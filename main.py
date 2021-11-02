@@ -102,7 +102,7 @@ class AnswerField:
     def set_value(self, pastValue, value):
         if value % 1 == 0:
             value = int(value)
-        if value == float(pastValue.replace(',', '')):
+        if value == float(str(pastValue).replace(',', '')):
             self.text.config(fg="black")
             self.after(100, lambda: self.text.config(fg="white"))
         self.text.delete(0, tk.END)
@@ -609,14 +609,16 @@ class DateCalculator(tk.Frame):
         self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="black",
                                  fg="white").grid(row=5, padx=8, sticky="w")
 
-        self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22))
+        self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22), 
+                                 highlightthickness=2)
         self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
         self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
         self.fromText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="black", fg="white").grid(
             row=7, padx=8, sticky="w")
 
-        self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22))
+        self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22), 
+                               highlightthickness=2)
         self.toDate.grid(row=8, padx=8, pady=8, sticky="w")
         self.toDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
@@ -663,10 +665,14 @@ class DateCalculator(tk.Frame):
                     self.__text = self.__text.replace("1 weeks", "1 week")
                 if self.__day != 11:
                     self.__text = self.__text.replace("1 days", "1 day")
-                self.__text = self.__text.replace("0 years, ", "")
-                self.__text = self.__text.replace("0 months, ", "")
-                self.__text = self.__text.replace("0 weeks, ", "")
-                self.__text = self.__text.replace("0 days", "")
+                if self.__year != 10:
+                    self.__text = self.__text.replace("0 years, ", "")
+                if self.__month != 10:
+                    self.__text = self.__text.replace("0 months, ", "")
+                if self.__week != 10:
+                    self.__text = self.__text.replace("0 weeks, ", "")
+                if self.__day != 10:
+                    self.__text = self.__text.replace("0 days", "")
                 self.__text = self.__text.removesuffix(", ")
             self.update(self.__text)
         else:
