@@ -254,7 +254,7 @@ class SelectionMenu(tk.Frame):
         Frame.set_bg_color(self, "black")
 
         scrollFrame = VerticalScrolledFrame(self)
-        scrollFrame.pack()
+        scrollFrame.pack(fill="both", expand=True)
 
         pageList = ["Calculator", "DateCalculator", "CurrencyConverter", "VolumeConverter", "LengthConverter",
                     "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", "AreaConverter",
