@@ -1,3 +1,18 @@
+#===============================================================#
+#  Python Individual Project, Year 1, Semester 1                #
+#                                                               #
+#  Course: 13006107 Introduction to Computers and Programming   #
+#  Program: Software Engineering Program                        #
+#  University: Faculty of Engineering, KMITL                    #
+#                                                               #
+#  Project: Calculatory                                         #
+#  Repository: https://github.com/DulapahV/Calculatory          #
+#  Written by: Dulapah Vibulsanti (64011388)                    #
+#===============================================================#
+
+# * Please install this package *
+# pip install forex-python
+
 try:
     import tkinter as tk  # python 3
 except ImportError:
@@ -5,8 +20,9 @@ except ImportError:
 from abc import ABC, abstractmethod
 from math import pi, e, sqrt, log, log10, factorial, radians, sin, cos, tan, sinh, cosh, tanh
 from numpy import cbrt
-from datetime import date
-from forex_python.converter import CurrencyRates, CurrencyCodes
+from datetime import datetime
+from forex_python.converter import CurrencyRates, RatesNotAvailableError
+from forex_python.bitcoin import BtcConverter
 
 
 class CalculatorApp(tk.Tk):
@@ -86,7 +102,7 @@ class AnswerField:
     def set_value(self, pastValue, value):
         if value % 1 == 0:
             value = int(value)
-        if value == float(pastValue):
+        if value == float(pastValue.replace(',', '')):
             self.text.config(fg="black")
             self.after(100, lambda: self.text.config(fg="white"))
         self.text.delete(0, tk.END)
@@ -189,14 +205,14 @@ class OptionMenu:
                                  padx=8, sticky="w")
 
         self.fromUnit = tk.OptionMenu(self, variable1, *list)
-        self.fromUnit.config(width=19, bd=0, bg="#505050", fg="white", font=("Arial", 18))
+        self.fromUnit.config(width=19, bd=0, bg="#505050", fg="white", font=("Arial", 18), anchor="w")
         self.fromUnit.grid(row=4, column=1, padx=8)
 
         self.toText = tk.Label(self, text="To", font=("Arial", 16), bg="black", fg="white").grid(row=5, column=1,
                                padx=8, sticky="w")
 
         self.toUnit = tk.OptionMenu(self, variable2, *list)
-        self.toUnit.config(width=19, bd=0, bg="#505050", fg="white", font=("Arial", 18))
+        self.toUnit.config(width=19, bd=0, bg="#505050", fg="white", font=("Arial", 18), anchor="w")
         self.toUnit.grid(row=6, column=1, padx=8)
 
 
@@ -255,8 +271,7 @@ class SelectionMenu(tk.Frame):
                                     command=lambda index=index: open_page(pageList[index])).pack()
 
         def open_page(page):
-            controller.show_frame(page)
-
+            controller.show_frame(page)  
 
 class Calculator(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
@@ -590,27 +605,29 @@ class DateCalculator(tk.Frame):
         self.text.grid(row=2, padx=8, pady=8, sticky="w")
         self.text.insert(tk.END, "Same dates")
 
+        self.grid_rowconfigure(4, minsize=10)
         self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="black",
-                                 fg="white").grid(row=4, padx=8, sticky="w")
+                                 fg="white").grid(row=5, padx=8, sticky="w")
 
         self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22))
-        self.fromDate.grid(row=5, padx=8, pady=8, sticky="w")
-        self.fromDate.insert(tk.END, date.today().strftime("%d/%m/%Y"))
+        self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
+        self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
         self.fromText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="black", fg="white").grid(
-            row=6, padx=8, sticky="w")
+            row=7, padx=8, sticky="w")
 
         self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22))
-        self.toDate.grid(row=7, padx=8, pady=8, sticky="w")
-        self.toDate.insert(tk.END, date.today().strftime("%d/%m/%Y"))
+        self.toDate.grid(row=8, padx=8, pady=8, sticky="w")
+        self.toDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
+        self.grid_rowconfigure(9, minsize=20)
         self.calcButton = tk.Button(self, height=2, text="Calculate", font=("Arial", 18), bg="#FF9500", fg="white",
-                                    bd=0, command=self.equal).grid(row=9, padx=8, sticky="w")
+                                    bd=0, command=self.equal).grid(row=10, padx=8, sticky="w")
 
     def equal(self):
         try:
-            self.fromDate.get().split("/")
-            self.toDate.get().split("/")
+            self.__fromDay, self.__fromMonth, self.__fromYear = self.fromDate.get().split("/")
+            self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         except ValueError:
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
@@ -671,15 +688,20 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         Frame.set_header_text(self, "Currency Converter")
         SelectionButton.summon(self, controller)
 
+        self.__c = CurrencyRates()
+        self.__b = BtcConverter()
         self.__value = 0
-        self.__fromCurrencyVal = tk.StringVar(value="USD")
-        self.__toCurrencyVal = tk.StringVar(value="THB")
-        self.__currencyList = ["USD", "JPY", "EUR", "THB", "IDR", "BGN", "ILS", "GBP", "AUD", "CHF", "HKD"]
+        self.__fromCurrency = tk.StringVar(value="BTC")
+        self.__toCurrency = tk.StringVar(value="USD")
+        self.__currencyList = ["BTC", "USD", "JPY", "EUR", "THB", "IDR", "BGN", "ILS", "GBP", "AUD", "CHF", "HKD"]
 
         AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromCurrencyVal, self.__toCurrencyVal, self.__currencyList)
+        OptionMenu.summon(self, self.__fromCurrency, self.__toCurrency, self.__currencyList)
         NumPad.summon(self)
         NumPad.disable_negative(self)
+
+        self.ratesDetail = tk.Label(self, padx=8, justify="left", font=("Arial", 12), bg="black", fg="white")
+        self.ratesDetail.grid(row=7, column=1, sticky="w")
 
     def update(self, char):
         AnswerField.update(self, char)
@@ -688,13 +710,44 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         AnswerField.negative(self)
 
     def clear(self):
+        self.ratesDetail.config(text="")
         AnswerField.clear(self)
 
     def delete(self):
         AnswerField.delete(self)
 
     def equal(self):
-        pass
+        self.__value = AnswerField.get_value(self)
+        if self.__fromCurrency.get() == "BTC" or self.__toCurrency.get() == "BTC":
+            try:
+                self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
+            except RatesNotAvailableError:
+                self.text.delete(0, tk.END)
+                self.text.insert(0, "Rates Not Available")
+                return 1
+            if self.__fromCurrency.get() == "BTC":
+                self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):.9f}" + 
+                                        f" {self.__toCurrency.get()}" + 
+                                        f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
+                
+            else:
+                self.ratesDetail.config(text=f"1 {self.__toCurrency.get()} = " + 
+                                        f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):.12f} BTC" + 
+                                        f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                self.__value = self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())
+        else:
+            try:
+                self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
+            except RatesNotAvailableError:
+                self.text.delete(0, tk.END)
+                self.text.insert(0, "Rates Not Available")
+                return 1
+            self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
+            self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
+                                    f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):.7f}" + 
+                                    f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+        self.set_text(self.text.get(), round(self.__value, 2))
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
