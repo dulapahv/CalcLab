@@ -638,6 +638,8 @@ class DateComparator(tk.Frame):
         except ValueError:
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
+            self.textDay.delete(0, tk.END)
+            self.textDay.insert(0, "")
         self.__fromDay, self.__fromMonth, self.__fromYear = self.fromDate.get().split("/")
         self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         try:
@@ -650,6 +652,8 @@ class DateComparator(tk.Frame):
         except ValueError:
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
+            self.textDay.delete(0, tk.END)
+            self.textDay.insert(0, "")
         if (1 <= self.__fromDay <= 31 and 1 <= self.__toDay <= 31 and 1 <= self.__fromMonth <= 12 and 
         1 <= self.__toMonth <= 12 and self.__fromYear >= 0 and self.__toYear >= 0):
             self.__sumDay = abs(self.__fromDay - self.__toDay) + (abs(self.__fromMonth - self.__toMonth) * 30) + (abs(
@@ -662,13 +666,13 @@ class DateComparator(tk.Frame):
                 self.__text = "Same dates"
             else:
                 self.__text = f"{self.__year:,} years, {self.__month} months, {self.__week} weeks, {self.__day} days"
-                if self.__year == 1 and len(str(self.__year)) != 1:
+                if self.__year == 1 and len(str(self.__year)) == 1:
                     self.__text = self.__text.replace("1 years", "1 year")
-                if self.__month == 1 and len(str(self.__month)) != 1:
+                if self.__month == 1 and len(str(self.__month)) == 1:
                     self.__text = self.__text.replace("1 months", "1 month")
-                if self.__week == 1 and len(str(self.__week)) != 1:
+                if self.__week == 1 and len(str(self.__week)) == 1:
                     self.__text = self.__text.replace("1 weeks", "1 week")
-                if self.__day == 1 and len(str(self.__day)) != 1:
+                if self.__day == 1 and len(str(self.__day)) == 1:
                     self.__text = self.__text.replace("1 days", "1 day")
                 if self.__year == 0 and len(str(self.__year)) == 1:
                     self.__text = self.__text.replace("0 years, ", "")
@@ -680,14 +684,16 @@ class DateComparator(tk.Frame):
                     self.__text = self.__text.replace("0 days", "")
                 self.__text = self.__text.removesuffix(", ")
             self.update(self.__text)
+            self.textDay.delete(0, tk.END)
+            if self.__sumDay == 0 or self.__sumDay == 1:
+                self.textDay.insert(0, f"{self.__sumDay} day")
+            else:
+                self.textDay.insert(0, f"{self.__sumDay:,} days")
         else:
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
-        self.textDay.delete(0, tk.END)
-        if self.__sumDay == 0 or self.__sumDay == 1:
-            self.textDay.insert(0, f"{self.__sumDay} day")
-        else:
-            self.textDay.insert(0, f"{self.__sumDay:,} days")
+            self.textDay.delete(0, tk.END)
+            self.textDay.insert(0, "")
 
     def update(self, char):
         if char == self.text.get():
