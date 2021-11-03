@@ -594,6 +594,7 @@ class DateComparator(tk.Frame):
         self.__week = 0
         self.__month = 0
         self.__year = 0
+        self.__sumDay = 0
         self.__text = ""
         
         Frame.set_bg_color(self, "black")
@@ -604,6 +605,10 @@ class DateComparator(tk.Frame):
         self.text = tk.Entry(self, width=32, justify="right", bd=0, bg="black", fg="white", font=("Arial", 22))
         self.text.grid(row=2, padx=8, pady=8, sticky="w")
         self.text.insert(tk.END, "Same dates")
+
+        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, bg="black", fg="white", font=("Arial", 22))
+        self.textDay.grid(row=3, padx=8, pady=8, sticky="w")
+        self.textDay.insert(tk.END, "0 day")
 
         self.grid_rowconfigure(4, minsize=10)
         self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="black",
@@ -646,38 +651,43 @@ class DateComparator(tk.Frame):
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
         if (1 <= self.__fromDay <= 31 and 1 <= self.__toDay <= 31 and 1 <= self.__fromMonth <= 12 and 
-        1 <= self.__toMonth <= 12 and self.__fromYear >= 1 and self.__toYear >= 1):
-            self.__day = abs(self.__fromDay - self.__toDay) + (abs(self.__fromMonth - self.__toMonth) * 30) + (abs(
+        1 <= self.__toMonth <= 12 and self.__fromYear >= 0 and self.__toYear >= 0):
+            self.__sumDay = abs(self.__fromDay - self.__toDay) + (abs(self.__fromMonth - self.__toMonth) * 30) + (abs(
                             self.__fromYear - self.__toYear) * 365)
-            self.__year = self.__day // 365
-            self.__month = (self.__day - self.__year*365) // 30
-            self.__week = (self.__day - self.__year*365 - self.__month*30) // 7
-            self.__day = (self.__day - self.__year*365 - self.__month*30 - self.__week*7)
+            self.__year = self.__sumDay // 365
+            self.__month = (self.__sumDay - self.__year*365) // 30
+            self.__week = (self.__sumDay - self.__year*365 - self.__month*30) // 7
+            self.__day = (self.__sumDay - self.__year*365 - self.__month*30 - self.__week*7)
             if self.__year == 0 and self.__month == 0 and self.__week == 0 and self.__day == 0:
                 self.__text = "Same dates"
             else:
-                self.__text = f"{self.__year} years, {self.__month} months, {self.__week} weeks, {self.__day} days"
-                if self.__year != 11:
+                self.__text = f"{self.__year:,} years, {self.__month} months, {self.__week} weeks, {self.__day} days"
+                if self.__year == 1 and len(str(self.__year)) != 1:
                     self.__text = self.__text.replace("1 years", "1 year")
-                if self.__month != 11:
+                if self.__month == 1 and len(str(self.__month)) != 1:
                     self.__text = self.__text.replace("1 months", "1 month")
-                if self.__week != 11:
+                if self.__week == 1 and len(str(self.__week)) != 1:
                     self.__text = self.__text.replace("1 weeks", "1 week")
-                if self.__day != 11:
+                if self.__day == 1 and len(str(self.__day)) != 1:
                     self.__text = self.__text.replace("1 days", "1 day")
-                if self.__year != 10:
+                if self.__year == 0 and len(str(self.__year)) == 1:
                     self.__text = self.__text.replace("0 years, ", "")
-                if self.__month != 10:
+                if self.__month == 0 and len(str(self.__month)) == 1:
                     self.__text = self.__text.replace("0 months, ", "")
-                if self.__week != 10:
+                if self.__week == 0 and len(str(self.__week)) == 1:
                     self.__text = self.__text.replace("0 weeks, ", "")
-                if self.__day != 10:
+                if self.__day == 0 and len(str(self.__day)) == 1:
                     self.__text = self.__text.replace("0 days", "")
                 self.__text = self.__text.removesuffix(", ")
             self.update(self.__text)
         else:
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
+        self.textDay.delete(0, tk.END)
+        if self.__sumDay == 0 or self.__sumDay == 1:
+            self.textDay.insert(0, f"{self.__sumDay} day")
+        else:
+            self.textDay.insert(0, f"{self.__sumDay:,} days")
 
     def update(self, char):
         if char == self.text.get():
@@ -1272,6 +1282,6 @@ class AngleConverter(tk.Frame, UpdateNumber):
 
 if __name__ == "__main__":
     app = CalculatorApp()
-    app.title("Calculatory")
+    app.title("CalcLab")
     app.resizable(width=False, height=False)
     app.mainloop()
