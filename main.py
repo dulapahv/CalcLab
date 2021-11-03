@@ -35,7 +35,7 @@ class CalculatorApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for frame in (SelectionMenu, Calculator, DateCalculator, CurrencyConverter, VolumeConverter, LengthConverter,
+        for frame in (SelectionMenu, Calculator, DateComparator, CurrencyConverter, VolumeConverter, LengthConverter,
                       WeightAndMassConverter, TemperatureConverter, EnergyConverter, AreaConverter, SpeedConverter,
                       TimeConverter, PowerConverter, DataConverter, PressureConverter, AngleConverter):
             page_name = frame.__name__
@@ -256,7 +256,7 @@ class SelectionMenu(tk.Frame):
         scrollFrame = VerticalScrolledFrame(self)
         scrollFrame.pack(fill="both", expand=True)
 
-        pageList = ["Calculator", "DateCalculator", "CurrencyConverter", "VolumeConverter", "LengthConverter",
+        pageList = ["Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter", "LengthConverter",
                     "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", "AreaConverter",
                     "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter", "PressureConverter", 
                     "AngleConverter"]
@@ -586,7 +586,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.set_text(self.__memory, pi)
 
 
-class DateCalculator(tk.Frame):
+class DateComparator(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -597,11 +597,11 @@ class DateCalculator(tk.Frame):
         self.__text = ""
         
         Frame.set_bg_color(self, "black")
-        Frame.set_header_text(self, "Date Calculator")
+        Frame.set_header_text(self, "Date Comparator")
         self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="white", bd=0, font=("Arial", 18), width=3,
                                       command=lambda: controller.show_frame("SelectionMenu")).grid(row=1, sticky="w")
 
-        self.text = tk.Entry(self, width=28, justify="right", bd=0, bg="black", fg="white", font=("Arial", 24))
+        self.text = tk.Entry(self, width=32, justify="right", bd=0, bg="black", fg="white", font=("Arial", 22))
         self.text.grid(row=2, padx=8, pady=8, sticky="w")
         self.text.insert(tk.END, "Same dates")
 
@@ -609,7 +609,7 @@ class DateCalculator(tk.Frame):
         self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="black",
                                  fg="white").grid(row=5, padx=8, sticky="w")
 
-        self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22), 
+        self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 20), 
                                  highlightthickness=2)
         self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
         self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
@@ -617,7 +617,7 @@ class DateCalculator(tk.Frame):
         self.fromText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="black", fg="white").grid(
             row=7, padx=8, sticky="w")
 
-        self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 22), 
+        self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 20), 
                                highlightthickness=2)
         self.toDate.grid(row=8, padx=8, pady=8, sticky="w")
         self.toDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
@@ -699,7 +699,10 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromCurrency = tk.StringVar(value="BTC")
         self.__toCurrency = tk.StringVar(value="USD")
-        self.__currencyList = ["BTC", "USD", "JPY", "EUR", "THB", "IDR", "BGN", "ILS", "GBP", "AUD", "CHF", "HKD"]
+        self.__currencyList = ["BTC", "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD", "NZD",
+                               "SEK", "KRW", "SGD", "NOK", "MXN", "INR", "RUB", "ZAR", "TRY", "BRL", "TWD",
+                               "DKK", "PLN", "THB", "IDR", "HUF", "CZK", "ILS", "CLP", "PHP", "AED", "COP",
+                               "SAR", "MYR", "RON"]
 
         AnswerField.summon_answer_field(self, 2, 5)
         OptionMenu.summon(self, self.__fromCurrency, self.__toCurrency, self.__currencyList)
@@ -726,7 +729,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         self.__value = AnswerField.get_value(self)
         if self.__fromCurrency.get() == "BTC" or self.__toCurrency.get() == "BTC":
             try:
-                self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
+                self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
             except RatesNotAvailableError:
                 self.text.delete(0, tk.END)
                 self.text.insert(0, "Rates Not Available")
