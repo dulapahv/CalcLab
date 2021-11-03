@@ -5,7 +5,7 @@
 #  Program: Software Engineering Program                        #
 #  University: Faculty of Engineering, KMITL                    #
 #                                                               #
-#  Project: Calculatory                                         #
+#  Project: CalcLab                                             #
 #  Repository: https://github.com/DulapahV/Calculatory          #
 #  Written by: Dulapah Vibulsanti (64011388)                    #
 #===============================================================#
