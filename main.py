@@ -757,7 +757,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                 self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
                 
             else:
-                self.ratesDetail.config(text=f"1 {self.__toCurrency.get()} = " + 
+                self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
                                         f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):.12f} BTC" + 
                                         f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
                 self.__value = self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())
