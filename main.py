@@ -428,7 +428,6 @@ class Calculator(tk.Frame, UpdateNumber):
         self.minusButton.config(bg="#FF9500", fg="white")
         self.multiplyButton.config(bg="#FF9500", fg="white")
         self.divideButton.config(bg="#FF9500", fg="white")
-        self.__lockOperatorInput = False
         AnswerField.update(self, char)
 
     def negative(self):
