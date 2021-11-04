@@ -10,7 +10,8 @@
 #  Written by: Dulapah Vibulsanti (64011388)                    #
 #===============================================================#
 
-# * Please install this package *
+# * Please install these packages *
+# pip install numpy
 # pip install forex-python
 
 try:
