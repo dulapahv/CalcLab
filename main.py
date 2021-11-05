@@ -6,7 +6,7 @@
 #  University: Faculty of Engineering, KMITL                    #
 #                                                               #
 #  Project: CalcLab                                             #
-#  Repository: https://github.com/DulapahV/Calculatory          #
+#  Repository: https://github.com/DulapahV/CalcLab              #
 #  Written by: Dulapah Vibulsanti (64011388)                    #
 #===============================================================#
 
@@ -743,6 +743,7 @@ class DateComparator(tk.Frame):
             self.text.insert(0, "Error")
             self.textDay.delete(0, tk.END)
             self.textDay.insert(0, "")
+            return None
         self.__fromDay, self.__fromMonth, self.__fromYear = self.fromDate.get().split("/")
         self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         try:
@@ -757,6 +758,7 @@ class DateComparator(tk.Frame):
             self.text.insert(0, "Error")
             self.textDay.delete(0, tk.END)
             self.textDay.insert(0, "")
+            return None
         if (1 <= self.__fromDay <= 31 and 1 <= self.__toDay <= 31 and 1 <= self.__fromMonth <= 12 and 
         1 <= self.__toMonth <= 12 and self.__fromYear >= 0 and self.__toYear >= 0):
             self.__sumDay = abs(self.__fromDay - self.__toDay) + (abs(self.__fromMonth - self.__toMonth) * 30) + (abs(
