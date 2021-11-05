@@ -225,14 +225,16 @@ class OptionMenu:
                                  padx=8, sticky="w")
 
         self.fromUnit = tk.OptionMenu(self, variable1, *list)
-        self.fromUnit.config(width=19, bd=0, bg="#505050", fg="white", font=("Arial", 18), anchor="w")
+        self.fromUnit.config(width=19, bd=0, bg="#505050", fg="white", activebackground="#A5A5A5", activeforeground="white", 
+                             font=("Arial", 18), anchor="w")
         self.fromUnit.grid(row=4, column=1, padx=8)
 
         self.toText = tk.Label(self, text="To", font=("Arial", 16), bg="black", fg="white").grid(row=5, column=1,
                                padx=8, sticky="w")
 
         self.toUnit = tk.OptionMenu(self, variable2, *list)
-        self.toUnit.config(width=19, bd=0, bg="#505050", fg="white", font=("Arial", 18), anchor="w")
+        self.toUnit.config(width=19, bd=0, bg="#505050", fg="white", activebackground="#A5A5A5", activeforeground="white", 
+                           font=("Arial", 18), anchor="w")
         self.toUnit.grid(row=6, column=1, padx=8)
 
 
@@ -419,6 +421,7 @@ class Calculator(tk.Frame, UpdateNumber):
                                      row=7, column=7)
 
     def update(self, char):
+        self.__lockOperatorInput = False
         if self.__lockSecInput == True:
             self.dotButton["state"] = "normal"
             self.text.delete(0, tk.END)
