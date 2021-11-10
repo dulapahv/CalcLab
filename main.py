@@ -11,21 +11,41 @@
 #===============================================================#
 
 """
-Please install these packages
-pip install numpy
-pip install forex-python
+CalcLab requires the following modules, however the program will install them automatically.
+Should the program not install them automatically, run these commands in the terminal.
+1. pip install numpy
+2. pip install forex-python
 """
 
+import subprocess
+import sys
+import math
+from abc import ABC, abstractmethod
+from datetime import datetime
+"""Check for valid tkinter module version"""
 try:
     import tkinter as tk  # python 3
 except ImportError:
     import Tkinter as tk  # python 2
-import math
-import numpy
-from abc import ABC, abstractmethod
-from datetime import datetime
-from forex_python.converter import CurrencyRates, RatesNotAvailableError
-from forex_python.bitcoin import BtcConverter
+"""Check for numpy module"""
+try:
+    import numpy
+except ImportError:
+    print("\nTrying to Install required module: numpy\n")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", 'numpy'])
+finally:
+    import numpy
+"""Check for forex-python module"""
+try:
+    from forex_python.converter import CurrencyRates, RatesNotAvailableError
+    from forex_python.bitcoin import BtcConverter
+except ImportError:
+    print("\nTrying to Install required module: forex-python\n")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", 'forex-python'])
+finally:
+    from forex_python.converter import CurrencyRates, RatesNotAvailableError
+    from forex_python.bitcoin import BtcConverter
+
 
 """
 This list stores all the pages in the program.
