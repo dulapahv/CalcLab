@@ -38,8 +38,8 @@ pages = ["Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter",
 
 """
 The following lists/dictionaries stores all the conversion units as well as their conversion factors (if have).
-To add more conversion units into the list, simply add them into the list right away.
-To add more conversion units into the dictionary, it must follow a format of {"[unit name]": [conversion factor]}
+To add more conversion units into a list, simply add them into the list.
+To add more conversion units into a dictionary, it must follow the format {"[unit name]": [conversion factor]}
 """
 currency = ["BTC", "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD", "NZD", "SEK", "KRW", "SGD", 
             "NOK", "MXN", "INR", "RUB", "ZAR", "TRY", "BRL", "TWD", "DKK", "PLN", "THB", "IDR", "HUF", "CZK", 
