@@ -80,7 +80,7 @@ data = {"Bits": 0.000000125, "Bytes": 0.000001, "Kilobits": 0.000125, "Kibibits"
         "Tebibits": 137439, "Terabytes": 1000000, "Tebibytes": 1099512, "Petabits": 125000000, "Pebibits": 140737488,
         "Petabytes": 10**9, "Pebibytes": 1125899907, "Exabits": 1.25 * (10**8), "Exbibits": 144115188076, 
         "Exabytes": 10**12, "Exibytes": 1152921504607, "Zetabits": 1.25 * (10**14), "Zebibits": 147573952589676, 
-        "Zetabytes": 10 ** 15, "Zebibytes": 1.180592 * (10**15), "Yottabit": 1.25 * (10**17), 
+        "Zetabytes": 10**15, "Zebibytes": 1.180592 * (10**15), "Yottabit": 1.25 * (10**17), 
         "Yobibits": 1.511157 * (10**17), "Yottabyte": 10 ** 18, "Yobibytes": 1.208926 * (10**18)}
 
 pressure = {"Atmospheres": 101325, "Bars": 100000, "Kilopascals": 1000, "Millimeters of mercury": 133.3,
