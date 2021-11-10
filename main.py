@@ -10,26 +10,94 @@
 #  Written by: Dulapah Vibulsanti (64011388)                    #
 #===============================================================#
 
-# * Please install these packages *
-# pip install numpy
-# pip install forex-python
+"""
+Please install these packages
+pip install numpy
+pip install forex-python
+"""
 
 try:
     import tkinter as tk  # python 3
 except ImportError:
     import Tkinter as tk  # python 2
+import math
+import numpy
 from abc import ABC, abstractmethod
-from math import pi, e, sqrt, log, log10, factorial, radians, sin, cos, tan, sinh, cosh, tanh
-from numpy import cbrt
 from datetime import datetime
 from forex_python.converter import CurrencyRates, RatesNotAvailableError
 from forex_python.bitcoin import BtcConverter
 
+"""
+This list stores all the pages in the program.
+To add more pages, put their class name into this list.
+"""
+pages = ["Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter", "LengthConverter",
+         "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", "AreaConverter",
+         "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter", "PressureConverter", 
+         "AngleConverter"]
 
-class CalculatorApp(tk.Tk):
+"""
+The following lists/dictionaries stores all the conversion units as well as their conversion factors (if have).
+To add more conversion units into the list, simply add them into the list right away.
+To add more conversion units into the dictionary, it must follow a format of {"[unit name]": [conversion factor]}
+"""
+currency = ["BTC", "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD", "NZD", "SEK", "KRW", "SGD", 
+            "NOK", "MXN", "INR", "RUB", "ZAR", "TRY", "BRL", "TWD", "DKK", "PLN", "THB", "IDR", "HUF", "CZK", 
+            "ILS", "CLP", "PHP", "AED", "COP", "SAR", "MYR", "RON"]
+
+volume = {"Milliliters": 0.001, "Cubic centimeters": 0.001, "Liters": 1, "Cubic meters": 1000,
+          "Teaspoons (US)": 0.004929, "Tablespoons (US)": 0.014787, "Fluid ounces (US)": 0.029574, 
+          "Cups (US)": 0.236588, "Pints (US)": 0.473176, "Quarts (US)": 0.946353, "Gallons (US)": 3.785412, 
+          "Cubic inches": 0.016387, "Cubic feet": 28.31685, "Cubic yards": 764.5549, 
+          "Teaspoons (UK)": 0.005919, "Tablespoons (UK)": 0.017758, "Fluid ounces (UK)": 0.028413, 
+          "Pints (UK)": 0.568261, "Quarts (UK)": 1.136523, "Gallons (UK)": 4.54609}
+
+length = {"Nanometers": 0.000000001, "Microns": 0.000001, "Millimeters": 0.001, "Centimeters": 0.01, "Meters": 1, 
+          "Kilometers": 1000, "Inches": 0.0254, "Feet": 0.3048, "Yards": 0.9144, "Miles": 1609.344, "Nautical Miles": 1852}
+
+weightMass = {"Carats": 0.0002, "Milligrams": 0.000001, "Centigrams": 0.00001, "Decigrams": 0.0001, "Grams": 0.001, 
+              "Dekagrams": 0.01, "Hectogram": 0.1, "Kilograms": 1, "Metric tonnes": 1000, "Ounces": 0.02835, 
+              "Pounds": 0.453592, "Stone": 6.350293, "Short tons (US)": 907.1847, "Long tons (US)": 1016.047}
+
+energy = {"Electron volts": 1.602177 * (10**-19), "Joules": 1, "Kilojoules": 1000, "Thermal calories": 4.184, 
+          "Food calories": 4184, "Foot-pounds": 1.355818, "British thermal units": 1055.056}
+
+area = {"Square millimeters": 0.000001, "Square centimeters": 0.0001, "Square meters": 1,
+        "Hectares": 100000, "Square kilometers": 1000000, "Square inches": 0.000645, 
+        "Square feet": 0.092903, "Square yards": 0.836127, "Acres": 4046.856, "Square miles": 2589988}
+
+speed = {"Centimeters per second": 0.01, "Meters per second": 1, "Kilometers per hour": 0.277778,
+         "Feet per second": 0.3048, "Miles per hour": 0.447, "Knots": 0.5144, "Mach": 340.3}
+
+time = {"Microseconds": 0.000001, "Milliseconds": 0.001, "Seconds": 1, "Minutes": 60, "Hours": 3600,
+        "Days": 86400, "Weeks": 604800, "Years": 31557600}
+
+power = {"Watts": 1, "Kilowats": 1000, "Horsepower (US)": 745.6999, "Foot-pounds/minute": 0.022597, "BTUs/minute": 17.58427}
+
+data = {"Bits": 0.000000125, "Bytes": 0.000001, "Kilobits": 0.000125, "Kibibits": 0.000128, "Kilobytes": 0.001, 
+        "Kibibytes": 0.001024, "Megabits": 0.125, "Mebibits": 0.131072, "Megabytes": 1, "Mebibytes": 1.048576, 
+        "Gigabits": 125, "Gibibits": 134.2177, "Gigabytes": 1000, "Gibibytes": 1073.742, "Terabits": 125000, 
+        "Tebibits": 137439, "Terabytes": 1000000, "Tebibytes": 1099512, "Petabits": 125000000, "Pebibits": 140737488,
+        "Petabytes": 10**9, "Pebibytes": 1125899907, "Exabits": 1.25 * (10**8), "Exbibits": 144115188076, 
+        "Exabytes": 10**12, "Exibytes": 1152921504607, "Zetabits": 1.25 * (10**14), "Zebibits": 147573952589676, 
+        "Zetabytes": 10 ** 15, "Zebibytes": 1.180592 * (10**15), "Yottabit": 1.25 * (10**17), 
+        "Yobibits": 1.511157 * (10**17), "Yottabyte": 10 ** 18, "Yobibytes": 1.208926 * (10**18)}
+
+pressure = {"Atmospheres": 101325, "Bars": 100000, "Kilopascals": 1000, "Millimeters of mercury": 133.3,
+            "Pascals": 1, "Pounds per square inch": 6894.757}
+
+angle = {"Degrees": 1, "Radians": 57.29578, "Gradians": 0.9}
+
+class CalcLab(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
+        self.pages = pages
+
+        """
+        This container is where all the frames (or pages) will be stacked on top of each other,
+        then each one that we want visible will be raised above the others.
+        """
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -44,6 +112,7 @@ class CalculatorApp(tk.Tk):
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
+        """First page to show is the calculator."""
         self.show_frame("Calculator")
 
     def show_frame(self, page_name):
@@ -78,7 +147,8 @@ class UpdateNumber(ABC):
 
 
 class AnswerField:
-    def summon_answer_field(self, row, columnSpan):
+    """Manipulating and getting value from the answer field."""
+    def summon_answer_field(self, row = 2, columnSpan = 5):
         self.text = tk.Entry(self, width=21, justify="right", bd=0, bg="black", fg="white", font=("Arial", 32))
         self.text.grid(row=row, columnspan=columnSpan, pady=8)
         self.text.insert(tk.END, 0)
@@ -150,6 +220,7 @@ class AnswerField:
 
 
 class NumPad(AnswerField):
+    """NumPad for converter tools."""
     def summon(self):
         self.clearButton = tk.Button(self, width=5, height=2, text="AC", font=("Arial", 18), bg="#D4D4D2", bd=0,
                                      command=self.clear).grid(row=3, column=2)
@@ -205,6 +276,7 @@ class NumPad(AnswerField):
 
 
 class Frame:
+    """Customization for header text and background color."""
     def set_bg_color(self, color):
         self.configure(bg=color)
 
@@ -213,6 +285,7 @@ class Frame:
 
 
 class SelectionButton:
+    """Selection button for user to enter tools selection menu."""
     def summon(self, controller):
         self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="white", bd=0, font=("Arial", 18), width=3,
                                       activebackground="#767676", activeforeground="white", command=lambda: 
@@ -220,6 +293,7 @@ class SelectionButton:
 
 
 class OptionMenu:
+    """Option menu for selecting conversion units in converter tools."""
     def summon(self, variable1, variable2, list):
         self.fromText = tk.Label(self, text="From", font=("Arial", 16), bg="black", fg="white").grid(row=3, column=1,
                                  padx=8, sticky="w")
@@ -239,6 +313,7 @@ class OptionMenu:
 
 
 class VerticalScrolledFrame(tk.Frame):
+    """Initializing vertical scrolled frame for the tools selection menu."""
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
 
@@ -270,6 +345,7 @@ class VerticalScrolledFrame(tk.Frame):
 
 
 class SelectionMenu(tk.Frame):
+    """Initializing tools selection menu and putting buttons into the vertical scrolled frame."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -278,10 +354,7 @@ class SelectionMenu(tk.Frame):
         scrollFrame = VerticalScrolledFrame(self)
         scrollFrame.pack(fill="both", expand=True)
 
-        pageList = ["Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter", "LengthConverter",
-                    "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", "AreaConverter",
-                    "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter", "PressureConverter", 
-                    "AngleConverter"]
+        pageList = pages
         for index, page in enumerate(pageList):
             spacedText = ""
             for i, letter in enumerate(page):
@@ -296,6 +369,7 @@ class SelectionMenu(tk.Frame):
             controller.show_frame(page)  
 
 class Calculator(tk.Frame, UpdateNumber):
+    """Calculator (scientific)."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -462,8 +536,11 @@ class Calculator(tk.Frame, UpdateNumber):
             float(self.__memory)
             float(self.__displayedText)
         except ValueError:
-            self.display_error()
-            return None
+            try:
+                self.set_text(0, eval(self.text.get()))
+            except (NameError, SyntaxError):
+                self.display_error()
+                return None
         if self.__operator != None:
             if self.__operator == "+":
                 if self.__reVal == 0:
@@ -584,111 +661,112 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def sqrt(self):
         try:
-            sqrt(float(self.text.get().replace(',', '')))
+            math.sqrt(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, sqrt(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.sqrt(float(self.text.get().replace(',', ''))))
 
     def cbrt(self):
         try:
-            cbrt(float(self.text.get().replace(',', '')))
+            numpy.cbrt(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, cbrt(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, numpy.cbrt(float(self.text.get().replace(',', ''))))
 
     def sin(self):
         try:
-            sin(radians(float(self.text.get().replace(',', ''))))
+            math.sin(math.radians(float(self.text.get().replace(',', ''))))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, sin(radians(float(self.text.get().replace(',', '')))))
+        self.set_text(self.__memory, math.sin(math.radians(float(self.text.get().replace(',', '')))))
 
     def cos(self):
         try:
-            cos(radians(float(self.text.get().replace(',', ''))))
+            math.cos(math.radians(float(self.text.get().replace(',', ''))))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, cos(radians(float(self.text.get().replace(',', '')))))
+        self.set_text(self.__memory, math.cos(math.radians(float(self.text.get().replace(',', '')))))
 
     def tan(self):
         try:
-            tan(radians(float(self.text.get().replace(',', ''))))
+            math.tan(math.radians(float(self.text.get().replace(',', ''))))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, tan(radians(float(self.text.get().replace(',', '')))))
+        self.set_text(self.__memory, math.tan(math.radians(float(self.text.get().replace(',', '')))))
 
     def sinh(self):
         try:
-            sinh(float(self.text.get().replace(',', '')))
+            math.sinh(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, sinh(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.sinh(float(self.text.get().replace(',', ''))))
 
     def cosh(self):
         try:
-            cosh(float(self.text.get().replace(',', '')))
+            math.cosh(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, cosh(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.cosh(float(self.text.get().replace(',', ''))))
 
     def tanh(self):
         try:
-            tanh(float(self.text.get().replace(',', '')))
+            math.tanh(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, tanh(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.tanh(float(self.text.get().replace(',', ''))))
 
     def ln(self):
         try:
-            log(float(self.text.get().replace(',', '')))
+            math.log(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, log(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.log(float(self.text.get().replace(',', ''))))
 
     def log10(self):
         try:
-            log10(float(self.text.get().replace(',', '')))
+            math.log10(float(self.text.get().replace(',', '')))
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, log10(float(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.log10(float(self.text.get().replace(',', ''))))
 
     def factorial(self):
         try:
-            factorial(int(self.text.get().replace(',', ''))) 
+            math.factorial(int(self.text.get().replace(',', ''))) 
         except ValueError:
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, factorial(int(self.text.get().replace(',', ''))))
+        self.set_text(self.__memory, math.factorial(int(self.text.get().replace(',', ''))))
 
     def eVal(self):
-        self.set_text(self.__memory, e)
+        self.set_text(self.__memory, math.e)
 
     def piVal(self):
-        self.set_text(self.__memory, pi)
+        self.set_text(self.__memory, math.pi)
 
 
 class DateComparator(tk.Frame):
+    """Date comparator."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -807,7 +885,9 @@ class DateComparator(tk.Frame):
         self.text.delete(0, tk.END)
         AnswerField.update(self, char)
 
+
 class CurrencyConverter(tk.Frame, UpdateNumber):
+    """Currency converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -820,13 +900,9 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromCurrency = tk.StringVar(value="BTC")
         self.__toCurrency = tk.StringVar(value="USD")
-        self.__currencyList = ["BTC", "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD", "NZD",
-                               "SEK", "KRW", "SGD", "NOK", "MXN", "INR", "RUB", "ZAR", "TRY", "BRL", "TWD",
-                               "DKK", "PLN", "THB", "IDR", "HUF", "CZK", "ILS", "CLP", "PHP", "AED", "COP",
-                               "SAR", "MYR", "RON"]
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromCurrency, self.__toCurrency, self.__currencyList)
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromCurrency, self.__toCurrency, currency)
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -854,7 +930,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
             except RatesNotAvailableError:
                 self.text.delete(0, tk.END)
                 self.text.insert(0, "Rates Not Available")
-                return 1
+                return None
             if self.__fromCurrency.get() == "BTC":
                 self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):.9f}" + 
                                         f" {self.__toCurrency.get()}" + 
@@ -872,7 +948,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
             except RatesNotAvailableError:
                 self.text.delete(0, tk.END)
                 self.text.insert(0, "Rates Not Available")
-                return 1
+                return None
             self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
             self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
                                     f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):.7f}" + 
@@ -884,6 +960,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
 
 
 class VolumeConverter(tk.Frame, UpdateNumber):
+    """Volume converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -894,15 +971,9 @@ class VolumeConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Milliliters")
         self.__toUnitVal = tk.StringVar(value="Teaspoons (US)")
-        self.__volume = {"Milliliters": 0.001, "Cubic centimeters": 0.001, "Liters": 1, "Cubic meters": 1000,
-                         "Teaspoons (US)": 0.004929, "Tablespoons (US)": 0.014787, "Fluid ounces (US)": 0.029574, 
-                         "Cups (US)": 0.236588, "Pints (US)": 0.473176, "Quarts (US)": 0.946353, "Gallons (US)": 3.785412, 
-                         "Cubic inches": 0.016387, "Cubic feet": 28.31685, "Cubic yards": 764.5549, 
-                         "Teaspoons (UK)": 0.005919, "Tablespoons (UK)": 0.017758, "Fluid ounces (UK)": 0.028413, 
-                         "Pints (UK)": 0.568261, "Quarts (UK)": 1.136523, "Gallons (UK)": 4.54609}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__volume.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(volume.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -921,13 +992,14 @@ class VolumeConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__volume[self.__fromUnitVal.get()] / self.__volume[self.__toUnitVal.get()])
+                      self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class LengthConverter(tk.Frame, UpdateNumber):
+    """Length converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -938,12 +1010,9 @@ class LengthConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Centimeters")
         self.__toUnitVal = tk.StringVar(value="Inches")
-        self.__length = {"Nanometers": 0.000000001, "Microns": 0.000001, "Millimeters": 0.001, "Centimeters": 0.01,
-                         "Meters": 1, "Kilometers": 1000, "Inches": 0.0254, "Feet": 0.3048, "Yards": 0.9144, 
-                         "Miles": 1609.344, "Nautical Miles": 1852}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__length.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(length.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -962,13 +1031,14 @@ class LengthConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__length[self.__fromUnitVal.get()] / self.__length[self.__toUnitVal.get()])
+                      self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class WeightAndMassConverter(tk.Frame, UpdateNumber):
+    """Weight and mass converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -979,13 +1049,9 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Kilograms")
         self.__toUnitVal = tk.StringVar(value="Pounds")
-        self.__weightMass = {"Carats": 0.0002, "Milligrams": 0.000001, "Centigrams": 0.00001, "Decigrams": 0.0001,
-                             "Grams": 0.001, "Dekagrams": 0.01, "Hectogram": 0.1, "Kilograms": 1, "Metric tonnes": 1000,
-                             "Ounces": 0.02835, "Pounds": 0.453592, "Stone": 6.350293, "Short tons (US)": 907.1847, 
-                             "Long tons (US)": 1016.047}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__weightMass.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(weightMass.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1003,14 +1069,15 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value, self.__value * self.__weightMass[self.__fromUnitVal.get()] / self.__weightMass[
-            self.__toUnitVal.get()])
+        self.set_text(self.__value, self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[
+                      self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class TemperatureConverter(tk.Frame, UpdateNumber):
+    """Temperature converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1023,7 +1090,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
         self.__toUnitVal = tk.StringVar(value="Fahrenheit")
         self.__temperatureList = ["Celsius", "Fahrenheit", "Kelvin"]
 
-        AnswerField.summon_answer_field(self, 2, 5)
+        AnswerField.summon_answer_field(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, self.__temperatureList)
         NumPad.summon(self)
 
@@ -1065,6 +1132,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
 
 
 class EnergyConverter(tk.Frame, UpdateNumber):
+    """Energy converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1075,12 +1143,9 @@ class EnergyConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Joules")
         self.__toUnitVal = tk.StringVar(value="Food calories")
-        self.__energy = {"Electron volts": 1.602177 * (10 ** -19), "Joules": 1, "Kilojoules": 1000,
-                         "Thermal calories": 4.184, "Food calories": 4184, "Foot-pounds": 1.355818, 
-                         "British thermal units": 1055.056}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__energy.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(energy.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1099,13 +1164,14 @@ class EnergyConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__energy[self.__fromUnitVal.get()] / self.__energy[self.__toUnitVal.get()])
+                      self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class AreaConverter(tk.Frame, UpdateNumber):
+    """Area converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1116,12 +1182,9 @@ class AreaConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Square meters")
         self.__toUnitVal = tk.StringVar(value="Square feet")
-        self.__area = {"Square millimeters": 0.000001, "Square centimeters": 0.0001, "Square meters": 1,
-                       "Hectares": 100000, "Square kilometers": 1000000, "Square inches": 0.000645, 
-                       "Square feet": 0.092903, "Square yards": 0.836127, "Acres": 4046.856, "Square miles": 2589988}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__area.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(area.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1140,13 +1203,14 @@ class AreaConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__area[self.__fromUnitVal.get()] / self.__area[self.__toUnitVal.get()])
+                      self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class SpeedConverter(tk.Frame, UpdateNumber):
+    """Speed converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1157,11 +1221,9 @@ class SpeedConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Kilometers per hour")
         self.__toUnitVal = tk.StringVar(value="Miles per hour")
-        self.__speed = {"Centimeters per second": 0.01, "Meters per second": 1, "Kilometers per hour": 0.277778,
-                        "Feet per second": 0.3048, "Miles per hour": 0.447, "Knots": 0.5144, "Mach": 340.3}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__speed.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(speed.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1180,13 +1242,14 @@ class SpeedConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__speed[self.__fromUnitVal.get()] / self.__speed[self.__toUnitVal.get()])
+                      self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class TimeConverter(tk.Frame, UpdateNumber):
+    """Time converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1197,11 +1260,9 @@ class TimeConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Hours")
         self.__toUnitVal = tk.StringVar(value="Minutes")
-        self.__time = {"Microseconds": 0.000001, "Milliseconds": 0.001, "Seconds": 1, "Minutes": 60, "Hours": 3600,
-                       "Days": 86400, "Weeks": 604800, "Years": 31557600}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__time.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(time.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1220,13 +1281,14 @@ class TimeConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__time[self.__fromUnitVal.get()] / self.__time[self.__toUnitVal.get()])
+                      self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class PowerConverter(tk.Frame, UpdateNumber):
+    """Power converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1237,11 +1299,9 @@ class PowerConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Kilowats")
         self.__toUnitVal = tk.StringVar(value="Horsepower (US)")
-        self.__power = {"Watts": 1, "Kilowats": 1000, "Horsepower (US)": 745.6999, "Foot-pounds/minute": 0.022597,
-                        "BTUs/minute": 17.58427}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__power.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(power.keys()))
         NumPad.summon(self)
 
     def update(self, char):
@@ -1259,13 +1319,14 @@ class PowerConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__power[self.__fromUnitVal.get()] / self.__power[self.__toUnitVal.get()])
+                      self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class DataConverter(tk.Frame, UpdateNumber):
+    """Data converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1276,19 +1337,9 @@ class DataConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Gigabytes")
         self.__toUnitVal = tk.StringVar(value="Megabytes")
-        self.__data = {"Bits": 0.000000125, "Bytes": 0.000001, "Kilobits": 0.000125, "Kibibits": 0.000128,
-                       "Kilobytes": 0.001, "Kibibytes": 0.001024, "Megabits": 0.125, "Mebibits": 0.131072, 
-                       "Megabytes": 1, "Mebibytes": 1.048576, "Gigabits": 125, "Gibibits": 134.2177, 
-                       "Gigabytes": 1000, "Gibibytes": 1073.742, "Terabits": 125000, "Tebibits": 137439, 
-                       "Terabytes": 1000000, "Tebibytes": 1099512, "Petabits": 125000000, "Pebibits": 140737488,
-                       "Petabytes": 10 ** 9, "Pebibytes": 1125899907, "Exabits": 1.25 * (10 ** 8),
-                       "Exbibits": 144115188076, "Exabytes": 10 ** 12, "Exibytes": 1152921504607, 
-                       "Zetabits": 1.25 * (10 ** 14), "Zebibits": 147573952589676, "Zetabytes": 10 ** 15, 
-                       "Zebibytes": 1.180592 * (10 ** 15), "Yottabit": 1.25 * (10 ** 17), 
-                       "Yobibits": 1.511157 * (10 ** 17), "Yottabyte": 10 ** 18, "Yobibytes": 1.208926 * (10 ** 18)}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__data.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(data.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1307,13 +1358,14 @@ class DataConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__data[self.__fromUnitVal.get()] / self.__data[self.__toUnitVal.get()])
+                      self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class PressureConverter(tk.Frame, UpdateNumber):
+    """Pressure converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1324,11 +1376,9 @@ class PressureConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Atmospheres")
         self.__toUnitVal = tk.StringVar(value="Bars")
-        self.__pressure = {"Atmospheres": 101325, "Bars": 100000, "Kilopascals": 1000, "Millimeters of mercury": 133.3,
-                           "Pascals": 1, "Pounds per square inch": 6894.757}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__pressure.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(pressure.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
@@ -1346,14 +1396,15 @@ class PressureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value, self.__value * self.__pressure[self.__fromUnitVal.get()] / self.__pressure[
-            self.__toUnitVal.get()])
+        self.set_text(self.__value, self.__value * pressure[self.__fromUnitVal.get()] / pressure[
+                      self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 class AngleConverter(tk.Frame, UpdateNumber):
+    """Angle converter."""
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -1364,10 +1415,9 @@ class AngleConverter(tk.Frame, UpdateNumber):
         self.__value = 0
         self.__fromUnitVal = tk.StringVar(value="Degrees")
         self.__toUnitVal = tk.StringVar(value="Radians")
-        self.__angle = {"Degrees": 1, "Radians": 57.29578, "Gradians": 0.9}
 
-        AnswerField.summon_answer_field(self, 2, 5)
-        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(self.__angle.keys()))
+        AnswerField.summon_answer_field(self)
+        OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(angle.keys()))
         NumPad.summon(self)
 
     def update(self, char):
@@ -1385,14 +1435,14 @@ class AngleConverter(tk.Frame, UpdateNumber):
     def equal(self):
         self.__value = AnswerField.get_value(self)
         self.set_text(self.__value,
-                      self.__value * self.__angle[self.__fromUnitVal.get()] / self.__angle[self.__toUnitVal.get()])
+                      self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
 
     def set_text(self, pastValue, value):
         AnswerField.set_value(self, pastValue, value)
 
 
 if __name__ == "__main__":
-    app = CalculatorApp()
-    app.title("CalcLab")
-    app.resizable(width=False, height=False)
-    app.mainloop()
+    CalcLab = CalcLab()
+    CalcLab.title("CalcLab")
+    CalcLab.resizable(width=False, height=False)
+    CalcLab.mainloop()
