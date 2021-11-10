@@ -37,7 +37,7 @@ pages = ["Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter",
          "AngleConverter"]
 
 """
-The following lists/dictionaries stores all the conversion units as well as their conversion factors (if have).
+The following lists/dictionaries store all the conversion units as well as their conversion factors (if have).
 To add more conversion units into a list, simply add them into the list.
 To add more conversion units into a dictionary, it must follow the format {"[unit name]": [conversion factor]}
 """
