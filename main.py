@@ -32,8 +32,9 @@ except ImportError:
 try:
     import numpy
 except ImportError:
-    print("\nTrying to install required module: numpy\n")
+    print(">>>Trying to install required module: numpy")
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'numpy'])
+    print()
 finally:
     import numpy
 """Check for forex-python module"""
@@ -41,7 +42,7 @@ try:
     from forex_python.converter import CurrencyRates, RatesNotAvailableError
     from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print("\nTrying to install required module: forex-python\n")
+    print(">>>Trying to install required module: forex-python")
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'forex-python'])
 finally:
     from forex_python.converter import CurrencyRates, RatesNotAvailableError
