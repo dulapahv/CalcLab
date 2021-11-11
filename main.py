@@ -113,9 +113,6 @@ angle = {"Degrees": 1, "Radians": 57.29578, "Gradians": 0.9}
 class CalcLab(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
-        self.pages = pages
-
         """
         This container is where all the frames (or pages) will be stacked on top of each other,
         then each one that we want visible will be raised above the others.
@@ -125,8 +122,8 @@ class CalcLab(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        self.frames = {}
         classList = []
+        self.frames = {}
         for element in pages:
             classList.append(self.str_to_class(element))
         for frame in classList:
