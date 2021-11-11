@@ -18,9 +18,9 @@ the terminal with the following commands.
 2. pip install forex-python
 """
 
-import subprocess
-import sys
 import math
+import sys
+import subprocess
 from abc import ABC, abstractmethod
 from datetime import datetime
 """Determine which tkinter version to use"""
