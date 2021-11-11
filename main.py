@@ -84,7 +84,7 @@ weightMass = {"Carats": 2*(10**-4), "Milligrams": 10**-6, "Centigrams": 10**-5, 
 energy = {"Electron volts": 1.602177*(10**-19), "Joules": 1, "Kilojoules": 1000, "Thermal calories": 4.184, 
           "Food calories": 4184, "Foot-pounds": 1.355818, "British thermal units": 1055.056}
 
-area = {"Square millimeters": 10**-6, "Square centimeters": 0.0001, "Square meters": 1,
+area = {"Square millimeters": 10**-6, "Square centimeters": 10**-4, "Square meters": 1,
         "Hectares": 10**5, "Square kilometers": 10**6, "Square inches": 6.45*(10**-4), 
         "Square feet": 0.092903, "Square yards": 0.836127, "Acres": 4046.856, "Square miles": 2589988}
 
