@@ -11,8 +11,9 @@
 #===============================================================#
 
 """
-CalcLab requires the following modules, however the program will install them automatically.
-Should the program not install them automatically, run these commands in the terminal.
+CalcLab requires the following modules, however, the program will install them automatically.
+Should the program fail to install them automatically, please install them manually through 
+the terminal with the following commands.
 1. pip install numpy
 2. pip install forex-python
 """
@@ -22,7 +23,7 @@ import sys
 import math
 from abc import ABC, abstractmethod
 from datetime import datetime
-"""Check for valid tkinter module version"""
+"""Determine which tkinter version to use"""
 try:
     import tkinter as tk  # python 3
 except ImportError:
@@ -31,7 +32,7 @@ except ImportError:
 try:
     import numpy
 except ImportError:
-    print("\nTrying to Install required module: numpy\n")
+    print("\nTrying to install required module: numpy\n")
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'numpy'])
 finally:
     import numpy
@@ -40,30 +41,30 @@ try:
     from forex_python.converter import CurrencyRates, RatesNotAvailableError
     from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print("\nTrying to Install required module: forex-python\n")
+    print("\nTrying to install required module: forex-python\n")
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'forex-python'])
 finally:
     from forex_python.converter import CurrencyRates, RatesNotAvailableError
     from forex_python.bitcoin import BtcConverter
 
+"""
+This list stores all the pages in the program. To add more pages, put their class name into this list.
+The page name will be automatically space-separated when encountering capital letters.
+"""
+pages = ["SelectionMenu", "Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter", 
+         "LengthConverter", "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", 
+         "AreaConverter", "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter", 
+         "PressureConverter", "AngleConverter"]
 
 """
-This list stores all the pages in the program.
-To add more pages, put their class name into this list.
+The following lists/dictionaries store all the conversion units as well as their conversion factors (only dictionary).
+To add more conversion units to a list, simply add them to the list.
+To add more conversion units to a dictionary, it must follow the format {"[unit name]": [conversion factor]}
+Some conversion types cannot be manually added as it requires more complex calculations (i.e. temperature).
 """
-pages = ["Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter", "LengthConverter",
-         "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", "AreaConverter",
-         "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter", "PressureConverter", 
-         "AngleConverter"]
-
-"""
-The following lists/dictionaries store all the conversion units as well as their conversion factors (if have).
-To add more conversion units into a list, simply add them into the list.
-To add more conversion units into a dictionary, it must follow the format {"[unit name]": [conversion factor]}
-"""
-currency = ["BTC", "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD", "NZD", "SEK", "KRW", "SGD", 
-            "NOK", "MXN", "INR", "RUB", "ZAR", "TRY", "BRL", "TWD", "DKK", "PLN", "THB", "IDR", "HUF", "CZK", 
-            "ILS", "CLP", "PHP", "AED", "COP", "SAR", "MYR", "RON"]
+currency = ['BTC', 'AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 
+            'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SAR', 'SEK', 
+            'SGD', 'THB', 'TRY', 'TWD', 'USD', 'ZAR']
 
 volume = {"Milliliters": 0.001, "Cubic centimeters": 0.001, "Liters": 1, "Cubic meters": 1000,
           "Teaspoons (US)": 0.004929, "Tablespoons (US)": 0.014787, "Fluid ounces (US)": 0.029574, 
@@ -72,38 +73,38 @@ volume = {"Milliliters": 0.001, "Cubic centimeters": 0.001, "Liters": 1, "Cubic 
           "Teaspoons (UK)": 0.005919, "Tablespoons (UK)": 0.017758, "Fluid ounces (UK)": 0.028413, 
           "Pints (UK)": 0.568261, "Quarts (UK)": 1.136523, "Gallons (UK)": 4.54609}
 
-length = {"Nanometers": 0.000000001, "Microns": 0.000001, "Millimeters": 0.001, "Centimeters": 0.01, "Meters": 1, 
+length = {"Nanometers": 10**-9, "Microns": 10**-6, "Millimeters": 0.001, "Centimeters": 0.01, "Meters": 1, 
           "Kilometers": 1000, "Inches": 0.0254, "Feet": 0.3048, "Yards": 0.9144, "Miles": 1609.344, "Nautical Miles": 1852}
 
-weightMass = {"Carats": 0.0002, "Milligrams": 0.000001, "Centigrams": 0.00001, "Decigrams": 0.0001, "Grams": 0.001, 
+weightMass = {"Carats": 2*(10**-4), "Milligrams": 10**-6, "Centigrams": 10**-5, "Decigrams": 10**-4, "Grams": 0.001, 
               "Dekagrams": 0.01, "Hectogram": 0.1, "Kilograms": 1, "Metric tonnes": 1000, "Ounces": 0.02835, 
               "Pounds": 0.453592, "Stone": 6.350293, "Short tons (US)": 907.1847, "Long tons (US)": 1016.047}
 
-energy = {"Electron volts": 1.602177 * (10**-19), "Joules": 1, "Kilojoules": 1000, "Thermal calories": 4.184, 
+energy = {"Electron volts": 1.602177*(10**-19), "Joules": 1, "Kilojoules": 1000, "Thermal calories": 4.184, 
           "Food calories": 4184, "Foot-pounds": 1.355818, "British thermal units": 1055.056}
 
-area = {"Square millimeters": 0.000001, "Square centimeters": 0.0001, "Square meters": 1,
-        "Hectares": 100000, "Square kilometers": 1000000, "Square inches": 0.000645, 
+area = {"Square millimeters": 10**-6, "Square centimeters": 0.0001, "Square meters": 1,
+        "Hectares": 10**5, "Square kilometers": 10**6, "Square inches": 6.45*(10**-4), 
         "Square feet": 0.092903, "Square yards": 0.836127, "Acres": 4046.856, "Square miles": 2589988}
 
 speed = {"Centimeters per second": 0.01, "Meters per second": 1, "Kilometers per hour": 0.277778,
          "Feet per second": 0.3048, "Miles per hour": 0.447, "Knots": 0.5144, "Mach": 340.3}
 
-time = {"Microseconds": 0.000001, "Milliseconds": 0.001, "Seconds": 1, "Minutes": 60, "Hours": 3600,
+time = {"Microseconds": 10**-6, "Milliseconds": 0.001, "Seconds": 1, "Minutes": 60, "Hours": 3600,
         "Days": 86400, "Weeks": 604800, "Years": 31557600}
 
 power = {"Watts": 1, "Kilowats": 1000, "Horsepower (US)": 745.6999, "Foot-pounds/minute": 0.022597, "BTUs/minute": 17.58427}
 
-data = {"Bits": 0.000000125, "Bytes": 0.000001, "Kilobits": 0.000125, "Kibibits": 0.000128, "Kilobytes": 0.001, 
+data = {"Bits": 1.25*(10**-7), "Bytes": 10**-6, "Kilobits": 1.25*(10**-4), "Kibibits": 1.28*(10**-4), "Kilobytes": 0.001, 
         "Kibibytes": 0.001024, "Megabits": 0.125, "Mebibits": 0.131072, "Megabytes": 1, "Mebibytes": 1.048576, 
         "Gigabits": 125, "Gibibits": 134.2177, "Gigabytes": 1000, "Gibibytes": 1073.742, "Terabits": 125000, 
-        "Tebibits": 137439, "Terabytes": 1000000, "Tebibytes": 1099512, "Petabits": 125000000, "Pebibits": 140737488,
-        "Petabytes": 10**9, "Pebibytes": 1125899907, "Exabits": 1.25 * (10**8), "Exbibits": 144115188076, 
-        "Exabytes": 10**12, "Exibytes": 1152921504607, "Zetabits": 1.25 * (10**14), "Zebibits": 147573952589676, 
-        "Zetabytes": 10**15, "Zebibytes": 1.180592 * (10**15), "Yottabit": 1.25 * (10**17), 
-        "Yobibits": 1.511157 * (10**17), "Yottabyte": 10 ** 18, "Yobibytes": 1.208926 * (10**18)}
+        "Tebibits": 137439, "Terabytes": 10**6, "Tebibytes": 1099512, "Petabits": 1.25*(10**8), "Pebibits": 140737488,
+        "Petabytes": 10**9, "Pebibytes": 1125899907, "Exabits": 1.25*(10**8), "Exbibits": 144115188076, 
+        "Exabytes": 10**12, "Exibytes": 1152921504607, "Zetabits": 1.25*(10**14), "Zebibits": 147573952589676, 
+        "Zetabytes": 10**15, "Zebibytes": 1.180592*(10**15), "Yottabit": 1.25*(10**17), 
+        "Yobibits": 1.511157*(10**17), "Yottabyte": 10**18, "Yobibytes": 1.208926*(10**18)}
 
-pressure = {"Atmospheres": 101325, "Bars": 100000, "Kilopascals": 1000, "Millimeters of mercury": 133.3,
+pressure = {"Atmospheres": 101325, "Bars": 10**5, "Kilopascals": 1000, "Millimeters of mercury": 133.3,
             "Pascals": 1, "Pounds per square inch": 6894.757}
 
 angle = {"Degrees": 1, "Radians": 57.29578, "Gradians": 0.9}
@@ -124,9 +125,10 @@ class CalcLab(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for frame in (SelectionMenu, Calculator, DateComparator, CurrencyConverter, VolumeConverter, LengthConverter,
-                      WeightAndMassConverter, TemperatureConverter, EnergyConverter, AreaConverter, SpeedConverter,
-                      TimeConverter, PowerConverter, DataConverter, PressureConverter, AngleConverter):
+        classList = []
+        for element in pages:
+            classList.append(self.__str_to_class(element))
+        for frame in classList:
             page_name = frame.__name__
             frame = frame(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -138,6 +140,9 @@ class CalcLab(tk.Tk):
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+    
+    def __str_to_class(self, className):
+        return getattr(sys.modules[__name__], className)
 
 
 class UpdateNumber(ABC):
@@ -374,6 +379,7 @@ class SelectionMenu(tk.Frame):
         scrollFrame = VerticalScrolledFrame(self)
         scrollFrame.pack(fill="both", expand=True)
 
+        pages.remove("SelectionMenu") # Remove selection menu button from the list since user is already in that page
         pageList = pages
         for index, page in enumerate(pageList):
             spacedText = ""
