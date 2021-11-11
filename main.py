@@ -109,6 +109,7 @@ pressure = {"Atmospheres": 101325, "Bars": 10**5, "Kilopascals": 1000, "Millimet
 
 angle = {"Degrees": 1, "Radians": 57.29578, "Gradians": 0.9}
 
+
 class CalcLab(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
