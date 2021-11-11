@@ -62,9 +62,9 @@ To add more conversion units to a list, simply add them to the list.
 To add more conversion units to a dictionary, it must follow the format {"[unit name]": [conversion factor]}
 Some conversion types cannot be manually added as it requires more complex calculations (i.e. temperature).
 """
-currency = ['BTC', 'AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 
-            'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SAR', 'SEK', 
-            'SGD', 'THB', 'TRY', 'TWD', 'USD', 'ZAR']
+currency = ['BTC', 'AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CZK', 'DKK', 'EUR', 
+            'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 
+            'PHP', 'PLN', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD', 'ZAR']
 
 volume = {"Milliliters": 0.001, "Cubic centimeters": 0.001, "Liters": 1, "Cubic meters": 1000,
           "Teaspoons (US)": 0.004929, "Tablespoons (US)": 0.014787, "Fluid ounces (US)": 0.029574, 
@@ -127,7 +127,7 @@ class CalcLab(tk.Tk):
         self.frames = {}
         classList = []
         for element in pages:
-            classList.append(self.__str_to_class(element))
+            classList.append(self.str_to_class(element))
         for frame in classList:
             page_name = frame.__name__
             frame = frame(parent=container, controller=self)
@@ -141,7 +141,7 @@ class CalcLab(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
     
-    def __str_to_class(self, className):
+    def str_to_class(self, className):
         return getattr(sys.modules[__name__], className)
 
 
