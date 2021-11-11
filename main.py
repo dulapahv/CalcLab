@@ -174,7 +174,7 @@ class UpdateNumber(ABC):
 class AnswerField:
     """Manipulating and getting value from the answer field."""
     def summon_answer_field(self, row = 2, columnSpan = 5):
-        self.text = tk.Entry(self, width=21, justify="right", bd=0, bg="black", fg="white", font=("Arial", 32))
+        self.text = tk.Entry(self, width=21, justify="right", bd=0, bg="#000000", fg="#FFFFFF", font=("Arial", 32))
         self.text.grid(row=row, columnspan=columnSpan, pady=8)
         self.text.insert(tk.END, 0)
 
@@ -199,8 +199,8 @@ class AnswerField:
         if value % 1 == 0:
             value = int(value)
         if value == float(str(pastValue).replace(',', '')):
-            self.text.config(fg="black")
-            self.after(100, lambda: self.text.config(fg="white"))
+            self.text.config(fg="#000000")
+            self.after(100, lambda: self.text.config(fg="#FFFFFF"))
         self.text.delete(0, tk.END)
         try:
             int(value)
@@ -255,45 +255,45 @@ class NumPad(AnswerField):
         self.deleteButton = tk.Button(self, width=5, height=2, text="<", font=("Arial", 18), bg="#D4D4D2", bd=0,
                                       command=self.delete).grid(row=3, column=4)
 
-        self.sevenButton = tk.Button(self, width=5, height=2, text="7", font=("Arial", 18), bg="#505050", fg="white",
-                                     activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.sevenButton = tk.Button(self, width=5, height=2, text="7", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                      self.update(7)).grid(row=4, column=2)
-        self.eightButton = tk.Button(self, width=5, height=2, text="8", font=("Arial", 18), bg="#505050", fg="white",
-                                     activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.eightButton = tk.Button(self, width=5, height=2, text="8", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                      self.update(8)).grid(row=4, column=3)
-        self.nineButton = tk.Button(self, width=5, height=2, text="9", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.nineButton = tk.Button(self, width=5, height=2, text="9", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(9)).grid(row=4, column=4)
 
-        self.fourButton = tk.Button(self, width=5, height=2, text="4", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.fourButton = tk.Button(self, width=5, height=2, text="4", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(4)).grid(row=5, column=2)
-        self.fiveButton = tk.Button(self, width=5, height=2, text="5", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.fiveButton = tk.Button(self, width=5, height=2, text="5", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(5)).grid(row=5, column=3)
-        self.sixButton = tk.Button(self, width=5, height=2, text="6", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.sixButton = tk.Button(self, width=5, height=2, text="6", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update(6)).grid(row=5, column=4)
 
-        self.oneButton = tk.Button(self, width=5, height=2, text="1", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.oneButton = tk.Button(self, width=5, height=2, text="1", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update(1)).grid(row=6, column=2)
-        self.twoButton = tk.Button(self, width=5, height=2, text="2", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.twoButton = tk.Button(self, width=5, height=2, text="2", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update(2)).grid(row=6, column=3)
-        self.threeButton = tk.Button(self, width=5, height=2, text="3", font=("Arial", 18), bg="#505050", fg="white",
-                                     activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.threeButton = tk.Button(self, width=5, height=2, text="3", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                      self.update(3)).grid(row=6, column=4)
 
-        self.zeroButton = tk.Button(self, width=5, height=2, text="0", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.zeroButton = tk.Button(self, width=5, height=2, text="0", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(0)).grid(row=7, column=3)
-        self.dotButton = tk.Button(self, width=5, height=2, text=".", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.dotButton = tk.Button(self, width=5, height=2, text=".", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update("."))
         self.dotButton.grid(row=7, column=4)
-        self.equalButton = tk.Button(self, width=5, height=2, text="=", font=("Arial", 18), bg="#FF9500", fg="white",
-                                     activebackground="#FFBD69", activeforeground="white", bd=0, command=self.equal).grid(
+        self.equalButton = tk.Button(self, width=5, height=2, text="=", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                     activebackground="#FFBD69", activeforeground="#FFFFFF", bd=0, command=self.equal).grid(
                                      row=7, column=2)
 
     def disable_negative(self):
@@ -306,33 +306,33 @@ class Frame:
         self.configure(bg=color)
 
     def set_header_text(self, text):
-        self.header = tk.Label(self, text=text, font=("Arial", 16), bg="black", fg="white").place(x=60, y=8)
+        self.header = tk.Label(self, text=text, font=("Arial", 16), bg="#000000", fg="#FFFFFF").place(x=60, y=8)
 
 
 class SelectionButton:
     """Selection button for user to enter tools selection menu."""
     def summon(self, controller):
-        self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="white", bd=0, font=("Arial", 18), width=3,
-                                      activebackground="#767676", activeforeground="white", command=lambda: 
+        self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
+                                      activebackground="#767676", activeforeground="#FFFFFF", command=lambda: 
                                       controller.show_frame("SelectionMenu")).grid(row=1, column=1, sticky="w")
 
 
 class OptionMenu:
     """Option menu for selecting conversion units in converter tools."""
     def summon(self, variable1, variable2, list):
-        self.fromText = tk.Label(self, text="From", font=("Arial", 16), bg="black", fg="white").grid(row=3, column=1,
+        self.fromText = tk.Label(self, text="From", font=("Arial", 16), bg="#000000", fg="#FFFFFF").grid(row=3, column=1,
                                  padx=8, sticky="w")
 
         self.fromUnit = tk.OptionMenu(self, variable1, *list)
-        self.fromUnit.config(width=19, bd=0, bg="#505050", fg="white", activebackground="#A5A5A5", activeforeground="white", 
+        self.fromUnit.config(width=19, bd=0, bg="#505050", fg="#FFFFFF", activebackground="#A5A5A5", activeforeground="#FFFFFF", 
                              font=("Arial", 18), anchor="w")
         self.fromUnit.grid(row=4, column=1, padx=8)
 
-        self.toText = tk.Label(self, text="To", font=("Arial", 16), bg="black", fg="white").grid(row=5, column=1,
+        self.toText = tk.Label(self, text="To", font=("Arial", 16), bg="#000000", fg="#FFFFFF").grid(row=5, column=1,
                                padx=8, sticky="w")
 
         self.toUnit = tk.OptionMenu(self, variable2, *list)
-        self.toUnit.config(width=19, bd=0, bg="#505050", fg="white", activebackground="#A5A5A5", activeforeground="white", 
+        self.toUnit.config(width=19, bd=0, bg="#505050", fg="#FFFFFF", activebackground="#A5A5A5", activeforeground="#FFFFFF", 
                            font=("Arial", 18), anchor="w")
         self.toUnit.grid(row=6, column=1, padx=8)
 
@@ -374,7 +374,7 @@ class SelectionMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
 
         scrollFrame = VerticalScrolledFrame(self)
         scrollFrame.pack(fill="both", expand=True)
@@ -388,7 +388,7 @@ class SelectionMenu(tk.Frame):
                     spacedText += " "
                 spacedText += letter
             self.button = tk.Button(scrollFrame.interior, width=36, font=("Arial", 18), text=f"  {spacedText}", anchor="w", 
-                                    bg="#1C1C1C", fg="white", activebackground="#767676", activeforeground="white", bd=1,
+                                    bg="#1C1C1C", fg="#FFFFFF", activebackground="#767676", activeforeground="#FFFFFF", bd=1,
                                     command=lambda index=index: open_page(pageList[index])).pack()
 
         def open_page(page):
@@ -399,7 +399,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Calculator")
         SelectionButton.summon(self, controller)
 
@@ -412,14 +412,14 @@ class Calculator(tk.Frame, UpdateNumber):
 
         AnswerField.summon_answer_field(self, 2, 8)
 
-        self.factButton = tk.Button(self, width=5, height=2, text="x!", font=("Arial", 18), bg="#1C1C1C", fg="white", 
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.factorial).grid(
+        self.factButton = tk.Button(self, width=5, height=2, text="x!", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF", 
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.factorial).grid(
                                     row=3, column=1)
-        self.sqrtButton = tk.Button(self, width=5, height=2, text="√x", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.sqrt).grid(
+        self.sqrtButton = tk.Button(self, width=5, height=2, text="√x", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.sqrt).grid(
                                     row=3, column=2)
-        self.squareButton = tk.Button(self, width=5, height=2, text="x²", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                      activebackground="#767676", activeforeground="white", bd=0, command=self.square).grid(
+        self.squareButton = tk.Button(self, width=5, height=2, text="x²", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                      activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.square).grid(
                                       row=3, column=3)
         self.clearButton = tk.Button(self, width=5, height=2, text="AC", font=("Arial", 18), bg="#D4D4D2", bd=0,
                                      command=self.clear).grid(row=3, column=4)
@@ -427,97 +427,97 @@ class Calculator(tk.Frame, UpdateNumber):
                                        command=self.percent).grid(row=3, column=5)
         self.deleteButton = tk.Button(self, width=5, height=2, text="<", font=("Arial", 18), bg="#D4D4D2", bd=0,
                                       command=self.delete).grid(row=3, column=6)
-        self.divideButton = tk.Button(self, width=5, height=2, text="÷", font=("Arial", 18), bg="#FF9500", fg="white",
-                                      activebackground="#FF9500", activeforeground="white", bd=0, command=self.divide)
+        self.divideButton = tk.Button(self, width=5, height=2, text="÷", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                      activebackground="#FF9500", activeforeground="#FFFFFF", bd=0, command=self.divide)
         self.divideButton.grid(row=3, column=7)
 
-        self.lnButton = tk.Button(self, width=5, height=2, text="ln", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                  activebackground="#767676", activeforeground="white", bd=0, command=self.ln).grid(
+        self.lnButton = tk.Button(self, width=5, height=2, text="ln", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                  activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.ln).grid(
                                   row=4, column=1)
-        self.cbrtButton = tk.Button(self, width=5, height=2, text="∛x", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.cbrt).grid(
+        self.cbrtButton = tk.Button(self, width=5, height=2, text="∛x", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.cbrt).grid(
                                     row=4, column=2)
-        self.cubeButton = tk.Button(self, width=5, height=2, text="x³", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.cube).grid(
+        self.cubeButton = tk.Button(self, width=5, height=2, text="x³", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.cube).grid(
                                     row=4, column=3)
-        self.sevenButton = tk.Button(self, width=5, height=2, text="7", font=("Arial", 18), bg="#505050", fg="white",
-                                     activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.sevenButton = tk.Button(self, width=5, height=2, text="7", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                      self.update(7)).grid(row=4, column=4)
-        self.eightButton = tk.Button(self, width=5, height=2, text="8", font=("Arial", 18), bg="#505050", fg="white",
-                                     activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.eightButton = tk.Button(self, width=5, height=2, text="8", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                      self.update(8)).grid(row=4, column=5)
-        self.nineButton = tk.Button(self, width=5, height=2, text="9", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.nineButton = tk.Button(self, width=5, height=2, text="9", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(9)).grid(row=4, column=6)
-        self.multiplyButton = tk.Button(self, width=5, height=2, text="x", font=("Arial", 18), bg="#FF9500", fg="white",
-                                        activebackground="#FF9500", activeforeground="white", bd=0, command=self.multiply)
+        self.multiplyButton = tk.Button(self, width=5, height=2, text="x", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                        activebackground="#FF9500", activeforeground="#FFFFFF", bd=0, command=self.multiply)
         self.multiplyButton.grid(row=4, column=7)
 
-        self.commonLog = tk.Button(self, width=5, height=2, text="log", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                   activebackground="#767676", activeforeground="white", bd=0, command=self.log10).grid(
+        self.commonLog = tk.Button(self, width=5, height=2, text="log", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                   activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.log10).grid(
                                    row=5, column=1)
-        self.sinhButton = tk.Button(self, width=5, height=2, text="sinh", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.sinh).grid(
+        self.sinhButton = tk.Button(self, width=5, height=2, text="sinh", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.sinh).grid(
                                     row=5, column=2)
-        self.sinButton = tk.Button(self, width=5, height=2, text="sin", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                   activebackground="#767676", activeforeground="white", bd=0, command=self.sin).grid(
+        self.sinButton = tk.Button(self, width=5, height=2, text="sin", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                   activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.sin).grid(
                                    row=5, column=3)
-        self.fourButton = tk.Button(self, width=5, height=2, text="4", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.fourButton = tk.Button(self, width=5, height=2, text="4", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(4)).grid(row=5, column=4)
-        self.fiveButton = tk.Button(self, width=5, height=2, text="5", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.fiveButton = tk.Button(self, width=5, height=2, text="5", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(5)).grid(row=5, column=5)
-        self.sixButton = tk.Button(self, width=5, height=2, text="6", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.sixButton = tk.Button(self, width=5, height=2, text="6", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update(6)).grid(row=5, column=6)
-        self.minusButton = tk.Button(self, width=5, height=2, text="-", font=("Arial", 18), bg="#FF9500", fg="white",
-                                     activebackground="#FF9500", activeforeground="white", bd=0, command=self.minus)
+        self.minusButton = tk.Button(self, width=5, height=2, text="-", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                     activebackground="#FF9500", activeforeground="#FFFFFF", bd=0, command=self.minus)
         self.minusButton.grid(row=5, column=7)
 
-        self.eButton = tk.Button(self, width=5, height=2, text="e", font=("Arial", 18), bg="#1C1C1C", fg="white", bd=0,
-                                 activebackground="#767676", activeforeground="white", command=self.eVal).grid(
+        self.eButton = tk.Button(self, width=5, height=2, text="e", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF", bd=0,
+                                 activebackground="#767676", activeforeground="#FFFFFF", command=self.eVal).grid(
                                  row=6, column=1)
-        self.coshButton = tk.Button(self, width=5, height=2, text="cosh", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.cosh).grid(
+        self.coshButton = tk.Button(self, width=5, height=2, text="cosh", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.cosh).grid(
                                     row=6, column=2)
-        self.cosButton = tk.Button(self, width=5, height=2, text="cos", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                   activebackground="#767676", activeforeground="white", bd=0, command=self.cos).grid(
+        self.cosButton = tk.Button(self, width=5, height=2, text="cos", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                   activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.cos).grid(
                                    row=6, column=3)
-        self.oneButton = tk.Button(self, width=5, height=2, text="1", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.oneButton = tk.Button(self, width=5, height=2, text="1", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update(1)).grid(row=6, column=4)
-        self.twoButton = tk.Button(self, width=5, height=2, text="2", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.twoButton = tk.Button(self, width=5, height=2, text="2", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update(2)).grid(row=6, column=5)
-        self.threeButton = tk.Button(self, width=5, height=2, text="3", font=("Arial", 18), bg="#505050", fg="white",
-                                     activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.threeButton = tk.Button(self, width=5, height=2, text="3", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                      self.update(3)).grid(row=6, column=6)
-        self.plusButton = tk.Button(self, width=5, height=2, text="+", font=("Arial", 18), bg="#FF9500", fg="white",
-                                    activebackground="#FF9500", activeforeground="white", bd=0, command=self.add)
+        self.plusButton = tk.Button(self, width=5, height=2, text="+", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                    activebackground="#FF9500", activeforeground="#FFFFFF", bd=0, command=self.add)
         self.plusButton.grid(row=6, column=7)
 
-        self.piButton = tk.Button(self, width=5, height=2, text="π", font=("Arial", 18), bg="#1C1C1C", fg="white", bd=0,
-                                  activebackground="#767676", activeforeground="white", command=self.piVal).grid(
+        self.piButton = tk.Button(self, width=5, height=2, text="π", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF", bd=0,
+                                  activebackground="#767676", activeforeground="#FFFFFF", command=self.piVal).grid(
                                   row=7, column=1)
-        self.tanhButton = tk.Button(self, width=5, height=2, text="tanh", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                    activebackground="#767676", activeforeground="white", bd=0, command=self.tanh).grid(
+        self.tanhButton = tk.Button(self, width=5, height=2, text="tanh", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                    activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.tanh).grid(
                                     row=7, column=2)
-        self.tanButton = tk.Button(self, width=5, height=2, text="tan", font=("Arial", 18), bg="#1C1C1C", fg="white",
-                                   activebackground="#767676", activeforeground="white", bd=0, command=self.tan).grid(
+        self.tanButton = tk.Button(self, width=5, height=2, text="tan", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
+                                   activebackground="#767676", activeforeground="#FFFFFF", bd=0, command=self.tan).grid(
                                    row=7, column=3)
         self.negativeButton = tk.Button(self, width=5, height=2, text="+/-", font=("Arial", 18), bg="#505050",
-                                        activebackground="#A5A5A5", activeforeground="white", fg="white", bd=0, 
+                                        activebackground="#A5A5A5", activeforeground="#FFFFFF", fg="#FFFFFF", bd=0, 
                                         command=self.negative).grid(row=7, column=4)
-        self.zeroButton = tk.Button(self, width=5, height=2, text="0", font=("Arial", 18), bg="#505050", fg="white",
-                                    activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.zeroButton = tk.Button(self, width=5, height=2, text="0", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                     self.update(0)).grid(row=7, column=5)
-        self.dotButton = tk.Button(self, width=5, height=2, text=".", font=("Arial", 18), bg="#505050", fg="white",
-                                   activebackground="#A5A5A5", activeforeground="white", bd=0, command=lambda: 
+        self.dotButton = tk.Button(self, width=5, height=2, text=".", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
+                                   activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda: 
                                    self.update("."))
         self.dotButton.grid(row=7, column=6)
-        self.equalButton = tk.Button(self, width=5, height=2, text="=", font=("Arial", 18), bg="#FF9500", fg="white",
-                                     activebackground="#FFBD69", activeforeground="white", bd=0, command=self.equal).grid(
+        self.equalButton = tk.Button(self, width=5, height=2, text="=", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                     activebackground="#FFBD69", activeforeground="#FFFFFF", bd=0, command=self.equal).grid(
                                      row=7, column=7)
 
     def update(self, char):
@@ -527,20 +527,20 @@ class Calculator(tk.Frame, UpdateNumber):
             self.text.delete(0, tk.END)
             self.text.insert(tk.END, 0)
             self.__lockSecInput = False
-        self.plusButton.config(bg="#FF9500", fg="white")
-        self.minusButton.config(bg="#FF9500", fg="white")
-        self.multiplyButton.config(bg="#FF9500", fg="white")
-        self.divideButton.config(bg="#FF9500", fg="white")
+        self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.multiplyButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.divideButton.config(bg="#FF9500", fg="#FFFFFF")
         AnswerField.update(self, char)
 
     def negative(self):
         AnswerField.negative(self)
 
     def clear(self):
-        self.plusButton.config(bg="#FF9500", fg="white")
-        self.minusButton.config(bg="#FF9500", fg="white")
-        self.multiplyButton.config(bg="#FF9500", fg="white")
-        self.divideButton.config(bg="#FF9500", fg="white")
+        self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.multiplyButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.divideButton.config(bg="#FF9500", fg="#FFFFFF")
         self.__memory = 0
         self.__reVal = 0
         self.__lockOperatorInput = True
@@ -553,10 +553,10 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__lockOperatorInput = True
-        self.plusButton.config(bg="#FF9500", fg="white")
-        self.minusButton.config(bg="#FF9500", fg="white")
-        self.multiplyButton.config(bg="#FF9500", fg="white")
-        self.divideButton.config(bg="#FF9500", fg="white")
+        self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.multiplyButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.divideButton.config(bg="#FF9500", fg="#FFFFFF")
         self.__displayedText = self.text.get().replace(',', '')
         try:
             float(self.__memory)
@@ -610,10 +610,10 @@ class Calculator(tk.Frame, UpdateNumber):
     def add(self):
         if self.__lockOperatorInput == False:
             self.equal()
-        self.plusButton.config(bg="white", fg="#FF9500", activebackground="white", activeforeground="#FF9500")
-        self.minusButton.config(bg="#FF9500", fg="white")
-        self.multiplyButton.config(bg="#FF9500", fg="white")
-        self.divideButton.config(bg="#FF9500", fg="white")
+        self.plusButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
+        self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.multiplyButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.divideButton.config(bg="#FF9500", fg="#FFFFFF")
         self.__memory = self.text.get().replace(',', '')
         self.__reVal = 0
         self.__lockOperatorInput = True
@@ -623,10 +623,10 @@ class Calculator(tk.Frame, UpdateNumber):
     def minus(self):
         if self.__lockOperatorInput == False:
             self.equal()
-        self.plusButton.config(bg="#FF9500", fg="white")
-        self.minusButton.config(bg="white", fg="#FF9500", activebackground="white", activeforeground="#FF9500")
-        self.multiplyButton.config(bg="#FF9500", fg="white")
-        self.divideButton.config(bg="#FF9500", fg="white")
+        self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.minusButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
+        self.multiplyButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.divideButton.config(bg="#FF9500", fg="#FFFFFF")
         self.__memory = self.text.get().replace(',', '')
         self.__reVal = 0
         self.__lockOperatorInput = True
@@ -636,10 +636,10 @@ class Calculator(tk.Frame, UpdateNumber):
     def multiply(self):
         if self.__lockOperatorInput == False:
             self.equal()
-        self.plusButton.config(bg="#FF9500", fg="white")
-        self.minusButton.config(bg="#FF9500", fg="white")
-        self.multiplyButton.config(bg="white", fg="#FF9500", activebackground="white", activeforeground="#FF9500")
-        self.divideButton.config(bg="#FF9500", fg="white")
+        self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.multiplyButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
+        self.divideButton.config(bg="#FF9500", fg="#FFFFFF")
         self.__memory = self.text.get().replace(',', '')
         self.__reVal = 0
         self.__lockOperatorInput = True
@@ -649,10 +649,10 @@ class Calculator(tk.Frame, UpdateNumber):
     def divide(self):
         if self.__lockOperatorInput == False:
             self.equal()
-        self.plusButton.config(bg="#FF9500", fg="white")
-        self.minusButton.config(bg="#FF9500", fg="white")
-        self.multiplyButton.config(bg="#FF9500", fg="white")
-        self.divideButton.config(bg="white", fg="#FF9500", activebackground="white", activeforeground="#FF9500")
+        self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.multiplyButton.config(bg="#FF9500", fg="#FFFFFF")
+        self.divideButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
         self.__memory = self.text.get().replace(',', '')
         self.__reVal = 0
         self.__lockOperatorInput = True
@@ -803,39 +803,39 @@ class DateComparator(tk.Frame):
         self.__sumDay = 0
         self.__text = ""
         
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Date Comparator")
-        self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="white", bd=0, font=("Arial", 18), width=3,
+        self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
                                       command=lambda: controller.show_frame("SelectionMenu")).grid(row=1, sticky="w")
 
-        self.text = tk.Entry(self, width=32, justify="right", bd=0, bg="black", fg="white", font=("Arial", 22))
+        self.text = tk.Entry(self, width=32, justify="right", bd=0, bg="#000000", fg="#FFFFFF", font=("Arial", 22))
         self.text.grid(row=2, padx=8, pady=8, sticky="w")
         self.text.insert(tk.END, "Same dates")
 
-        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, bg="black", fg="white", font=("Arial", 22))
+        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, bg="#000000", fg="#FFFFFF", font=("Arial", 22))
         self.textDay.grid(row=3, padx=8, pady=8, sticky="w")
         self.textDay.insert(tk.END, "0 day")
 
         self.grid_rowconfigure(4, minsize=10)
-        self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="black",
-                                 fg="white").grid(row=5, padx=8, sticky="w")
+        self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
+                                 fg="#FFFFFF").grid(row=5, padx=8, sticky="w")
 
-        self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 20), 
+        self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20), 
                                  highlightthickness=2)
         self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
         self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
-        self.fromText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="black", fg="white").grid(
+        self.fromText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="#000000", fg="#FFFFFF").grid(
             row=7, padx=8, sticky="w")
 
-        self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="white", font=("Arial", 20), 
+        self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20), 
                                highlightthickness=2)
         self.toDate.grid(row=8, padx=8, pady=8, sticky="w")
         self.toDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
         self.grid_rowconfigure(9, minsize=20)
-        self.calcButton = tk.Button(self, height=2, text="Calculate", font=("Arial", 18), bg="#FF9500", fg="white",
-                                    activebackground="#FFBD69", activeforeground="white", bd=0, command=self.equal).grid(
+        self.calcButton = tk.Button(self, height=2, text="Calculate", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                    activebackground="#FFBD69", activeforeground="#FFFFFF", bd=0, command=self.equal).grid(
                                     row=10, padx=8, sticky="w")
 
     def equal(self):
@@ -906,8 +906,8 @@ class DateComparator(tk.Frame):
 
     def update(self, char):
         if char == self.text.get():
-            self.text.config(fg="black")
-            self.after(100, lambda: self.text.config(fg="white"))
+            self.text.config(fg="#000000")
+            self.after(100, lambda: self.text.config(fg="#FFFFFF"))
         self.text.delete(0, tk.END)
         AnswerField.update(self, char)
 
@@ -917,7 +917,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Currency Converter")
         SelectionButton.summon(self, controller)
 
@@ -932,7 +932,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         NumPad.summon(self)
         NumPad.disable_negative(self)
 
-        self.ratesDetail = tk.Label(self, padx=8, justify="left", font=("Arial", 12), bg="black", fg="white")
+        self.ratesDetail = tk.Label(self, padx=8, justify="left", font=("Arial", 12), bg="#000000", fg="#FFFFFF")
         self.ratesDetail.grid(row=7, column=1, sticky="w")
 
     def update(self, char):
@@ -990,7 +990,7 @@ class VolumeConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Volume Converter")
         SelectionButton.summon(self, controller)
 
@@ -1029,7 +1029,7 @@ class LengthConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Length Converter")
         SelectionButton.summon(self, controller)
 
@@ -1068,7 +1068,7 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Weight and Mass Converter")
         SelectionButton.summon(self, controller)
 
@@ -1107,7 +1107,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Temperature Converter")
         SelectionButton.summon(self, controller)
 
@@ -1162,7 +1162,7 @@ class EnergyConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Energy Converter")
         SelectionButton.summon(self, controller)
 
@@ -1201,7 +1201,7 @@ class AreaConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Area Converter")
         SelectionButton.summon(self, controller)
 
@@ -1240,7 +1240,7 @@ class SpeedConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Speed Converter")
         SelectionButton.summon(self, controller)
 
@@ -1279,7 +1279,7 @@ class TimeConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Time Converter")
         SelectionButton.summon(self, controller)
 
@@ -1318,7 +1318,7 @@ class PowerConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Power Converter")
         SelectionButton.summon(self, controller)
 
@@ -1356,7 +1356,7 @@ class DataConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Data Converter")
         SelectionButton.summon(self, controller)
 
@@ -1395,7 +1395,7 @@ class PressureConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Pressure Converter")
         SelectionButton.summon(self, controller)
 
@@ -1434,7 +1434,7 @@ class AngleConverter(tk.Frame, UpdateNumber):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        Frame.set_bg_color(self, "black")
+        Frame.set_bg_color(self, "#000000")
         Frame.set_header_text(self, "Angle Converter")
         SelectionButton.summon(self, controller)
 
