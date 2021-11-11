@@ -50,8 +50,9 @@ finally:
 """
 This list stores all the pages in the program. To add more pages, put their class name into this list.
 The page name will be automatically space-separated when encountering capital letters.
+The first page in this list will be the first page to appear.
 """
-pages = ["SelectionMenu", "Calculator", "DateComparator", "CurrencyConverter", "VolumeConverter", 
+pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter", "VolumeConverter", 
          "LengthConverter", "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter", 
          "AreaConverter", "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter", 
          "PressureConverter", "AngleConverter"]
@@ -132,8 +133,8 @@ class CalcLab(tk.Tk):
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        """First page to show is the calculator."""
-        self.show_frame("Calculator")
+        """Show the first page based on the first element in the pages list."""
+        self.show_frame(pages[0])
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
