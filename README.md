@@ -8,21 +8,21 @@ CalcLab is an all-in-one application which includes a scientific calculator, dat
 Generally, when people want to perform conversions or calculations, they must look up on the internet to get the right tools. However, that is inefficient and not so productive as they have to waste their precious time finding the right tools, not to mention some people even have a hard time finding the right tools. This is where CalcLab will solve the problem as it has all the right tools located at their fingertip, and it is very easy to use.
 
 ## Features
-1. Calculator (scientific)
-2. Date Comparator
-3. Currency Converter (real-time rates provided by Forex Python)
-4. Volume Converter
-5. Length Converter
-6. Weight and Mass Converter
-7. Temperature Converter
-8. Energy Converter
-9. Area Converter
-10. Speed Converter
-11. Time Converter
-12. Power Converter
-13. Data Converter
-14. Pressure Converter
-15. Angle Converter
+1. [Calculator (scientific)](#1-calculator-scientific)
+2. [Date Comparator](#2-date-comparator)
+3. [Currency Converter (real-time rates provided by Forex Python)](#3-currency-converter)
+4. [Volume Converter](#4-volume-converter)
+5. [Length Converter](#5-length-converter)
+6. [Weight and Mass Converter](#6-weight-and-mass-converter)
+7. [Temperature Converter](#7-temperature-converter)
+8. [Energy Converter](#8-energy-converter)
+9. [Area Converter](#9-area-converter)
+10. [Speed Converter](#10-speed-converter)
+11. [Time Converter](#11-time-converter)
+12. [Power Converter](#12-power-converter)
+13. [Data Converter](#13-data-converter)
+14. [Pressure Converter](#14-pressure-converter)
+15. [Angle Converter](#15-angle-converter)
 
 ### 1. Calculator (scientific)
 **Supports:**
