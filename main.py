@@ -12,17 +12,18 @@
 
 """
 CalcLab requires the following modules, however, the program will install them automatically.
-Should the program fail to install them automatically, please install them manually through 
-the terminal with the following commands.
+Should the program fail to do so, please install them manually through the terminal with the 
+following commands.
 1. pip install numpy
 2. pip install forex-python
 """
 
 import math
-import sys
 import subprocess
+import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
+
 """Determine which tkinter version to use"""
 try:
     import tkinter as tk  # python 3
@@ -32,18 +33,18 @@ except ImportError:
 try:
     import numpy
 except ImportError:
-    print(">>>Trying to install required module: numpy")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", 'numpy'])
+    print("> numpy module is missing!\nTrying to install required module: numpy")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy"])
     print()
 finally:
     import numpy
 """Check for forex-python module"""
 try:
-    from forex_python.converter import CurrencyRates, RatesNotAvailableError
+    from forex_python.converter import CurrencyRates, RatesNotAvailableError, DecimalFloatMismatchError
     from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print(">>>Trying to install required module: forex-python")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", 'forex-python'])
+    print("> forex-python module is missing!\nTrying to install required module: forex-python")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "forex-python"])
 finally:
     from forex_python.converter import CurrencyRates, RatesNotAvailableError
     from forex_python.bitcoin import BtcConverter
@@ -195,13 +196,7 @@ class AnswerField:
             elif char != 0:
                 self.text.insert(tk.END, char)
 
-    def set_value(self, pastValue, value):
-        if value % 1 == 0:
-            value = int(value)
-        if value == float(str(pastValue).replace(',', '')):
-            self.text.config(fg="#000000")
-            self.after(100, lambda: self.text.config(fg="#FFFFFF"))
-        self.text.delete(0, tk.END)
+    def set_value(self, value):
         try:
             int(value)
             float(value)
@@ -209,6 +204,16 @@ class AnswerField:
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
             return None
+        if value % 1 == 0:
+            value = int(value)
+        if value == AnswerField.get_value(self):
+            self.text.config(fg="#000000")
+            self.after(100, lambda: self.text.config(fg="#FFFFFF"))
+        if "." in str(value):
+            self.dotButton["state"] = "disabled"
+        else:
+            self.dotButton["state"] = "normal"
+        self.text.delete(0, tk.END)
         if len(str(int(value))) <= 18 and len(self.text.get()) <= 18:
             self.text.insert(0, f"{round(value, 18 - len(str(int(value)))):,}")
         else:
@@ -563,7 +568,7 @@ class Calculator(tk.Frame, UpdateNumber):
             float(self.__displayedText)
         except ValueError:
             try:
-                self.set_text(0, eval(self.text.get()))
+                self.set_text(eval(self.text.get()))
             except (NameError, SyntaxError):
                 self.display_error()
                 return None
@@ -598,10 +603,10 @@ class Calculator(tk.Frame, UpdateNumber):
                 else:
                     self.__value /= self.__reVal
             self.__lockSecInput = True
-            self.set_text(self.__displayedText, self.__value)
+            self.set_text(self.__value)
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
     
     def display_error(self):
         self.text.delete(0, tk.END)
@@ -661,29 +666,29 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def percent(self):
         try:
-            float(self.text.get().replace(',', ''))
-        except ValueError:
+            float(self.text.get().replace(',', '')) / 100
+        except (ValueError, OverflowError):
             self.display_error()
             return None
-        self.set_text(0, float(self.text.get().replace(',', '')) / 100)
+        self.set_text(float(self.text.get().replace(',', '')) / 100)
 
     def square(self):
         try:
-            float(self.text.get().replace(',', ''))
-        except ValueError:
+            float(self.text.get().replace(',', ''))**2
+        except (ValueError, OverflowError):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, float(self.text.get().replace(',', '')) ** 2)
+        self.set_text(float(self.text.get().replace(',', ''))**2)
 
     def cube(self):
         try:
-            float(self.text.get().replace(',', ''))
-        except ValueError:
+            float(self.text.get().replace(',', ''))**3
+        except (ValueError, OverflowError):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, float(self.text.get().replace(',', '')) ** 3)
+        self.set_text(float(self.text.get().replace(',', ''))**3)
 
     def sqrt(self):
         try:
@@ -692,7 +697,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.sqrt(float(self.text.get().replace(',', ''))))
+        self.set_text(math.sqrt(float(self.text.get().replace(',', ''))))
 
     def cbrt(self):
         try:
@@ -701,7 +706,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, numpy.cbrt(float(self.text.get().replace(',', ''))))
+        self.set_text(numpy.cbrt(float(self.text.get().replace(',', ''))))
 
     def sin(self):
         try:
@@ -710,7 +715,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.sin(math.radians(float(self.text.get().replace(',', '')))))
+        self.set_text(math.sin(math.radians(float(self.text.get().replace(',', '')))))
 
     def cos(self):
         try:
@@ -719,7 +724,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.cos(math.radians(float(self.text.get().replace(',', '')))))
+        self.set_text(math.cos(math.radians(float(self.text.get().replace(',', '')))))
 
     def tan(self):
         try:
@@ -728,7 +733,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.tan(math.radians(float(self.text.get().replace(',', '')))))
+        self.set_text(math.tan(math.radians(float(self.text.get().replace(',', '')))))
 
     def sinh(self):
         try:
@@ -737,7 +742,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.sinh(float(self.text.get().replace(',', ''))))
+        self.set_text(math.sinh(float(self.text.get().replace(',', ''))))
 
     def cosh(self):
         try:
@@ -746,7 +751,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.cosh(float(self.text.get().replace(',', ''))))
+        self.set_text(math.cosh(float(self.text.get().replace(',', ''))))
 
     def tanh(self):
         try:
@@ -755,7 +760,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.tanh(float(self.text.get().replace(',', ''))))
+        self.set_text(math.tanh(float(self.text.get().replace(',', ''))))
 
     def ln(self):
         try:
@@ -764,7 +769,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.log(float(self.text.get().replace(',', ''))))
+        self.set_text(math.log(float(self.text.get().replace(',', ''))))
 
     def log10(self):
         try:
@@ -773,7 +778,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.log10(float(self.text.get().replace(',', ''))))
+        self.set_text(math.log10(float(self.text.get().replace(',', ''))))
 
     def factorial(self):
         try:
@@ -782,13 +787,13 @@ class Calculator(tk.Frame, UpdateNumber):
             self.display_error()
             return None
         self.__memory = self.text.get().replace(',', '')
-        self.set_text(self.__memory, math.factorial(int(self.text.get().replace(',', ''))))
+        self.set_text(math.factorial(int(self.text.get().replace(',', ''))))
 
     def eVal(self):
-        self.set_text(self.__memory, math.e)
+        self.set_text(math.e)
 
     def piVal(self):
-        self.set_text(self.__memory, math.pi)
+        self.set_text(math.pi)
 
 
 class DateComparator(tk.Frame):
@@ -952,6 +957,11 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         self.__value = AnswerField.get_value(self)
         if self.__fromCurrency.get() == "BTC" or self.__toCurrency.get() == "BTC":
             try:
+                float(self.__value)
+            except (DecimalFloatMismatchError, TypeError):
+                self.text.delete(0, tk.END)
+                self.text.insert(0, "Error")
+            try:
                 self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
             except RatesNotAvailableError:
                 self.text.delete(0, tk.END)
@@ -979,10 +989,10 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
             self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
                                     f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):.7f}" + 
                                     f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
-        self.set_text(self.text.get(), round(self.__value, 7))
+        self.set_text(round(self.__value, 7))
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class VolumeConverter(tk.Frame, UpdateNumber):
@@ -1017,11 +1027,14 @@ class VolumeConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
+        try:
+            self.set_text(self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
+        except TypeError:
+            self.text.delete(0, tk.END)
+            self.text.insert(0, "Error")
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class LengthConverter(tk.Frame, UpdateNumber):
@@ -1056,11 +1069,10 @@ class LengthConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
+        self.set_text(self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class WeightAndMassConverter(tk.Frame, UpdateNumber):
@@ -1095,11 +1107,10 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value, self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[
-                      self.__toUnitVal.get()])
+        self.set_text(self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class TemperatureConverter(tk.Frame, UpdateNumber):
@@ -1137,24 +1148,24 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
         if self.__fromUnitVal.get() != self.__toUnitVal.get():
             if self.__fromUnitVal.get() == "Celsius":
                 if self.__toUnitVal.get() == "Fahrenheit":
-                    AnswerField.set_value(self, self.__value, (self.__value * 9 / 5) + 32)
+                    self.set_text((self.__value * 9 / 5) + 32)
                 else:
-                    AnswerField.set_value(self, self.__value, self.__value + 273.15)
+                    self.set_text(self.__value + 273.15)
             elif self.__fromUnitVal.get() == "Fahrenheit":
                 if self.__toUnitVal.get() == "Celsius":
-                    AnswerField.set_value(self, self.__value, (self.__value - 32) * 5 / 9)
+                    self.set_text((self.__value - 32) * 5 / 9)
                 else:
-                    AnswerField.set_value(self, self.__value, ((self.__value - 32) * 5 / 9) + 273.15)
+                    self.set_text(((self.__value - 32) * 5 / 9) + 273.15)
             elif self.__fromUnitVal.get() == "Kelvin":
                 if self.__toUnitVal.get() == "Celsius":
-                    AnswerField.set_value(self, self.__value, self.__value - 273.15)
+                    self.set_text(self.__value - 273.15)
                 else:
-                    AnswerField.set_value(self, self.__value, ((self.__value - 273.15) * (9 / 5) + 32))
+                    self.set_text((self.__value - 273.15) * (9 / 5) + 32)
         else:
-            self.set_text(self.__value, self.__value)
+            self.set_text(self.__value)
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class EnergyConverter(tk.Frame, UpdateNumber):
@@ -1189,11 +1200,10 @@ class EnergyConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
+        self.set_text(self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class AreaConverter(tk.Frame, UpdateNumber):
@@ -1228,11 +1238,10 @@ class AreaConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
+        self.set_text(self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class SpeedConverter(tk.Frame, UpdateNumber):
@@ -1267,11 +1276,10 @@ class SpeedConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
+        self.set_text(self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class TimeConverter(tk.Frame, UpdateNumber):
@@ -1306,11 +1314,10 @@ class TimeConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
+        self.set_text(self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class PowerConverter(tk.Frame, UpdateNumber):
@@ -1344,11 +1351,10 @@ class PowerConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
+        self.set_text(self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class DataConverter(tk.Frame, UpdateNumber):
@@ -1383,11 +1389,10 @@ class DataConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
+        self.set_text(self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class PressureConverter(tk.Frame, UpdateNumber):
@@ -1422,11 +1427,10 @@ class PressureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value, self.__value * pressure[self.__fromUnitVal.get()] / pressure[
-                      self.__toUnitVal.get()])
+        self.set_text(self.__value * pressure[self.__fromUnitVal.get()] / pressure[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 class AngleConverter(tk.Frame, UpdateNumber):
@@ -1460,11 +1464,10 @@ class AngleConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value,
-                      self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
+        self.set_text(self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
 
-    def set_text(self, pastValue, value):
-        AnswerField.set_value(self, pastValue, value)
+    def set_text(self, value):
+        AnswerField.set_value(self, value)
 
 
 if __name__ == "__main__":
