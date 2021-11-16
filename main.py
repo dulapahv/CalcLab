@@ -169,7 +169,12 @@ class UpdateNumber(ABC):
 
     @abstractmethod
     def set_text(self, value):
-        pass
+        AnswerField.set_value(self, value)
+
+    @abstractmethod
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class AnswerField:
@@ -848,8 +853,7 @@ class DateComparator(tk.Frame):
             self.__fromDay, self.__fromMonth, self.__fromYear = self.fromDate.get().split("/")
             self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         except ValueError:
-            self.text.delete(0, tk.END)
-            self.text.insert(0, "Error")
+            self.display_error()
             self.textDay.delete(0, tk.END)
             self.textDay.insert(0, "")
             return None
@@ -863,8 +867,7 @@ class DateComparator(tk.Frame):
             self.__toMonth = int(self.__toMonth)
             self.__toYear = int(self.__toYear)
         except ValueError:
-            self.text.delete(0, tk.END)
-            self.text.insert(0, "Error")
+            self.display_error()
             self.textDay.delete(0, tk.END)
             self.textDay.insert(0, "")
             return None
@@ -904,8 +907,7 @@ class DateComparator(tk.Frame):
             else:
                 self.textDay.insert(0, f"{self.__sumDay:,} days")
         else:
-            self.text.delete(0, tk.END)
-            self.text.insert(0, "Error")
+            self.display_error()
             self.textDay.delete(0, tk.END)
             self.textDay.insert(0, "")
 
@@ -915,6 +917,10 @@ class DateComparator(tk.Frame):
             self.after(100, lambda: self.text.config(fg="#FFFFFF"))
         self.text.delete(0, tk.END)
         AnswerField.update(self, char)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class CurrencyConverter(tk.Frame, UpdateNumber):
@@ -955,44 +961,51 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__fromCurrency.get() == "BTC" or self.__toCurrency.get() == "BTC":
-            try:
-                float(self.__value)
-            except (DecimalFloatMismatchError, TypeError):
-                self.text.delete(0, tk.END)
-                self.text.insert(0, "Error")
-            try:
-                self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
-            except RatesNotAvailableError:
-                self.text.delete(0, tk.END)
-                self.text.insert(0, "Rates Not Available")
-                return None
-            if self.__fromCurrency.get() == "BTC":
-                self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):.9f}" + 
-                                        f" {self.__toCurrency.get()}" + 
-                                        f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
-                self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
-                
-            else:
-                self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
-                                        f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):.12f} BTC" + 
-                                        f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
-                self.__value = self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())
+        self.__value = AnswerField.get_value(self)
+        if self.__value == None or self.__value < 0:
+            self.display_error()
         else:
-            try:
-                self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
-            except RatesNotAvailableError:
-                self.text.delete(0, tk.END)
-                self.text.insert(0, "Rates Not Available")
-                return None
-            self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
-            self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
-                                    f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):.7f}" + 
-                                    f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
-        self.set_text(round(self.__value, 7))
+            if self.__fromCurrency.get() == "BTC" or self.__toCurrency.get() == "BTC":
+                try:
+                    float(self.__value)
+                except (DecimalFloatMismatchError, TypeError):
+                    self.display_error()
+                try:
+                    self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
+                except RatesNotAvailableError:
+                    self.text.delete(0, tk.END)
+                    self.text.insert(0, "Rates Not Available")
+                    return None
+                if self.__fromCurrency.get() == "BTC":
+                    self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):.9f}" + 
+                                            f" {self.__toCurrency.get()}" + 
+                                            f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                    self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
+                    
+                else:
+                    self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
+                                            f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):.12f} BTC" + 
+                                            f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                    self.__value = self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())
+            else:
+                try:
+                    self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
+                except RatesNotAvailableError:
+                    self.text.delete(0, tk.END)
+                    self.text.insert(0, "Rates Not Available")
+                    return None
+                self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
+                self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " + 
+                                        f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):.7f}" + 
+                                        f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+            self.set_text(round(self.__value, 7))
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class VolumeConverter(tk.Frame, UpdateNumber):
@@ -1027,14 +1040,18 @@ class VolumeConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        try:
-            self.set_text(self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
-        except TypeError:
-            self.text.delete(0, tk.END)
-            self.text.insert(0, "Error")
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class LengthConverter(tk.Frame, UpdateNumber):
@@ -1069,10 +1086,18 @@ class LengthConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class WeightAndMassConverter(tk.Frame, UpdateNumber):
@@ -1107,10 +1132,18 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class TemperatureConverter(tk.Frame, UpdateNumber):
@@ -1145,27 +1178,34 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__fromUnitVal.get() != self.__toUnitVal.get():
-            if self.__fromUnitVal.get() == "Celsius":
-                if self.__toUnitVal.get() == "Fahrenheit":
-                    self.set_text((self.__value * 9 / 5) + 32)
-                else:
-                    self.set_text(self.__value + 273.15)
-            elif self.__fromUnitVal.get() == "Fahrenheit":
-                if self.__toUnitVal.get() == "Celsius":
-                    self.set_text((self.__value - 32) * 5 / 9)
-                else:
-                    self.set_text(((self.__value - 32) * 5 / 9) + 273.15)
-            elif self.__fromUnitVal.get() == "Kelvin":
-                if self.__toUnitVal.get() == "Celsius":
-                    self.set_text(self.__value - 273.15)
-                else:
-                    self.set_text((self.__value - 273.15) * (9 / 5) + 32)
+        if self.__value == None or self.__value < 0:
+            self.display_error()
         else:
-            self.set_text(self.__value)
+            if self.__fromUnitVal.get() != self.__toUnitVal.get():
+                if self.__fromUnitVal.get() == "Celsius":
+                    if self.__toUnitVal.get() == "Fahrenheit":
+                        self.set_text((self.__value * 9 / 5) + 32)
+                    else:
+                        self.set_text(self.__value + 273.15)
+                elif self.__fromUnitVal.get() == "Fahrenheit":
+                    if self.__toUnitVal.get() == "Celsius":
+                        self.set_text((self.__value - 32) * 5 / 9)
+                    else:
+                        self.set_text(((self.__value - 32) * 5 / 9) + 273.15)
+                elif self.__fromUnitVal.get() == "Kelvin":
+                    if self.__toUnitVal.get() == "Celsius":
+                        self.set_text(self.__value - 273.15)
+                    else:
+                        self.set_text((self.__value - 273.15) * (9 / 5) + 32)
+            else:
+                self.set_text(self.__value)
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class EnergyConverter(tk.Frame, UpdateNumber):
@@ -1200,10 +1240,18 @@ class EnergyConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class AreaConverter(tk.Frame, UpdateNumber):
@@ -1238,10 +1286,18 @@ class AreaConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class SpeedConverter(tk.Frame, UpdateNumber):
@@ -1276,10 +1332,18 @@ class SpeedConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class TimeConverter(tk.Frame, UpdateNumber):
@@ -1314,10 +1378,18 @@ class TimeConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class PowerConverter(tk.Frame, UpdateNumber):
@@ -1351,10 +1423,18 @@ class PowerConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
+        if self.__value == None:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class DataConverter(tk.Frame, UpdateNumber):
@@ -1389,10 +1469,18 @@ class DataConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class PressureConverter(tk.Frame, UpdateNumber):
@@ -1427,10 +1515,18 @@ class PressureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * pressure[self.__fromUnitVal.get()] / pressure[self.__toUnitVal.get()])
+        if self.__value == None or self.__value < 0:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * pressure[self.__fromUnitVal.get()] / pressure[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 class AngleConverter(tk.Frame, UpdateNumber):
@@ -1464,10 +1560,18 @@ class AngleConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        self.set_text(self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
+        if self.__value == None:
+            self.display_error()
+        else:
+            try: self.set_text(self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
+            except TypeError: self.display_error()
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
+    
+    def display_error(self):
+        self.text.delete(0, tk.END)
+        self.text.insert(0, "Error")
 
 
 if __name__ == "__main__":
