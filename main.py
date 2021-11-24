@@ -629,12 +629,6 @@ class Calculator(tk.Frame, UpdateNumber):
                 self.display_error()
                 return None
         if self.__operator != None:
-            try:
-                float(self.__memory)
-                float(self.__displayedText)
-            except ValueError:
-                self.display_error()
-                return None
             if self.__operator == "+":
                 if self.__reVal == 0:
                     self.__value = float(self.__memory) + float(self.__displayedText)
