@@ -1094,23 +1094,21 @@ class DateComparator(tk.Frame):
         self.textDay.insert(tk.END, "0 day")
         self.textDay["state"] = "disabled"
 
-        self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
-                                 fg="#FFFFFF").grid(row=5, padx=8, sticky="w")
+        self.noticeText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
+                                 fg="#FFFFFF")
+        self.noticeText.grid(row=5, padx=8, sticky="w")
+        self.noticeText.grid(row=7, padx=8, sticky="w")
 
         self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20),
                                  insertbackground="#FFFFFF", selectbackground="#A5A5A5", highlightthickness=2)
         self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
         self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
-        self.toText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
-                                 fg="#FFFFFF").grid(row=7, padx=8, sticky="w")
-
         self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20),
                                insertbackground="#FFFFFF", selectbackground="#A5A5A5", highlightthickness=2)
         self.toDate.grid(row=8, padx=8, pady=8, sticky="w")
         self.toDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
-        self.grid_rowconfigure(9, minsize=20)
         self.calcButton = tk.Button(self, height=2, text="Calculate", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
                                     activebackground="#FFBD69", activeforeground="#FFFFFF", bd=0,
                                     command=self.equal).grid(row=10, padx=8, sticky="w")
@@ -1121,8 +1119,6 @@ class DateComparator(tk.Frame):
             self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         except ValueError:
             self.display_error()
-            self.textDay.delete(0, tk.END)
-            self.textDay.insert(0, "")
             return None
         self.__fromDay, self.__fromMonth, self.__fromYear = self.fromDate.get().split("/")
         self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
@@ -1135,8 +1131,6 @@ class DateComparator(tk.Frame):
             self.__toYear = int(self.__toYear)
         except ValueError:
             self.display_error()
-            self.textDay.delete(0, tk.END)
-            self.textDay.insert(0, "")
             return None
         if (1 <= self.__fromDay <= 31 and 1 <= self.__toDay <= 31 and 1 <= self.__fromMonth <= 12 and
                 1 <= self.__toMonth <= 12 and self.__fromYear >= 0 and self.__toYear >= 0):
@@ -1175,8 +1169,8 @@ class DateComparator(tk.Frame):
                 self.textDay.insert(0, f"{self.__sumDay:,} days")
         else:
             self.display_error()
-            self.textDay.delete(0, tk.END)
-            self.textDay.insert(0, "")
+        self.text["state"] = "disabled"
+        self.textDay["state"] = "disabled"
 
     def update(self, char):
         self.text["state"] = "normal"
@@ -1186,12 +1180,16 @@ class DateComparator(tk.Frame):
             self.after(100, lambda: self.text.config(fg="#FFFFFF"))
         self.text.delete(0, tk.END)
         AnswerField.update(self, char)
-        self.text["state"] = "disabled"
-        self.textDay["state"] = "disabled"
 
     def display_error(self):
+        self.text["state"] = "normal"
+        self.textDay["state"] = "normal"
         self.text.delete(0, tk.END)
         self.text.insert(0, "Error")
+        self.textDay.delete(0, tk.END)
+        self.textDay.insert(0, "")
+        self.text["state"] = "disabled"
+        self.textDay["state"] = "disabled"
 
 
 class CurrencyConverter(tk.Frame, UpdateNumber):
