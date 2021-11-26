@@ -1097,14 +1097,15 @@ class DateComparator(tk.Frame):
         self.textDay["state"] = "disabled"
 
         self.noticeText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
-                                   fg="#FFFFFF")
-        self.noticeText.grid(row=5, padx=8, sticky="w")
-        self.noticeText.grid(row=7, padx=8, sticky="w")
+                                   fg="#FFFFFF").grid(row=5, padx=8, sticky="w")
 
         self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20),
                                  insertbackground="#FFFFFF", selectbackground="#A5A5A5", highlightthickness=2)
         self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
         self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
+
+        self.noticeText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
+                                   fg="#FFFFFF").grid(row=7, padx=8, sticky="w")
 
         self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20),
                                insertbackground="#FFFFFF", selectbackground="#A5A5A5", highlightthickness=2)
