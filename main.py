@@ -1,4 +1,4 @@
-#===============================================================#
+# ============================================================= #
 #  Python Individual Project, Year 1, Semester 1                #
 #                                                               #
 #  Course: 13006107 Introduction to Computers and Programming   #
@@ -8,12 +8,12 @@
 #  Project: CalcLab                                             #
 #  Repository: https://github.com/DulapahV/CalcLab              #
 #  Written by: Dulapah Vibulsanti (64011388)                    #
-#===============================================================#
+# ============================================================= #
 
 """
-CalcLab requires the following modules, however, the program will install them automatically.
-Should the program fail to do so, please install them manually through the terminal with the 
-following commands.
+CalcLab requires the following modules, however, the program will install them
+automatically. Should the program fail to do so, please install them manually
+through the terminal with the following commands.
 1. pip install numpy
 2. pip install forex-python
 """
@@ -33,101 +33,208 @@ try:
 except ImportError:
     import Tkinter as tk  # python 2
     from Tkinter import messagebox
+
 """Check for numpy module"""
 try:
     import numpy
 except ImportError:
-    print("> numpy module is missing!\nTrying to install required module: numpy")
+    print("> numpy module is missing!\n" +
+          "Trying to install required module: numpy")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy"])
     print()
 finally:
     import numpy
+
 """Check for forex-python module"""
 try:
-    from forex_python.converter import CurrencyRates, RatesNotAvailableError, DecimalFloatMismatchError
+    from forex_python.converter import (CurrencyRates, RatesNotAvailableError,
+                                        DecimalFloatMismatchError)
     from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print("> forex-python module is missing!\nTrying to install required module: forex-python")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "forex-python"])
+    print("> forex-python module is missing!\nTrying to install required " +
+          "module: forex-python")
+    subprocess.check_call([sys.executable, "-m", "pip", "install",
+                          "forex-python"])
 finally:
     from forex_python.converter import CurrencyRates, RatesNotAvailableError
     from forex_python.bitcoin import BtcConverter
 
 """
-This list stores all the pages in the program. To add more pages, put their class name into this list.
-The page name will be automatically space-separated when encountering capital letters.
+This list stores all the pages in the program. To add more pages, put
+their class name into this list.
+
+The page name will be automatically space-separated when encountering
+capital letters.
+
 The first page in this list will be the first page to appear.
 """
-pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter", "VolumeConverter",
-         "LengthConverter", "WeightAndMassConverter", "TemperatureConverter", "EnergyConverter",
-         "AreaConverter", "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter",
+pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter",
+         "VolumeConverter", "LengthConverter", "WeightAndMassConverter",
+         "TemperatureConverter", "EnergyConverter", "AreaConverter",
+         "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter",
          "PressureConverter", "AngleConverter"]
 
 """
-The following lists/dictionaries store all the conversion units as well as their conversion factors (only dictionary).
+The following lists/dictionaries store all the conversion units as well as
+their conversion factors (only dictionary).
+
 To add more conversion units to a list, simply add them to the list.
-To add more conversion units to a dictionary, it must follow the format {"[unit name]": [conversion factor]}
-Some conversion types cannot be manually added as it requires more complex calculations (i.e. temperature).
+
+To add more conversion units to a dictionary, it must follow
+the format {"[unit name]": [conversion factor]}
+
+Some conversion types cannot be manually added as it requires
+more complex calculations (i.e. temperature).
 """
-currency = ['BTC', 'AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CZK', 'DKK', 'EUR',
-            'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD',
-            'PHP', 'PLN', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD', 'ZAR']
+currency = ['BTC', 'AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP',
+            'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR',
+            'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON',
+            'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD', 'ZAR']
 
-volume = {"Milliliters": 0.001, "Cubic centimeters": 0.001, "Liters": 1, "Cubic meters": 1000,
-          "Teaspoons (US)": 0.004929, "Tablespoons (US)": 0.014787, "Fluid ounces (US)": 0.029574,
-          "Cups (US)": 0.236588, "Pints (US)": 0.473176, "Quarts (US)": 0.946353, "Gallons (US)": 3.785412,
-          "Cubic inches": 0.016387, "Cubic feet": 28.31685, "Cubic yards": 764.5549,
-          "Teaspoons (UK)": 0.005919, "Tablespoons (UK)": 0.017758, "Fluid ounces (UK)": 0.028413,
-          "Pints (UK)": 0.568261, "Quarts (UK)": 1.136523, "Gallons (UK)": 4.54609}
+volume = {"Milliliters": 0.001,
+          "Cubic centimeters": 0.001,
+          "Liters": 1,
+          "Cubic meters": 1000,
+          "Teaspoons (US)": 0.004929,
+          "Tablespoons (US)": 0.014787,
+          "Fluid ounces (US)": 0.029574,
+          "Cups (US)": 0.236588,
+          "Pints (US)": 0.473176,
+          "Quarts (US)": 0.946353,
+          "Gallons (US)": 3.785412,
+          "Cubic inches": 0.016387,
+          "Cubic feet": 28.31685,
+          "Cubic yards": 764.5549,
+          "Teaspoons (UK)": 0.005919,
+          "Tablespoons (UK)": 0.017758,
+          "Fluid ounces (UK)": 0.028413,
+          "Pints (UK)": 0.568261,
+          "Quarts (UK)": 1.136523,
+          "Gallons (UK)": 4.54609}
 
-length = {"Nanometers": 10 ** -9, "Microns": 10 ** -6, "Millimeters": 0.001, "Centimeters": 0.01, "Meters": 1,
-          "Kilometers": 1000, "Inches": 0.0254, "Feet": 0.3048, "Yards": 0.9144, "Miles": 1609.344,
+length = {"Nanometers": 10 ** -9,
+          "Microns": 10 ** -6,
+          "Millimeters": 0.001,
+          "Centimeters": 0.01,
+          "Meters": 1,
+          "Kilometers": 1000,
+          "Inches": 0.0254,
+          "Feet": 0.3048,
+          "Yards": 0.9144,
+          "Miles": 1609.344,
           "Nautical Miles": 1852}
 
-weightMass = {"Carats": 2 * (10 ** -4), "Milligrams": 10 ** -6, "Centigrams": 10 ** -5, "Decigrams": 10 ** -4,
+weightMass = {"Carats": 2 * (10 ** -4),
+              "Milligrams": 10 ** -6,
+              "Centigrams": 10 ** -5,
+              "Decigrams": 10 ** -4,
               "Grams": 0.001,
-              "Dekagrams": 0.01, "Hectogram": 0.1, "Kilograms": 1, "Metric tonnes": 1000, "Ounces": 0.02835,
-              "Pounds": 0.453592, "Stone": 6.350293, "Short tons (US)": 907.1847, "Long tons (US)": 1016.047}
+              "Dekagrams": 0.01,
+              "Hectogram": 0.1,
+              "Kilograms": 1,
+              "Metric tonnes": 1000,
+              "Ounces": 0.02835,
+              "Pounds": 0.453592,
+              "Stone": 6.350293,
+              "Short tons (US)": 907.1847,
+              "Long tons (US)": 1016.047}
 
-energy = {"Electron volts": 1.602177 * (10 ** -19), "Joules": 1, "Kilojoules": 1000, "Thermal calories": 4.184,
-          "Food calories": 4184, "Foot-pounds": 1.355818, "British thermal units": 1055.056}
+energy = {"Electron volts": 1.602177 * (10 ** -19),
+          "Joules": 1,
+          "Kilojoules": 1000,
+          "Thermal calories": 4.184,
+          "Food calories": 4184,
+          "Foot-pounds": 1.355818,
+          "British thermal units": 1055.056}
 
-area = {"Square millimeters": 10 ** -6, "Square centimeters": 10 ** -4, "Square meters": 1,
-        "Hectares": 10 ** 5, "Square kilometers": 10 ** 6, "Square inches": 6.45 * (10 ** -4),
-        "Square feet": 0.092903, "Square yards": 0.836127, "Acres": 4046.856, "Square miles": 2589988}
+area = {"Square millimeters": 10 ** -6,
+        "Square centimeters": 10 ** -4,
+        "Square meters": 1,
+        "Hectares": 10 ** 5,
+        "Square kilometers": 10 ** 6,
+        "Square inches": 6.45 * (10 ** -4),
+        "Square feet": 0.092903,
+        "Square yards": 0.836127,
+        "Acres": 4046.856,
+        "Square miles": 2589988}
 
-speed = {"Centimeters per second": 0.01, "Meters per second": 1, "Kilometers per hour": 0.277778,
-         "Feet per second": 0.3048, "Miles per hour": 0.447, "Knots": 0.5144, "Mach": 340.3}
+speed = {"Centimeters per second": 0.01,
+         "Meters per second": 1,
+         "Kilometers per hour": 0.277778,
+         "Feet per second": 0.3048,
+         "Miles per hour": 0.447,
+         "Knots": 0.5144,
+         "Mach": 340.3}
 
-time = {"Microseconds": 10 ** -6, "Milliseconds": 0.001, "Seconds": 1, "Minutes": 60, "Hours": 3600,
-        "Days": 86400, "Weeks": 604800, "Years": 31557600}
+time = {"Microseconds": 10 ** -6,
+        "Milliseconds": 0.001,
+        "Seconds": 1,
+        "Minutes": 60,
+        "Hours": 3600,
+        "Days": 86400,
+        "Weeks": 604800,
+        "Years": 31557600}
 
-power = {"Watts": 1, "Kilowats": 1000, "Horsepower (US)": 745.6999, "Foot-pounds/minute": 0.022597,
+power = {"Watts": 1,
+         "Kilowats": 1000,
+         "Horsepower (US)": 745.6999,
+         "Foot-pounds/minute": 0.022597,
          "BTUs/minute": 17.58427}
 
-data = {"Bits": 1.25 * (10 ** -7), "Bytes": 10 ** -6, "Kilobits": 1.25 * (10 ** -4), "Kibibits": 1.28 * (10 ** -4),
+data = {"Bits": 1.25 * (10 ** -7),
+        "Bytes": 10 ** -6,
+        "Kilobits": 1.25 * (10 ** -4),
+        "Kibibits": 1.28 * (10 ** -4),
         "Kilobytes": 0.001,
-        "Kibibytes": 0.001024, "Megabits": 0.125, "Mebibits": 0.131072, "Megabytes": 1, "Mebibytes": 1.048576,
-        "Gigabits": 125, "Gibibits": 134.2177, "Gigabytes": 1000, "Gibibytes": 1073.742, "Terabits": 125000,
-        "Tebibits": 137439, "Terabytes": 10 ** 6, "Tebibytes": 1099512, "Petabits": 1.25 * (10 ** 8),
+        "Kibibytes": 0.001024,
+        "Megabits": 0.125,
+        "Mebibits": 0.131072,
+        "Megabytes": 1,
+        "Mebibytes": 1.048576,
+        "Gigabits": 125,
+        "Gibibits": 134.2177,
+        "Gigabytes": 1000,
+        "Gibibytes": 1073.742,
+        "Terabits": 125000,
+        "Tebibits": 137439,
+        "Terabytes": 10 ** 6,
+        "Tebibytes": 1099512,
+        "Petabits": 1.25 * (10 ** 8),
         "Pebibits": 140737488,
-        "Petabytes": 10 ** 9, "Pebibytes": 1125899907, "Exabits": 1.25 * (10 ** 8), "Exbibits": 144115188076,
-        "Exabytes": 10 ** 12, "Exibytes": 1152921504607, "Zetabits": 1.25 * (10 ** 14), "Zebibits": 147573952589676,
-        "Zetabytes": 10 ** 15, "Zebibytes": 1.180592 * (10 ** 15), "Yottabit": 1.25 * (10 ** 17),
-        "Yobibits": 1.511157 * (10 ** 17), "Yottabyte": 10 ** 18, "Yobibytes": 1.208926 * (10 ** 18)}
+        "Petabytes": 10 ** 9,
+        "Pebibytes": 1125899907,
+        "Exabits": 1.25 * (10 ** 8),
+        "Exbibits": 144115188076,
+        "Exabytes": 10 ** 12,
+        "Exibytes": 1152921504607,
+        "Zetabits": 1.25 * (10 ** 14),
+        "Zebibits": 147573952589676,
+        "Zetabytes": 10 ** 15,
+        "Zebibytes": 1.180592 * (10 ** 15),
+        "Yottabit": 1.25 * (10 ** 17),
+        "Yobibits": 1.511157 * (10 ** 17),
+        "Yottabyte": 10 ** 18,
+        "Yobibytes": 1.208926 * (10 ** 18)}
 
-pressure = {"Atmospheres": 101325, "Bars": 10 ** 5, "Kilopascals": 1000, "Millimeters of mercury": 133.3,
-            "Pascals": 1, "Pounds per square inch": 6894.757}
+pressure = {"Atmospheres": 101325,
+            "Bars": 10 ** 5,
+            "Kilopascals": 1000,
+            "Millimeters of mercury": 133.3,
+            "Pascals": 1,
+            "Pounds per square inch": 6894.757}
 
-angle = {"Degrees": 1, "Radians": 57.29578, "Gradians": 0.9}
+angle = {"Degrees": 1,
+         "Radians": 57.29578,
+         "Gradians": 0.9}
 
 
 class CalcLab(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         """
-        This container is where all the frames (or pages) will be stacked on top of each other,
-        then each one that we want visible will be raised above the others.
+        This container is where all the frames (or pages) will be stacked
+        on top of each other, then each one that we want visible will be
+        raised above the others.
         """
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -144,18 +251,21 @@ class CalcLab(tk.Tk):
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        """Show the first page based on the first element in the pages list."""
+        """
+        Show the first page based on the first element in the pages list.
+        """
         self.show_frame(pages[0])
 
         """Clear all history in history.txt"""
         try:
             open("history.txt", "w").close()
         except PermissionError:
-            tk.messagebox.showerror("Error", "Error occurred: Cannot access history.txt\n\n" +
-                                    "It may be set to read-only or you might not have\nenough " +
-                                    "disk space.")
+            tk.messagebox.showerror("Error", "Error occurred: Cannot access" +
+                                    " history.txt\n\nIt may be set to " +
+                                    "read-only or you might not have\n" +
+                                    "enough disk space.")
             sys.exit(1)
-            
+
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
@@ -204,8 +314,10 @@ class AnswerField:
     """Manipulating and getting value from the answer field."""
 
     def summon_answer_field(self, row=2, columnSpan=5):
-        self.text = tk.Entry(self, width=21, justify="right", bd=0, bg="#000000", fg="#FFFFFF", 
-                             insertbackground="#FFFFFF", selectbackground="#505050", font=("Arial", 32))
+        self.text = tk.Entry(self, width=21, justify="right", bd=0,
+                             bg="#000000", fg="#FFFFFF",
+                             insertbackground="#FFFFFF",
+                             selectbackground="#505050", font=("Arial", 32))
         self.text.grid(row=row, columnspan=columnSpan, pady=8)
         self.text.insert(tk.END, 0)
 
@@ -245,12 +357,14 @@ class AnswerField:
             self.dotButton["state"] = "normal"
         self.text.delete(0, tk.END)
         if len(str(int(value))) <= 18 and len(self.text.get()) <= 18:
-            self.text.insert(0, f"{round(value, 18 - len(str(int(value)))):,}")
+            self.text.insert(0,
+                             f"{round(value, 18 - len(str(int(value)))):,}")
         else:
             self.text.insert(0, f"{round(value, 12):e}")
 
     def negative(self):
-        if self.text.get().replace(',', '') == "0" or float(self.text.get().replace(',', '')) > 0:
+        if (self.text.get().replace(',', '') == "0" or
+                float(self.text.get().replace(',', '')) > 0):
             self.text.insert(0, "-")
         else:
             self.text.delete(0, 1)
@@ -262,7 +376,10 @@ class AnswerField:
         self.text.insert(tk.END, 0)
 
     def delete(self):
-        self.text.delete(len(self.text.get()) - 1, tk.END) if len(self.text.get()) != 1 else self.clear()
+        if len(self.text.get()) != 1:
+            self.text.delete(len(self.text.get()) - 1, tk.END)
+        else:
+            self.clear()
         if "." not in self.text.get():
             self.dotButton["state"] = "normal"
 
@@ -343,7 +460,8 @@ class Frame:
         self.configure(bg=color)
 
     def set_header_text(self, text):
-        self.header = tk.Label(self, text=text, font=("Arial", 16), bg="#000000", fg="#FFFFFF").place(x=60, y=8)
+        self.header = tk.Label(self, text=text, font=("Arial", 16),
+                               bg="#000000", fg="#FFFFFF").place(x=60, y=8)
 
 
 class SelectionButton:
@@ -352,15 +470,15 @@ class SelectionButton:
     def summon(self, controller):
         self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
                                       activebackground="#767676", activeforeground="#FFFFFF", command=lambda:
-            controller.show_frame("SelectionMenu")).grid(row=1, column=1, sticky="w")
+                                      controller.show_frame("SelectionMenu")).grid(row=1, column=1, sticky="w")
 
 
 class OptionMenu:
     """Option menu for selecting conversion units in converter tools."""
 
     def summon(self, variable1, variable2, list):
-        self.fromText = tk.Label(self, text="From", font=("Arial", 16), bg="#000000", fg="#FFFFFF").grid(row=3,
-                                 column=1, padx=8, sticky="w")
+        self.fromText = tk.Label(self, text="From", font=("Arial", 16), bg="#000000", fg="#FFFFFF"
+                                 ).grid(row=3, column=1, padx=8, sticky="w")
 
         self.fromUnit = tk.OptionMenu(self, variable1, *list)
         self.fromUnit.config(width=19, bd=0, bg="#505050", fg="#FFFFFF", activebackground="#A5A5A5",
@@ -368,8 +486,8 @@ class OptionMenu:
                              font=("Arial", 18), anchor="w")
         self.fromUnit.grid(row=4, column=1, padx=8)
 
-        self.toText = tk.Label(self, text="To", font=("Arial", 16), bg="#000000", fg="#FFFFFF").grid(row=5, column=1,
-                               padx=8, sticky="w")
+        self.toText = tk.Label(self, text="To", font=("Arial", 16), bg="#000000", fg="#FFFFFF"
+                               ).grid(row=5, column=1, padx=8, sticky="w")
 
         self.toUnit = tk.OptionMenu(self, variable2, *list)
         self.toUnit.config(width=19, bd=0, bg="#505050", fg="#FFFFFF", activebackground="#A5A5A5",
@@ -411,7 +529,10 @@ class VerticalScrolledFrame(tk.Frame):
 
 
 class SelectionMenu(tk.Frame):
-    """Initializing tools selection menu and putting buttons into the vertical scrolled frame."""
+    """
+    Initializing tools selection menu and putting buttons into the
+    vertical scrolled frame.
+    """
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -421,7 +542,9 @@ class SelectionMenu(tk.Frame):
         scrollFrame = VerticalScrolledFrame(self)
         scrollFrame.pack(fill="both", expand=True)
 
-        pages.remove("SelectionMenu")  # Remove selection menu button from the list since user is already in that page
+        # Remove selection menu button from the
+        # list since user is already in that page
+        pages.remove("SelectionMenu")
         pageList = pages
         for index, page in enumerate(pageList):
             spacedText = ""
@@ -430,7 +553,7 @@ class SelectionMenu(tk.Frame):
                     spacedText += " "
                 spacedText += letter
             self.button = tk.Button(scrollFrame.interior, width=36, font=("Arial", 18), text=f"  {spacedText}",
-                                    anchor="w", bg="#1C1C1C", fg="#FFFFFF", activebackground="#767676", 
+                                    anchor="w", bg="#1C1C1C", fg="#FFFFFF", activebackground="#767676",
                                     activeforeground="#FFFFFF", bd=1,
                                     command=lambda index=index: open_page(pageList[index])).pack()
 
@@ -564,7 +687,7 @@ class Calculator(tk.Frame, UpdateNumber):
                                     self.update(0)).grid(row=7, column=5)
         self.dotButton = tk.Button(self, width=5, height=2, text=".", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-                                    self.update("."))
+                                   self.update("."))
         self.dotButton.grid(row=7, column=6)
         self.equalButton = tk.Button(self, width=5, height=2, text="=", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
                                      activebackground="#FFBD69", activeforeground="#FFFFFF", bd=0,
@@ -573,7 +696,7 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def update(self, char):
         self.__lockOperatorInput = False
-        if self.__lockSecInput == True:
+        if self.__lockSecInput:
             self.dotButton["state"] = "normal"
             self.text.delete(0, tk.END)
             self.text.insert(tk.END, 0)
@@ -599,7 +722,7 @@ class Calculator(tk.Frame, UpdateNumber):
         AnswerField.clear(self)
 
     def delete(self):
-        if self.__lockOperatorInput == False:
+        if not self.__lockOperatorInput:
             AnswerField.delete(self)
 
     def equal(self):
@@ -621,7 +744,7 @@ class Calculator(tk.Frame, UpdateNumber):
             except:
                 self.display_error()
                 return None
-        if self.__operator != None:
+        if self.__operator is not None:
             if self.__operator == "+":
                 if self.__reVal == 0:
                     self.__value = eval(str(self.__memory)) + eval(str(self.__displayedText))
@@ -653,7 +776,7 @@ class Calculator(tk.Frame, UpdateNumber):
                     self.__value /= self.__reVal
             self.__lockSecInput = True
             self.set_text(self.__value)
-            if self.__operator != None:
+            if self.__operator is not None:
                 history.write(f"{self.__memory} {self.__operator} {eval(self.__displayedText)} = {self.text.get()}\n")
             history.close()
 
@@ -665,7 +788,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.text.insert(0, "Error")
 
     def add(self):
-        if self.__lockOperatorInput == False:
+        if not self.__lockOperatorInput:
             self.equal()
         self.plusButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
         self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
@@ -683,7 +806,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.dotButton["state"] = "normal"
 
     def minus(self):
-        if self.__lockOperatorInput == False:
+        if not self.__lockOperatorInput:
             self.equal()
         self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
         self.minusButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
@@ -701,7 +824,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.dotButton["state"] = "normal"
 
     def multiply(self):
-        if self.__lockOperatorInput == False:
+        if not self.__lockOperatorInput:
             self.equal()
         self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
         self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
@@ -719,7 +842,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.dotButton["state"] = "normal"
 
     def divide(self):
-        if self.__lockOperatorInput == False:
+        if not self.__lockOperatorInput:
             self.equal()
         self.plusButton.config(bg="#FF9500", fg="#FFFFFF")
         self.minusButton.config(bg="#FF9500", fg="#FFFFFF")
@@ -919,21 +1042,21 @@ class Calculator(tk.Frame, UpdateNumber):
         h.pack(side="bottom", fill="x")
         history = open("history.txt", "r")
         historySize = os.path.getsize("history.txt")
-        text = ("There is no history yet.\n\nTip:\nYou can copy numbers from here\nand paste them into the " + 
-                "app's\nanswer field.")
+        text = ("There is no history yet.\n\nTip:\nYou can copy numbers " +
+                "from here\nand paste them into the app's\nanswer field.")
         if historySize != 0:
             text = history.read()[:-1]
-        textBox = tk.Text(popup, height=21, bg="#000000", fg="#FFFFFF", insertbackground="#FFFFFF", 
-                          selectbackground="#505050", bd=0, font=("Arial", 18), wrap="none", spacing3=3, 
+        textBox = tk.Text(popup, height=21, bg="#000000", fg="#FFFFFF", insertbackground="#FFFFFF",
+                          selectbackground="#505050", bd=0, font=("Arial", 18), wrap="none", spacing3=3,
                           yscrollcommand=v.set)
         textBox.pack(anchor="w", padx=10, pady=10)
         textBox.insert(tk.END, text)
         clearButton = tk.Button(popup, text="🗑", height=1, font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
                                 activebackground="#FF9500", activeforeground="#FFFFFF", bd=0,
-                                command=lambda: [open("history.txt", "w").close(), textBox.delete("1.0", tk.END), 
-                                textBox.insert(tk.END, "There is no history yet.\n\nTip:\nYou can copy numbers " + 
-                                "from here\nand paste them into the app's\nanswer field.")]).pack(
-                                side="bottom", anchor="e", padx=10, pady=5)
+                                command=lambda: [open("history.txt", "w").close(), textBox.delete("1.0", tk.END),
+                                textBox.insert(tk.END, "There is no history yet.\n\nTip:\nYou can copy numbers " +
+                                               "from here\nand paste them into the app's\nanswer field.")]
+                                ).pack(side="bottom", anchor="e", padx=10, pady=5)
         h.config(command=textBox.xview)
         v.config(command=textBox.yview)
         textBox.yview(tk.END)
@@ -958,13 +1081,13 @@ class DateComparator(tk.Frame):
         self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
                                       command=lambda: controller.show_frame("SelectionMenu")).grid(row=1, sticky="w")
 
-        self.text = tk.Entry(self, width=32, justify="right", bd=0, disabledbackground="#000000", 
+        self.text = tk.Entry(self, width=32, justify="right", bd=0, disabledbackground="#000000",
                              disabledforeground="#FFFFFF", font=("Arial", 22))
         self.text.grid(row=2, padx=8, pady=8, sticky="w")
         self.text.insert(tk.END, "Same dates")
         self.text["state"] = "disabled"
 
-        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, disabledbackground="#000000", 
+        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, disabledbackground="#000000",
                                 disabledforeground="#FFFFFF", font=("Arial", 22))
         self.textDay.grid(row=3, padx=8, pady=8, sticky="w")
         self.textDay.insert(tk.END, "0 day")
@@ -1119,7 +1242,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                                                   "Check your connection and try again.")
             self.equal() if answer else self.display_error()
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             if self.__fromCurrency.get() == "BTC" or self.__toCurrency.get() == "BTC":
@@ -1135,14 +1258,14 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                     return None
                 if self.__fromCurrency.get() == "BTC":
                     self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):,.9f}" +
-                                                 f" {self.__toCurrency.get()}" +
-                                                 f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                                            f" {self.__toCurrency.get()}" +
+                                            f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
                     self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
 
                 else:
                     self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " +
-                                                 f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):,.12f} BTC" +
-                                                 f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                                            f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):,.12f} BTC" +
+                                            f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
                     self.__value = self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())
             else:
                 try:
@@ -1153,8 +1276,8 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                     return None
                 self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
                 self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " +
-                                             f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):,.7f}" +
-                                             f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                                        f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):,.7f}" +
+                                        f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
             self.set_text(round(self.__value, 7))
 
     def set_text(self, value):
@@ -1198,7 +1321,7 @@ class VolumeConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1247,7 +1370,7 @@ class LengthConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1296,7 +1419,7 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1345,7 +1468,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             if self.__fromUnitVal.get() != self.__toUnitVal.get():
@@ -1408,7 +1531,7 @@ class EnergyConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1457,7 +1580,7 @@ class AreaConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1506,7 +1629,7 @@ class SpeedConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1555,7 +1678,7 @@ class TimeConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1603,7 +1726,7 @@ class PowerConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None:
+        if self.__value is None:
             self.display_error()
         else:
             try:
@@ -1652,7 +1775,7 @@ class DataConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1701,7 +1824,7 @@ class PressureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None or self.__value < 0:
+        if self.__value is None or self.__value < 0:
             self.display_error()
         else:
             try:
@@ -1749,7 +1872,7 @@ class AngleConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value == None:
+        if self.__value is None:
             self.display_error()
         else:
             try:
