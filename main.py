@@ -1046,6 +1046,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 "from here\nand paste them into the app's\nanswer field.")
         if historySize != 0:
             text = history.read()[:-1]
+        history.close()
         textBox = tk.Text(popup, height=21, bg="#000000", fg="#FFFFFF", insertbackground="#FFFFFF",
                           selectbackground="#505050", bd=0, font=("Arial", 18), wrap="none", spacing3=3,
                           yscrollcommand=v.set)
@@ -1093,20 +1094,19 @@ class DateComparator(tk.Frame):
         self.textDay.insert(tk.END, "0 day")
         self.textDay["state"] = "disabled"
 
-        self.grid_rowconfigure(4, minsize=10)
         self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
                                  fg="#FFFFFF").grid(row=5, padx=8, sticky="w")
 
         self.fromDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20),
-                                 highlightthickness=2)
+                                 insertbackground="#FFFFFF", selectbackground="#A5A5A5", highlightthickness=2)
         self.fromDate.grid(row=6, padx=8, pady=8, sticky="w")
         self.fromDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
-        self.fromText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
+        self.toText = tk.Label(self, text="To (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
                                  fg="#FFFFFF").grid(row=7, padx=8, sticky="w")
 
         self.toDate = tk.Entry(self, width=21, justify="left", bd=0, bg="#505050", fg="#FFFFFF", font=("Arial", 20),
-                               highlightthickness=2)
+                               insertbackground="#FFFFFF", selectbackground="#A5A5A5", highlightthickness=2)
         self.toDate.grid(row=8, padx=8, pady=8, sticky="w")
         self.toDate.insert(tk.END, datetime.today().strftime("%d/%m/%Y"))
 
