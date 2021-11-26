@@ -28,8 +28,10 @@ from datetime import datetime
 """Determine which tkinter version to use"""
 try:
     import tkinter as tk  # python 3
+    from tkinter import messagebox
 except ImportError:
     import Tkinter as tk  # python 2
+    from Tkinter import messagebox
 """Check for numpy module"""
 try:
     import numpy
@@ -145,11 +147,22 @@ class CalcLab(tk.Tk):
         self.show_frame(pages[0])
 
         """Clear all history in history.txt"""
-        open("history.txt", "w").close()
-
+        try:
+            open("history.txt", "w").close()
+        except PermissionError:
+            tk.messagebox.showerror("Error", "Error occurred: Cannot access history.txt\n\n" +
+                                    "It may be set to read-only or you might not have\nenough " +
+                                    "disk space.")
+            sys.exit(1)
+            
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+        try:
+            frame.text.delete(0, tk.END)
+            frame.text.insert(tk.END, 0)
+        except AttributeError:
+            pass
 
     def str_to_class(self, className):
         return getattr(sys.modules[__name__], className)
@@ -190,7 +203,8 @@ class AnswerField:
     """Manipulating and getting value from the answer field."""
 
     def summon_answer_field(self, row=2, columnSpan=5):
-        self.text = tk.Entry(self, width=21, justify="right", bd=0, bg="#000000", fg="#FFFFFF", font=("Arial", 32))
+        self.text = tk.Entry(self, width=21, justify="right", bd=0, bg="#000000", fg="#FFFFFF", 
+                             insertbackground="#FFFFFF", selectbackground="#505050", font=("Arial", 32))
         self.text.grid(row=row, columnspan=columnSpan, pady=8)
         self.text.insert(tk.END, 0)
 
@@ -277,41 +291,41 @@ class NumPad(AnswerField):
                                       command=self.delete).grid(row=3, column=4)
 
         self.sevenButton = tk.Button(self, width=5, height=2, text="7", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
-                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(7)).grid(row=4, column=2)
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0)
+        self.sevenButton.grid(row=4, column=2)
         self.eightButton = tk.Button(self, width=5, height=2, text="8", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                      activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(8)).grid(row=4, column=3)
+                                     self.update(8)).grid(row=4, column=3)
         self.nineButton = tk.Button(self, width=5, height=2, text="9", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(9)).grid(row=4, column=4)
+                                    self.update(9)).grid(row=4, column=4)
 
         self.fourButton = tk.Button(self, width=5, height=2, text="4", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(4)).grid(row=5, column=2)
+                                    self.update(4)).grid(row=5, column=2)
         self.fiveButton = tk.Button(self, width=5, height=2, text="5", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(5)).grid(row=5, column=3)
+                                    self.update(5)).grid(row=5, column=3)
         self.sixButton = tk.Button(self, width=5, height=2, text="6", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(6)).grid(row=5, column=4)
+                                   self.update(6)).grid(row=5, column=4)
 
         self.oneButton = tk.Button(self, width=5, height=2, text="1", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(1)).grid(row=6, column=2)
+                                   self.update(1)).grid(row=6, column=2)
         self.twoButton = tk.Button(self, width=5, height=2, text="2", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(2)).grid(row=6, column=3)
+                                   self.update(2)).grid(row=6, column=3)
         self.threeButton = tk.Button(self, width=5, height=2, text="3", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                      activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(3)).grid(row=6, column=4)
+                                     self.update(3)).grid(row=6, column=4)
 
         self.zeroButton = tk.Button(self, width=5, height=2, text="0", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update(0)).grid(row=7, column=3)
+                                    self.update(0)).grid(row=7, column=3)
         self.dotButton = tk.Button(self, width=5, height=2, text=".", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                    activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
-            self.update("."))
+                                   self.update("."))
         self.dotButton.grid(row=7, column=4)
         self.equalButton = tk.Button(self, width=5, height=2, text="=", font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
                                      activebackground="#FFBD69", activeforeground="#FFFFFF", bd=0,
@@ -448,17 +462,13 @@ class Calculator(tk.Frame, UpdateNumber):
 
         self.factButton = tk.Button(self, width=5, height=2, text="x!", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
                                     activebackground="#767676", activeforeground="#FFFFFF", bd=0,
-                                    command=self.factorial).grid(
-            row=3, column=1)
+                                    command=self.factorial).grid(row=3, column=1)
         self.sqrtButton = tk.Button(self, width=5, height=2, text="√x", font=("Arial", 18), bg="#1C1C1C", fg="#FFFFFF",
                                     activebackground="#767676", activeforeground="#FFFFFF", bd=0,
-                                    command=self.sqrt).grid(
-            row=3, column=2)
+                                    command=self.sqrt).grid(row=3, column=2)
         self.squareButton = tk.Button(self, width=5, height=2, text="x²", font=("Arial", 18), bg="#1C1C1C",
-                                      fg="#FFFFFF",
-                                      activebackground="#767676", activeforeground="#FFFFFF", bd=0,
-                                      command=self.square).grid(
-            row=3, column=3)
+                                      fg="#FFFFFF", activebackground="#767676", activeforeground="#FFFFFF", bd=0,
+                                      command=self.square).grid(row=3, column=3)
         self.clearButton = tk.Button(self, width=5, height=2, text="AC", font=("Arial", 18), bg="#D4D4D2", bd=0,
                                      command=self.clear).grid(row=3, column=4)
         self.percentButton = tk.Button(self, width=5, height=2, text="%", font=("Arial", 18), bg="#D4D4D2", bd=0,
@@ -607,7 +617,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 float(self.__memory)
                 history.write(f"{self.text.get()} = {eval(self.text.get())}\n")
                 self.set_text(eval(self.text.get()))
-            except (NameError, SyntaxError, ValueError, OverflowError):
+            except:
                 self.display_error()
                 return None
         if self.__operator != None:
@@ -669,6 +679,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.__lockOperatorInput = True
         self.__lockSecInput = True
         self.__operator = "+"
+        self.dotButton["state"] = "normal"
 
     def minus(self):
         if self.__lockOperatorInput == False:
@@ -686,6 +697,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.__lockOperatorInput = True
         self.__lockSecInput = True
         self.__operator = "-"
+        self.dotButton["state"] = "normal"
 
     def multiply(self):
         if self.__lockOperatorInput == False:
@@ -703,6 +715,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.__lockOperatorInput = True
         self.__lockSecInput = True
         self.__operator = "*"
+        self.dotButton["state"] = "normal"
 
     def divide(self):
         if self.__lockOperatorInput == False:
@@ -713,25 +726,26 @@ class Calculator(tk.Frame, UpdateNumber):
         self.divideButton.config(bg="#FFFFFF", fg="#FF9500", activebackground="#FFFFFF", activeforeground="#FF9500")
         try:
             self.__memory = self.text.get().replace(',', '')
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         self.__reVal = 0
         self.__lockOperatorInput = True
         self.__lockSecInput = True
         self.__operator = "/"
+        self.dotButton["state"] = "normal"
 
     def percent(self):
         try:
             self.set_text(eval(self.text.get().replace(',', '')) / 100)
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
 
     def square(self):
         try:
             eval(self.text.get().replace(',', ''))**2
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -743,7 +757,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def cube(self):
         try:
             eval(self.text.get().replace(',', ''))**3
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -755,7 +769,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def sqrt(self):
         try:
             math.sqrt(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -767,7 +781,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def cbrt(self):
         try:
             numpy.cbrt(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -779,7 +793,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def sin(self):
         try:
             math.sin(math.radians(eval(self.text.get().replace(',', ''))))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -791,7 +805,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def cos(self):
         try:
             math.cos(math.radians(eval(self.text.get().replace(',', ''))))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -803,7 +817,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def tan(self):
         try:
             math.tan(math.radians(eval(self.text.get().replace(',', ''))))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -815,7 +829,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def sinh(self):
         try:
             math.sinh(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -827,7 +841,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def cosh(self):
         try:
             math.cosh(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -839,7 +853,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def tanh(self):
         try:
             math.tanh(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -851,7 +865,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def ln(self):
         try:
             math.log(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -863,7 +877,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def log10(self):
         try:
             math.log10(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -875,7 +889,7 @@ class Calculator(tk.Frame, UpdateNumber):
     def factorial(self):
         try:
             math.factorial(eval(self.text.get().replace(',', '')))
-        except (NameError, SyntaxError, ValueError, OverflowError, TypeError):
+        except:
             self.display_error()
             return None
         value = eval(self.text.get().replace(',', ''))
@@ -904,11 +918,13 @@ class Calculator(tk.Frame, UpdateNumber):
         v.pack(side="right", fill="y")
         history = open("history.txt", "r")
         historySize = os.path.getsize("history.txt")
-        text = "There is no history yet.\n\nTip:\nYou can copy numbers from here\nand paste them into the app's\nanswer field."
+        text = ("There is no history yet.\n\nTip:\nYou can copy numbers from here\nand paste them into the " + 
+                "app's\nanswer field.")
         if historySize != 0:
             text = history.read()[:-1]
-        textBox = tk.Text(popup, height=21, bg="#000000", fg="#FFFFFF", bd=0, font=("Arial", 18), wrap="none",
-                          spacing3=3, yscrollcommand=v.set)
+        textBox = tk.Text(popup, height=21, bg="#000000", fg="#FFFFFF", insertbackground="#FFFFFF", 
+                          selectbackground="#505050", bd=0, font=("Arial", 18), wrap="none", spacing3=3, 
+                          yscrollcommand=v.set)
         textBox.pack(anchor="w", padx=10, pady=10)
         textBox.insert(tk.END, text)
         clearButton = tk.Button(popup, text="🗑", height=1, font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
@@ -941,13 +957,17 @@ class DateComparator(tk.Frame):
         self.switchButton = tk.Button(self, text="≡", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
                                       command=lambda: controller.show_frame("SelectionMenu")).grid(row=1, sticky="w")
 
-        self.text = tk.Entry(self, width=32, justify="right", bd=0, bg="#000000", fg="#FFFFFF", font=("Arial", 22))
+        self.text = tk.Entry(self, width=32, justify="right", bd=0, disabledbackground="#000000", 
+                             disabledforeground="#FFFFFF", font=("Arial", 22))
         self.text.grid(row=2, padx=8, pady=8, sticky="w")
         self.text.insert(tk.END, "Same dates")
+        self.text["state"] = "disabled"
 
-        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, bg="#000000", fg="#FFFFFF", font=("Arial", 22))
+        self.textDay = tk.Entry(self, width=32, justify="right", bd=0, disabledbackground="#000000", 
+                                disabledforeground="#FFFFFF", font=("Arial", 22))
         self.textDay.grid(row=3, padx=8, pady=8, sticky="w")
         self.textDay.insert(tk.END, "0 day")
+        self.textDay["state"] = "disabled"
 
         self.grid_rowconfigure(4, minsize=10)
         self.fromText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
@@ -1035,11 +1055,15 @@ class DateComparator(tk.Frame):
             self.textDay.insert(0, "")
 
     def update(self, char):
+        self.text["state"] = "normal"
+        self.textDay["state"] = "normal"
         if char == self.text.get():
             self.text.config(fg="#000000")
             self.after(100, lambda: self.text.config(fg="#FFFFFF"))
         self.text.delete(0, tk.END)
         AnswerField.update(self, char)
+        self.text["state"] = "disabled"
+        self.textDay["state"] = "disabled"
 
     def display_error(self):
         self.text.delete(0, tk.END)
