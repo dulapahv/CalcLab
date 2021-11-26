@@ -1239,6 +1239,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
             answer = tk.messagebox.askretrycancel("Error", "Error occurred: No internet connection\n\n" +
                                                   "Check your connection and try again.")
             self.equal() if answer else self.display_error()
+            return 1
         self.__value = AnswerField.get_value(self)
         if self.__value is None or self.__value < 0:
             self.display_error()
