@@ -60,8 +60,8 @@ finally:
     from forex_python.bitcoin import BtcConverter
 
 """
-This list stores all the pages in the program. To add more pages, put
-their class name into this list.
+This list stores all the pages in the program, respectively. To add 
+more pages, put their class name into this list.
 
 The page name will be automatically space-separated when encountering
 capital letters.
@@ -76,12 +76,12 @@ pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter",
 
 """
 The following lists/dictionaries store all the conversion units as well as
-their conversion factors (only dictionary).
+their conversion factors (only dictionary), respectively.
 
 To add more conversion units to a list, simply add them to the list.
 
 To add more conversion units to a dictionary, it must follow
-the format {"[unit name]": [conversion factor]}
+the format: {"[unit name]": [conversion factor]}
 
 Some conversion types cannot be manually added as it requires
 more complex calculations (i.e. temperature).
