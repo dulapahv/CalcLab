@@ -20,6 +20,7 @@ following commands.
 
 import math
 import os
+import requests
 import subprocess
 import sys
 from abc import ABC, abstractmethod
@@ -907,15 +908,15 @@ class Calculator(tk.Frame, UpdateNumber):
     def show_history(self):
         popup = tk.Tk()
         popup.title("History")
-        popup.configure(bg="#000000")
         popup.geometry("420x720")
         popup.minsize(420, 720)
         popup.maxsize(1024, 720)
+        popup.configure(bg="#000000")
         popup.focus_force()
         v = tk.Scrollbar(popup)
         h = tk.Scrollbar(popup, orient="horizontal")
-        h.pack(side="bottom", fill="x")
         v.pack(side="right", fill="y")
+        h.pack(side="bottom", fill="x")
         history = open("history.txt", "r")
         historySize = os.path.getsize("history.txt")
         text = ("There is no history yet.\n\nTip:\nYou can copy numbers from here\nand paste them into the " + 
@@ -1108,7 +1109,15 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         AnswerField.delete(self)
 
     def equal(self):
-        self.__value = AnswerField.get_value(self)
+        # Check for internet connection
+        url = "https://api.coindesk.com/"
+        timeout = 5
+        try:
+            request = requests.get(url, timeout=timeout)
+        except (requests.ConnectionError, requests.Timeout):
+            answer = tk.messagebox.askretrycancel("Error", "Error occurred: No internet connection\n\n" +
+                                                  "Check your connection and try again.")
+            self.equal() if answer else self.display_error()
         self.__value = AnswerField.get_value(self)
         if self.__value == None or self.__value < 0:
             self.display_error()
@@ -1125,14 +1134,14 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                     self.text.insert(0, "Rates Not Available")
                     return None
                 if self.__fromCurrency.get() == "BTC":
-                    self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):.9f}" +
+                    self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):,.9f}" +
                                                  f" {self.__toCurrency.get()}" +
                                                  f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
                     self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
 
                 else:
                     self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " +
-                                                 f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):.12f} BTC" +
+                                                 f"{(self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())):,.12f} BTC" +
                                                  f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
                     self.__value = self.__b.convert_to_btc(self.__value, self.__fromCurrency.get())
             else:
@@ -1144,7 +1153,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                     return None
                 self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
                 self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " +
-                                             f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):.7f}" +
+                                             f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):,.7f}" +
                                              f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
             self.set_text(round(self.__value, 7))
 
