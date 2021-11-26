@@ -345,7 +345,7 @@ class AnswerField:
         except (NameError, SyntaxError, ValueError, OverflowError):
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
-            return None
+            return 1
         if value % 1 == 0:
             value = int(value)
         if value == AnswerField.get_value(self):
@@ -389,7 +389,7 @@ class AnswerField:
         except (NameError, SyntaxError, ValueError, OverflowError):
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
-            return None
+            return 1
         self.__value = float(self.text.get().replace(',', ''))
         if self.__value % 1 == 0:
             self.__value = int(self.__value)
@@ -743,7 +743,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 self.set_text(eval(self.text.get()))
             except:
                 self.display_error()
-                return None
+                return 1
         if self.__operator is not None:
             if self.__operator == "+":
                 if self.__reVal == 0:
@@ -768,7 +768,7 @@ class Calculator(tk.Frame, UpdateNumber):
                     float(self.__memory) / float(self.__displayedText)
                 except ZeroDivisionError:
                     self.display_error()
-                    return None
+                    return 1
                 if self.__reVal == 0:
                     self.__value = float(self.__memory) / float(self.__displayedText)
                     self.__reVal = float(self.__displayedText)
@@ -798,7 +798,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.__memory = eval(self.text.get().replace(',', ''))
         except (NameError, SyntaxError, ValueError, OverflowError):
             self.display_error()
-            return None
+            return 1
         self.__reVal = 0
         self.__lockOperatorInput = True
         self.__lockSecInput = True
@@ -816,7 +816,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.__memory = self.text.get().replace(',', '')
         except (NameError, SyntaxError, ValueError, OverflowError):
             self.display_error()
-            return None
+            return 1
         self.__reVal = 0
         self.__lockOperatorInput = True
         self.__lockSecInput = True
@@ -834,7 +834,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.__memory = self.text.get().replace(',', '')
         except (NameError, SyntaxError, ValueError, OverflowError):
             self.display_error()
-            return None
+            return 1
         self.__reVal = 0
         self.__lockOperatorInput = True
         self.__lockSecInput = True
@@ -852,7 +852,7 @@ class Calculator(tk.Frame, UpdateNumber):
             self.__memory = self.text.get().replace(',', '')
         except:
             self.display_error()
-            return None
+            return 1
         self.__reVal = 0
         self.__lockOperatorInput = True
         self.__lockSecInput = True
@@ -864,14 +864,14 @@ class Calculator(tk.Frame, UpdateNumber):
             self.set_text(eval(self.text.get().replace(',', '')) / 100)
         except:
             self.display_error()
-            return None
+            return 1
 
     def square(self):
         try:
             eval(self.text.get().replace(',', ''))**2
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(value**2)
         history = open("history.txt", "a")
@@ -883,7 +883,7 @@ class Calculator(tk.Frame, UpdateNumber):
             eval(self.text.get().replace(',', ''))**3
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(value**3)
         history = open("history.txt", "a")
@@ -895,7 +895,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.sqrt(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.sqrt(value))
         history = open("history.txt", "a")
@@ -907,7 +907,7 @@ class Calculator(tk.Frame, UpdateNumber):
             numpy.cbrt(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(numpy.cbrt(value))
         history = open("history.txt", "a")
@@ -919,7 +919,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.sin(math.radians(eval(self.text.get().replace(',', ''))))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.sin(math.radians(value)))
         history = open("history.txt", "a")
@@ -931,7 +931,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.cos(math.radians(eval(self.text.get().replace(',', ''))))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.cos(math.radians(value)))
         history = open("history.txt", "a")
@@ -943,7 +943,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.tan(math.radians(eval(self.text.get().replace(',', ''))))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.tan(math.radians(value)))
         history = open("history.txt", "a")
@@ -955,7 +955,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.sinh(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.sinh(value))
         history = open("history.txt", "a")
@@ -967,7 +967,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.cosh(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.cosh(value))
         history = open("history.txt", "a")
@@ -979,7 +979,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.tanh(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.tanh(value))
         history = open("history.txt", "a")
@@ -991,7 +991,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.log(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.log(value))
         history = open("history.txt", "a")
@@ -1003,7 +1003,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.log10(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.log10(value))
         history = open("history.txt", "a")
@@ -1015,7 +1015,7 @@ class Calculator(tk.Frame, UpdateNumber):
             math.factorial(eval(self.text.get().replace(',', '')))
         except:
             self.display_error()
-            return None
+            return 1
         value = eval(self.text.get().replace(',', ''))
         self.set_text(math.factorial(value))
         history = open("history.txt", "a")
@@ -1119,7 +1119,7 @@ class DateComparator(tk.Frame):
             self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         except ValueError:
             self.display_error()
-            return None
+            return 1
         self.__fromDay, self.__fromMonth, self.__fromYear = self.fromDate.get().split("/")
         self.__toDay, self.__toMonth, self.__toYear = self.toDate.get().split("/")
         try:
@@ -1131,7 +1131,7 @@ class DateComparator(tk.Frame):
             self.__toYear = int(self.__toYear)
         except ValueError:
             self.display_error()
-            return None
+            return 1
         if (1 <= self.__fromDay <= 31 and 1 <= self.__toDay <= 31 and 1 <= self.__fromMonth <= 12 and
                 1 <= self.__toMonth <= 12 and self.__fromYear >= 0 and self.__toYear >= 0):
             self.__sumDay = abs(self.__fromDay - self.__toDay) + (abs(self.__fromMonth - self.__toMonth) * 30) + (abs(
@@ -1253,7 +1253,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                 except RatesNotAvailableError:
                     self.text.delete(0, tk.END)
                     self.text.insert(0, "Rates Not Available")
-                    return None
+                    return 1
                 if self.__fromCurrency.get() == "BTC":
                     self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):,.9f}" +
                                             f" {self.__toCurrency.get()}" +
@@ -1271,7 +1271,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                 except RatesNotAvailableError:
                     self.text.delete(0, tk.END)
                     self.text.insert(0, "Rates Not Available")
-                    return None
+                    return 1
                 self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
                 self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " +
                                         f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):,.7f}" +
