@@ -60,7 +60,7 @@ finally:
     from forex_python.bitcoin import BtcConverter
 
 """
-This list stores all the pages in the program, respectively. To add 
+This list stores all the pages in the program, respectively. To add
 more pages, put their class name into this list.
 
 The page name will be automatically space-separated when encountering
@@ -1044,20 +1044,22 @@ class Calculator(tk.Frame, UpdateNumber):
         historySize = os.path.getsize("history.txt")
         text = ("There is no history yet.\n\nTip:\nYou can copy numbers " +
                 "from here\nand paste them into the app's\nanswer field.")
+        clearButton = tk.Button(popup, text="🗑", height=1, font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
+                                activebackground="#FF9500", activeforeground="#FFFFFF", bd=0,
+                                command=lambda: [open("history.txt", "w").close(), textBox.delete("1.0", tk.END),
+                                textBox.insert(tk.END, "There is no history yet.\n\nTip:\nYou can copy numbers " +
+                                               "from here\nand paste them into the app's\nanswer field."),
+                                                 clearButton.destroy()])
         if historySize != 0:
             text = history.read()[:-1]
+            clearButton.pack(side="bottom", anchor="e", padx=10, pady=5)
         history.close()
         textBox = tk.Text(popup, height=21, bg="#000000", fg="#FFFFFF", insertbackground="#FFFFFF",
                           selectbackground="#505050", bd=0, font=("Arial", 18), wrap="none", spacing3=3,
                           yscrollcommand=v.set)
         textBox.pack(anchor="w", padx=10, pady=10)
         textBox.insert(tk.END, text)
-        clearButton = tk.Button(popup, text="🗑", height=1, font=("Arial", 18), bg="#FF9500", fg="#FFFFFF",
-                                activebackground="#FF9500", activeforeground="#FFFFFF", bd=0,
-                                command=lambda: [open("history.txt", "w").close(), textBox.delete("1.0", tk.END),
-                                textBox.insert(tk.END, "There is no history yet.\n\nTip:\nYou can copy numbers " +
-                                               "from here\nand paste them into the app's\nanswer field.")]
-                                ).pack(side="bottom", anchor="e", padx=10, pady=5)
+
         h.config(command=textBox.xview)
         v.config(command=textBox.yview)
         textBox.yview(tk.END)
@@ -1095,7 +1097,7 @@ class DateComparator(tk.Frame):
         self.textDay["state"] = "disabled"
 
         self.noticeText = tk.Label(self, text="From (format: 02/12/2021)", font=("Arial", 16), bg="#000000",
-                                 fg="#FFFFFF")
+                                   fg="#FFFFFF")
         self.noticeText.grid(row=5, padx=8, sticky="w")
         self.noticeText.grid(row=7, padx=8, sticky="w")
 
