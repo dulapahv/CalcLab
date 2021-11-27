@@ -269,9 +269,11 @@ class CalcLab(tk.Tk):
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+        # reset answer field and various text to default after changing page
         try:
             frame.text.delete(0, tk.END)
-            frame.text.insert(tk.END, 0)
+            frame.text.insert(tk.END, 0)  
+            frame.ratesDetail.config(text="")
         except AttributeError:
             pass
 
@@ -313,7 +315,7 @@ class UpdateNumber(ABC):
 class AnswerField:
     """Manipulating and getting value from the answer field."""
 
-    def summon_answer_field(self, row=2, columnSpan=5):
+    def summon(self, row=2, columnSpan=5):
         self.text = tk.Entry(self, width=21, justify="right", bd=0,
                              bg="#000000", fg="#FFFFFF",
                              insertbackground="#FFFFFF",
@@ -575,7 +577,7 @@ class Calculator(tk.Frame, UpdateNumber):
         self.__lockOperatorInput = False
         self.__operator = None
 
-        AnswerField.summon_answer_field(self, 2, 8)
+        AnswerField.summon(self, 2, 8)
 
         self.historyButton = tk.Button(self, text="↺", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
                                        activebackground="#767676", activeforeground="#FFFFFF", command=self.show_history
@@ -1208,7 +1210,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         self.__fromCurrency = tk.StringVar(value="BTC")
         self.__toCurrency = tk.StringVar(value="USD")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromCurrency, self.__toCurrency, currency)
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1256,8 +1258,8 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                     self.text.insert(0, "Rates Not Available")
                     return 1
                 if self.__fromCurrency.get() == "BTC":
-                    self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):,.9f}" +
-                                            f" {self.__toCurrency.get()}" +
+                    self.ratesDetail.config(text=f"1 BTC = {(self.__b.get_latest_price(self.__toCurrency.get())):,.9f} " +
+                                            f"{self.__toCurrency.get()}" +
                                             f"\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
                     self.__value = self.__b.convert_btc_to_cur(self.__value, self.__toCurrency.get())
 
@@ -1275,8 +1277,8 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
                     return 1
                 self.__value = self.__c.convert(self.__fromCurrency.get(), self.__toCurrency.get(), self.__value)
                 self.ratesDetail.config(text=f"1 {self.__fromCurrency.get()} = " +
-                                        f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):,.7f}" +
-                                        f" {self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
+                                        f"{(self.__c.get_rate(self.__fromCurrency.get(), self.__toCurrency.get())):,.7f} " +
+                                        f"{self.__toCurrency.get()}\nUpdated {datetime.today().strftime('%d/%m/%Y %I:%M %p')}")
             self.set_text(round(self.__value, 7))
 
     def set_text(self, value):
@@ -1301,7 +1303,7 @@ class VolumeConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Milliliters")
         self.__toUnitVal = tk.StringVar(value="Teaspoons (US)")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(volume.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1347,7 +1349,7 @@ class LengthConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Centimeters")
         self.__toUnitVal = tk.StringVar(value="Inches")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(length.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1393,7 +1395,7 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Kilograms")
         self.__toUnitVal = tk.StringVar(value="Pounds")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(weightMass.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1440,7 +1442,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
         self.__toUnitVal = tk.StringVar(value="Fahrenheit")
         self.__temperatureList = ["Celsius", "Fahrenheit", "Kelvin"]
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, self.__temperatureList)
         NumPad.summon(self)
 
@@ -1502,7 +1504,7 @@ class EnergyConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Joules")
         self.__toUnitVal = tk.StringVar(value="Food calories")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(energy.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1548,7 +1550,7 @@ class AreaConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Square meters")
         self.__toUnitVal = tk.StringVar(value="Square feet")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(area.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1594,7 +1596,7 @@ class SpeedConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Kilometers per hour")
         self.__toUnitVal = tk.StringVar(value="Miles per hour")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(speed.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1640,7 +1642,7 @@ class TimeConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Hours")
         self.__toUnitVal = tk.StringVar(value="Minutes")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(time.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1686,7 +1688,7 @@ class PowerConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Kilowats")
         self.__toUnitVal = tk.StringVar(value="Horsepower (US)")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(power.keys()))
         NumPad.summon(self)
 
@@ -1731,7 +1733,7 @@ class DataConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Gigabytes")
         self.__toUnitVal = tk.StringVar(value="Megabytes")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(data.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1777,7 +1779,7 @@ class PressureConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Atmospheres")
         self.__toUnitVal = tk.StringVar(value="Bars")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(pressure.keys()))
         NumPad.summon(self)
         NumPad.disable_negative(self)
@@ -1823,7 +1825,7 @@ class AngleConverter(tk.Frame, UpdateNumber):
         self.__fromUnitVal = tk.StringVar(value="Degrees")
         self.__toUnitVal = tk.StringVar(value="Radians")
 
-        AnswerField.summon_answer_field(self)
+        AnswerField.summon(self)
         OptionMenu.summon(self, self.__fromUnitVal, self.__toUnitVal, list(angle.keys()))
         NumPad.summon(self)
 
