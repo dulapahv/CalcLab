@@ -1146,14 +1146,22 @@ class Calculator(tk.Frame, UpdateNumber):
                 sign = "+"
                 if c < 0:
                     sign = ""
-                if c == 0:
-                    t.write(f"y={m:.2f}x, x-int = {((0 - c) / m):.2f}, y-int = {c:.2f}", font=("Arial", 18))
-                elif m == 0:
-                    t.write(f"y=x{sign}{c:.2f}, x-int = {((0 - c) / m):.2f}, y-int = {c:.2f}", font=("Arial", 18))
-                elif c == 0 and m == 0:
-                    t.write(f"y=x, x-int = {((0 - c) / m):.2f}, y-int = {c:.2f}", font=("Arial", 18))
+                if m % 1 == 0:
+                    m = int(m)
                 else:
-                    t.write(f"y={m:.2f}x{sign}{c:.2f}, x-int = {((0 - c) / m):.2f}, y-int = {c:.2f}", font=("Arial", 18))
+                    m = round(m, 2)
+                if c % 1 == 0:
+                    c = int(c)
+                else:
+                    c = round(c, 2)
+                if c == 0:
+                    t.write(f"y={m}x, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
+                elif m == 0:
+                    t.write(f"y=x{sign}{c}, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
+                elif c == 0 and m == 0:
+                    t.write(f"y=x, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
+                else:
+                    t.write(f"y={m}x{sign}{c}, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
                 t.pd()
                 t.setpos(tempX, tempY)
                 t.pen(pensize=4)
