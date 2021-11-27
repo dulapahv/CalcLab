@@ -20,9 +20,11 @@ through the terminal with the following commands.
 
 import math
 import os
+import random
 import requests
 import subprocess
 import sys
+import turtle as t
 from abc import ABC, abstractmethod
 from datetime import datetime
 
@@ -579,6 +581,10 @@ class Calculator(tk.Frame, UpdateNumber):
 
         AnswerField.summon(self, 2, 8)
 
+        self.graphButton = tk.Button(self, text="P", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
+                                       activebackground="#767676", activeforeground="#FFFFFF", command=self.plot_graph
+                                       ).place(x=442, y=0)
+
         self.historyButton = tk.Button(self, text="↺", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
                                        activebackground="#767676", activeforeground="#FFFFFF", command=self.show_history
                                        ).grid(row=1, column=7, sticky="E")
@@ -1063,6 +1069,91 @@ class Calculator(tk.Frame, UpdateNumber):
         v.config(command=textBox.yview)
         textBox.yview(tk.END)
         popup.mainloop()
+    
+    def plot_graph(self):       
+        expression = self.text.get().replace(" ", "")
+
+        try:
+            try:
+                m = expression.split("y=", 1)[1]
+                m = eval(m.split("x")[0])
+            except SyntaxError:
+                m = 1
+
+            try:
+                c = eval(expression.split("x", 1)[1])
+            except SyntaxError:
+                c = 0
+        except:
+            tk.messagebox.showinfo("Error", "Error occurred: Invalid syntax\n\nMake sure your expression is in "+
+                                   "the format: y=mx+c\nFor example:\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
+            return 1
+        
+        try:
+            t.setworldcoordinates(-200, -200, 200, 200)
+        except:
+            pass
+        t.title("Graph Plotter")
+        t.setworldcoordinates(-200, -200, 200, 200)
+        t.ht()
+        t.tracer(0, 0)
+        count = 0
+        for i in range(25):
+            t.dot()
+            t.write(count)
+            t.fd(20)
+            count += 20
+        t.setx(0)
+        count = 0
+        for i in range(25):
+            t.dot()
+            t.write(count)
+            t.bk(20)
+            count -= 20
+        t.setx(0)
+        t.lt(90)
+        count = 0
+        for i in range(25):
+            t.dot()
+            t.write(count)
+            t.fd(20)
+            count += 20
+        t.sety(0)
+        count = 0
+        for i in range(25):
+            t.dot()
+            t.write(count)
+            t.bk(20)
+            count += 20
+            
+        t.setpos(0, 0)
+        color = "#%06x" % random.randint(0, 0xFFFFFF)
+        t.pu()
+        t.pen(pencolor=color, pensize=4)
+        for x in range(-500, 500):
+            y = (m * x) + c 
+            if x != -500:
+                t.pd()
+            if x == 25:
+                t.pu()
+                tempX, tempY = t.pos()
+                t.pen(pensize=1)
+                t.setpos(x + random.randint(-20, 20), y)
+                if m > 7:
+                    t.sety(random.randint(100, 180))
+                sign = "+"
+                if c < 0:
+                    sign = ""
+                t.write(f"y={m}x{sign}{c}, x-int = {((0 - c) / m):.2f}, y-int = {c:.2f}", font=("Arial", 18))
+                t.pd()
+                t.setpos(tempX, tempY)
+                t.pen(pensize=4)
+            t.setpos(x, y)
+        t.pu()
+        t.pen(pencolor="black", pensize=0)
+        t.seth(0)
+        t.setpos(0, 0)
+        t.update()
 
 
 class DateComparator(tk.Frame):
