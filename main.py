@@ -1085,8 +1085,8 @@ class Calculator(tk.Frame, UpdateNumber):
             except SyntaxError:
                 c = 0
         except:
-            tk.messagebox.showinfo("Error", "Error occurred: Invalid syntax\n\nMake sure your expression is in "+
-                                   "the format: y=mx+c\nFor example:\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
+            tk.messagebox.showinfo("Graph Plotter Error", "Error occurred: Invalid syntax\n\nMake sure your "+
+            "expression is in the format: y=mx+c\nFor example:\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
             return 1
         
         try:
@@ -1124,7 +1124,7 @@ class Calculator(tk.Frame, UpdateNumber):
             t.dot()
             t.write(count)
             t.bk(20)
-            count += 20
+            count -= 20
             
         t.setpos(0, 0)
         color = "#%06x" % random.randint(0, 0xFFFFFF)
