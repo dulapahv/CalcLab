@@ -1141,6 +1141,8 @@ class Calculator(tk.Frame, UpdateNumber):
                 t.setpos(x + random.randint(-20, 20), y)
                 if m > 7:
                     t.sety(random.randint(100, 180))
+                if m < 7:
+                    t.sety(random.randint(-180, -100))
                 sign = "+"
                 if c < 0:
                     sign = ""
