@@ -385,14 +385,11 @@ class AnswerField:
 
     def get_value(self):
         try:
-            float(self.text.get().replace(',', ''))
+            self.__value = eval(self.text.get().replace(',', ''))
         except (NameError, SyntaxError, ValueError, OverflowError):
             self.text.delete(0, tk.END)
             self.text.insert(0, "Error")
-            return 1
-        self.__value = float(self.text.get().replace(',', ''))
-        if self.__value % 1 == 0:
-            self.__value = int(self.__value)
+            return None
         return self.__value
 
 
@@ -1326,10 +1323,7 @@ class VolumeConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * volume[self.__fromUnitVal.get()] / volume[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1375,10 +1369,7 @@ class LengthConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * length[self.__fromUnitVal.get()] / length[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1424,10 +1415,7 @@ class WeightAndMassConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * weightMass[self.__fromUnitVal.get()] / weightMass[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1536,10 +1524,7 @@ class EnergyConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * energy[self.__fromUnitVal.get()] / energy[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1585,10 +1570,7 @@ class AreaConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * area[self.__fromUnitVal.get()] / area[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1634,10 +1616,7 @@ class SpeedConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * speed[self.__fromUnitVal.get()] / speed[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1683,10 +1662,7 @@ class TimeConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * time[self.__fromUnitVal.get()] / time[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1731,10 +1707,7 @@ class PowerConverter(tk.Frame, UpdateNumber):
         if self.__value is None:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * power[self.__fromUnitVal.get()] / power[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1780,10 +1753,7 @@ class DataConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * data[self.__fromUnitVal.get()] / data[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1829,10 +1799,7 @@ class PressureConverter(tk.Frame, UpdateNumber):
         if self.__value is None or self.__value < 0:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * pressure[self.__fromUnitVal.get()] / pressure[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * pressure[self.__fromUnitVal.get()] / pressure[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
@@ -1877,10 +1844,7 @@ class AngleConverter(tk.Frame, UpdateNumber):
         if self.__value is None:
             self.display_error()
         else:
-            try:
-                self.set_text(self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
-            except TypeError:
-                self.display_error()
+            self.set_text(self.__value * angle[self.__fromUnitVal.get()] / angle[self.__toUnitVal.get()])
 
     def set_text(self, value):
         AnswerField.set_value(self, value)
