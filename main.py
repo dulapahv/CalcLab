@@ -1157,7 +1157,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 m = int(m)
             else:
                 m = round(m, 2)
-            t.write(f"x={m}, y-int = {m}", font=("Arial", 18))
+            t.write(f"x={m}, x-int = {m}", font=("Arial", 18))
             t.pen(pensize=1)
             t.pd()
             t.setpos(m, 25)
