@@ -1073,10 +1073,12 @@ class Calculator(tk.Frame, UpdateNumber):
     def plot_graph(self):
         expression = self.text.get().replace(" ", "")
         errorTitle = "Graph Plotter Error"
-        errorText = ("Error occurred: Invalid syntax\n\nExpression must be in the format: " +
-                     "y=mx+c, y=n, x=n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
+        errorText = ("Error occurred: Invalid syntax\n\nExpression must be in the format:\n" +
+                     "y=mx+c, y=mx^n+c, y=n, x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\n" +
+                     "y=-2x+10\ny = (1/2)x - (100/3)\ny=0.03x^3+20")
         isSlope = True
         isXonly = False
+        isYonly = False
         try:
             try:
                 m = expression.split("y=", 1)[1]
@@ -1089,8 +1091,9 @@ class Calculator(tk.Frame, UpdateNumber):
                 m = 1
 
             try:
-                c = eval(expression.split("x", 1)[1])
-            except (SyntaxError, SyntaxError):
+                c = expression.split("x", 1)[1]
+                c = eval(expression.split("+", 1)[1])
+            except:
                 c = 0
         except:
             try:
@@ -1110,13 +1113,26 @@ class Calculator(tk.Frame, UpdateNumber):
             except:
                 tk.messagebox.showinfo(errorTitle, errorText)
                 return 1
+        if "x" not in expression:
+            c, m = m, c
+            isSlope = False
         try:
             if not isXonly:
                 y = float(m * 1) + c
         except (ValueError, TypeError):
             tk.messagebox.showinfo(errorTitle, errorText)
             return 1
-
+        if "^" in expression:
+            try:
+                a = expression.split("x", 1)[1][1:]
+                a = eval(a.split("+")[0])
+            except:
+                if "x" in expression:
+                    a = 1
+                else:
+                    a = 0
+        else:
+            a = 1
         try:
             t.setworldcoordinates(-100, -100, 100, 100)
         except:
@@ -1125,6 +1141,7 @@ class Calculator(tk.Frame, UpdateNumber):
         t.setworldcoordinates(-100, -100, 100, 100)
         t.ht()
         t.tracer(0, 0)
+        t.pen(pencolor="black", pensize=0)
         count = 0
         for i in range(25):
             t.dot()
@@ -1176,10 +1193,20 @@ class Calculator(tk.Frame, UpdateNumber):
             t.setpos(m, 250)
         else:
             for x in range(-250, 250):
-                y = float(m * x) + c
+                y = float(m * (x**a)) + c
                 if x != -250:
                     t.pd()
-                if x == 15:
+                
+                if a != 0:
+                    try:
+                        x == 15 // a**1.5
+                    except TypeError:
+                        tk.messagebox.showinfo(errorTitle, "Error occurred: Math error\n\nPlease check your expression.")
+                        return 1
+                    val = 15 // a**1.5
+                else:
+                    val = 15
+                if x == val:
                     t.pu()
                     tempX, tempY = t.pos()
                     t.pen(pensize=1)
@@ -1201,38 +1228,51 @@ class Calculator(tk.Frame, UpdateNumber):
                         xInt = 0
                     if xInt % 1 == 0:
                         xInt = int(xInt)
+                        xIntText = f", x-int = {xInt}"
                     else:
                         xInt = round(xInt, 2)
+                    if a != 0 and c != 0:
+                        xIntText = ""
                     if c % 1 == 0:
                         c = int(c)
                     else:
                         c = round(c, 2)
-                    if c == 0 and (m == 0 or m == 1 or m == -1):
-                        if isSlope:
-                            if m == -1:
-                                t.write(f"y=-x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
-                            else:
-                                t.write(f"y=x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
-                        else:
-                            t.write(f"y={c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
-                    elif m == 0 or m == 1 or m == -1:
-                        if isSlope:
-                            if m == -1:
-                                t.write(f"y=-x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
-                            else:
-                                t.write(f"y=x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
-                        else:
-                            t.write(f"y={c}, y-int = {c}", font=("Arial", 18))
-                    elif c == 0:
-                        t.write(f"y={m}x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                    if a == 0 or a == 1:
+                        expo = ""
                     else:
-                        t.write(f"y={m}x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                        expo = f"^{a}"
+                    if c == 0 and m == 1:
+                        t.write(f"y=x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
+                    elif c == 0 and m == -1:
+                        t.write(f"y=-x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
+                    else:
+                        if m == 0 or m == 1 or m == -1:
+                            if isSlope:
+                                if m == -1:
+                                    t.write(f"y=-x{expo}{sign}{c}{xIntText}, y-int = {c}", font=("Arial", 18))
+                                else:
+                                    t.write(f"y=x{expo}{sign}{c}{xIntText}, y-int = {c}", font=("Arial", 18))
+                            else:
+                                t.write(f"y={c}, y-int = {c}", font=("Arial", 18))
+                        elif c == 0 and (m == 0 or m == 1 or m == -1):
+                            if isSlope:
+                                if m == -1:
+                                    t.write(f"y=-x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
+                                else:
+                                    t.write(f"y=x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
+                            else:
+                                t.write(f"y={c}{xIntText}, y-int = {c}", font=("Arial", 18))
+                        elif "x" not in expression:
+                            t.write(f"y={m}, y-int = {m}", font=("Arial", 18))
+                        elif c == 0:
+                            t.write(f"y={m}x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
+                        else:
+                            t.write(f"y={m}x{expo}{sign}{c}{xIntText}, y-int = {c}", font=("Arial", 18))
                     t.pd()
                     t.setpos(tempX, tempY)
                     t.pen(pensize=4)
                 t.setpos(x, y)
         t.pu()
-        t.pen(pencolor="black", pensize=0)
         t.seth(0)
         t.setpos(0, 0)
         t.update()
