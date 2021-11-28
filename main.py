@@ -1082,11 +1082,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 m = expression.split("y=", 1)[1]
                 m = eval(m.split("x")[0])
             except SyntaxError:
-                if m == "x":
-                    m = 1
-                else:
-                    tk.messagebox.showinfo(errorTitle, errorText)
-                    return 1
+                m = 1
 
             try:
                 c = eval(expression.split("x", 1)[1])
