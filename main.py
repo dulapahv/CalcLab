@@ -581,7 +581,7 @@ class Calculator(tk.Frame, UpdateNumber):
 
         AnswerField.summon(self, 2, 8)
 
-        self.graphButton = tk.Button(self, text="P", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
+        self.graphButton = tk.Button(self, text="⧟", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
                                      activebackground="#767676", activeforeground="#FFFFFF", command=self.plot_graph
                                      ).place(x=442, y=0)
 
