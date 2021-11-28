@@ -274,7 +274,7 @@ class CalcLab(tk.Tk):
         # reset answer field and various text to default after changing page
         try:
             frame.text.delete(0, tk.END)
-            frame.text.insert(tk.END, 0)  
+            frame.text.insert(tk.END, 0)
             frame.ratesDetail.config(text="")
         except AttributeError:
             pass
@@ -582,8 +582,8 @@ class Calculator(tk.Frame, UpdateNumber):
         AnswerField.summon(self, 2, 8)
 
         self.graphButton = tk.Button(self, text="P", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
-                                       activebackground="#767676", activeforeground="#FFFFFF", command=self.plot_graph
-                                       ).place(x=442, y=0)
+                                     activebackground="#767676", activeforeground="#FFFFFF", command=self.plot_graph
+                                     ).place(x=442, y=0)
 
         self.historyButton = tk.Button(self, text="↺", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
                                        activebackground="#767676", activeforeground="#FFFFFF", command=self.show_history
@@ -1069,12 +1069,12 @@ class Calculator(tk.Frame, UpdateNumber):
         v.config(command=textBox.yview)
         textBox.yview(tk.END)
         popup.mainloop()
-    
-    def plot_graph(self):       
+
+    def plot_graph(self):
         expression = self.text.get().replace(" ", "")
         errorTitle = "Graph Plotter Error"
-        errorText = ("Error occurred: Invalid syntax\n\nExpression must be in the format: "+
-                    "y=mx+c, y=n, x=n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
+        errorText = ("Error occurred: Invalid syntax\n\nExpression must be in the format: " +
+                     "y=mx+c, y=n, x=n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
         isSlope = True
         isXonly = False
         try:
@@ -1142,7 +1142,7 @@ class Calculator(tk.Frame, UpdateNumber):
             t.write(count)
             t.bk(10)
             count -= 10
-            
+
         t.setpos(0, 0)
         color = "#%06x" % random.randint(0, 0xFFFFFF)
         t.pu()
@@ -1165,7 +1165,7 @@ class Calculator(tk.Frame, UpdateNumber):
             t.setpos(m, 250)
         else:
             for x in range(-250, 250):
-                y = (m * x) + c 
+                y = (m * x) + c
                 if x != -250:
                     t.pd()
                 if x == 15:
