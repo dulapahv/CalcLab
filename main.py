@@ -1080,7 +1080,11 @@ class Calculator(tk.Frame, UpdateNumber):
         try:
             try:
                 m = expression.split("y=", 1)[1]
-                m = eval(m.split("x")[0])
+                m = m.split("x")[0]
+                if m == "-":
+                    m = -1
+                else:
+                    m = eval(m)
             except SyntaxError:
                 m = 1
 
@@ -1196,14 +1200,20 @@ class Calculator(tk.Frame, UpdateNumber):
                         c = int(c)
                     else:
                         c = round(c, 2)
-                    if c == 0 and (m == 0 or m == 1):
+                    if c == 0 and (m == 0 or m == 1 or m == -1):
                         if isSlope:
-                            t.write(f"y=x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                            if m == -1:
+                                t.write(f"y=-x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                            else:
+                                t.write(f"y=x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
                         else:
                             t.write(f"y={c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
-                    elif m == 0 or m == 1:
+                    elif m == 0 or m == 1 or m == -1:
                         if isSlope:
-                            t.write(f"y=x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                            if m == -1:
+                                t.write(f"y=-x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                            else:
+                                t.write(f"y=x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
                         else:
                             t.write(f"y={c}, y-int = {c}", font=("Arial", 18))
                     elif c == 0:
