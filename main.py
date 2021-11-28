@@ -19,7 +19,6 @@ through the terminal with the following commands.
 """
 
 import math
-from operator import truediv
 import os
 import random
 import requests
@@ -1074,8 +1073,8 @@ class Calculator(tk.Frame, UpdateNumber):
     def plot_graph(self):       
         expression = self.text.get().replace(" ", "")
         errorTitle = "Graph Plotter Error"
-        errorText = ("Error occurred: Invalid syntax\n\n"+
-                    "Expression must be in the format: y=mx+c, y=n, x=n\nFor example:\ny=20\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
+        errorText = ("Error occurred: Invalid syntax\n\nExpression must be in the format: "+
+                    "y=mx+c, y=n, x=n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
         isSlope = True
         isXonly = False
         try:
@@ -1154,6 +1153,10 @@ class Calculator(tk.Frame, UpdateNumber):
             t.setpos(m, 25)
             t.pu()
             t.setpos(m + 5, 25 + random.randint(-20, 20))
+            if m % 1 == 0:
+                m = int(m)
+            else:
+                m = round(m, 2)
             t.write(f"x={m}, y-int = {m}", font=("Arial", 18))
             t.pen(pensize=1)
             t.pd()
@@ -1165,15 +1168,15 @@ class Calculator(tk.Frame, UpdateNumber):
                 y = (m * x) + c 
                 if x != -250:
                     t.pd()
-                if x == 25:
+                if x == 15:
                     t.pu()
                     tempX, tempY = t.pos()
                     t.pen(pensize=1)
                     t.setpos(x + random.randint(-20, 20), y)
-                    if m > 7:
-                        t.sety(random.randint(20, 100))
-                    if m < -7:
-                        t.sety(random.randint(-20, -100))
+                    if m > 4:
+                        t.sety(random.randint(0, 80))
+                    if m < -4:
+                        t.sety(random.randint(-60, 0))
                     sign = "+"
                     if c < 0:
                         sign = ""
