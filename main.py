@@ -1197,7 +1197,10 @@ class Calculator(tk.Frame, UpdateNumber):
                     else:
                         c = round(c, 2)
                     if c == 0 and (m == 0 or m == 1):
-                        t.write(f"y=x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                        if isSlope:
+                            t.write(f"y=x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                        else:
+                            t.write(f"y={c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
                     elif m == 0 or m == 1:
                         if isSlope:
                             t.write(f"y=x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
