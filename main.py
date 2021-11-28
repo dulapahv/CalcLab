@@ -19,6 +19,7 @@ through the terminal with the following commands.
 """
 
 import math
+from operator import truediv
 import os
 import random
 import requests
@@ -1072,7 +1073,11 @@ class Calculator(tk.Frame, UpdateNumber):
     
     def plot_graph(self):       
         expression = self.text.get().replace(" ", "")
-
+        errorTitle = "Graph Plotter Error"
+        errorText = ("Error occurred: Invalid syntax\n\n"+
+                    "Expression must be in the format: y=mx+c, y=n, x=n\nFor example:\ny=20\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
+        isSlope = True
+        isXonly = False
         try:
             try:
                 m = expression.split("y=", 1)[1]
@@ -1085,87 +1090,124 @@ class Calculator(tk.Frame, UpdateNumber):
             except SyntaxError:
                 c = 0
         except:
-            tk.messagebox.showinfo("Graph Plotter Error", "Error occurred: Invalid syntax\n\nMake sure your "+
-            "expression is in the format: y=mx+c\nFor example:\ny=2x\ny=-2x+10\ny = (1/2)x - (100/3)")
-            return 1
-        
+            try:
+                try:
+                    m = expression.split("y=", 1)[1]
+                    c = eval(m)
+                    m = 0
+                    isSlope = False
+                except:
+                    try:
+                        m = expression.split("x=", 1)[1]
+                        m = eval(m)
+                        isXonly = True
+                    except:
+                        tk.messagebox.showinfo(errorTitle, errorText)
+                        return 1
+            except:
+                tk.messagebox.showinfo(errorTitle, errorText)
+                return 1
         try:
-            t.setworldcoordinates(-200, -200, 200, 200)
+            t.setworldcoordinates(-100, -100, 100, 100)
         except:
             pass
         t.title("Graph Plotter")
-        t.setworldcoordinates(-200, -200, 200, 200)
+        t.setworldcoordinates(-100, -100, 100, 100)
         t.ht()
         t.tracer(0, 0)
         count = 0
         for i in range(25):
             t.dot()
             t.write(count)
-            t.fd(20)
-            count += 20
+            t.fd(10)
+            count += 10
         t.setx(0)
         count = 0
         for i in range(25):
             t.dot()
             t.write(count)
-            t.bk(20)
-            count -= 20
+            t.bk(10)
+            count -= 10
         t.setx(0)
         t.lt(90)
         count = 0
         for i in range(25):
             t.dot()
             t.write(count)
-            t.fd(20)
-            count += 20
+            t.fd(10)
+            count += 10
         t.sety(0)
         count = 0
         for i in range(25):
             t.dot()
             t.write(count)
-            t.bk(20)
-            count -= 20
+            t.bk(10)
+            count -= 10
             
         t.setpos(0, 0)
         color = "#%06x" % random.randint(0, 0xFFFFFF)
         t.pu()
         t.pen(pencolor=color, pensize=4)
-        for x in range(-500, 500):
-            y = (m * x) + c 
-            if x != -500:
-                t.pd()
-            if x == 25:
-                t.pu()
-                tempX, tempY = t.pos()
-                t.pen(pensize=1)
-                t.setpos(x + random.randint(-20, 20), y)
-                if m > 7:
-                    t.sety(random.randint(100, 180))
-                if m < -7:
-                    t.sety(random.randint(-180, -100))
-                sign = "+"
-                if c < 0:
-                    sign = ""
-                if m % 1 == 0:
-                    m = int(m)
-                else:
-                    m = round(m, 2)
-                if c % 1 == 0:
-                    c = int(c)
-                else:
-                    c = round(c, 2)
-                if c == 0:
-                    t.write(f"y={m}x, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
-                elif m == 0:
-                    t.write(f"y=x{sign}{c}, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
-                elif c == 0 and m == 0:
-                    t.write(f"y=x, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
-                else:
-                    t.write(f"y={m}x{sign}{c}, x-int = {((0 - c) / m):.2f}, y-int = {c}", font=("Arial", 18))
-                t.pd()
-                t.setpos(tempX, tempY)
-                t.pen(pensize=4)
-            t.setpos(x, y)
+        if isXonly:
+            t.setpos(m, -250)
+            t.pd()
+            t.setpos(m, 25)
+            t.pu()
+            t.setpos(m + 5, 25 + random.randint(-20, 20))
+            t.write(f"x={m}, y-int = {m}", font=("Arial", 18))
+            t.pen(pensize=1)
+            t.pd()
+            t.setpos(m, 25)
+            t.pen(pensize=4)
+            t.setpos(m, 250)
+        else:
+            for x in range(-250, 250):
+                y = (m * x) + c 
+                if x != -250:
+                    t.pd()
+                if x == 25:
+                    t.pu()
+                    tempX, tempY = t.pos()
+                    t.pen(pensize=1)
+                    t.setpos(x + random.randint(-20, 20), y)
+                    if m > 7:
+                        t.sety(random.randint(20, 100))
+                    if m < -7:
+                        t.sety(random.randint(-20, -100))
+                    sign = "+"
+                    if c < 0:
+                        sign = ""
+                    if m % 1 == 0:
+                        m = int(m)
+                    else:
+                        m = round(m, 2)
+                    try:
+                        xInt = ((0 - c) / m)
+                    except ZeroDivisionError:
+                        xInt = 0
+                    if xInt % 1 == 0:
+                        xInt = int(xInt)
+                    else:
+                        xInt = round(xInt, 2)
+                    if c % 1 == 0:
+                        c = int(c)
+                    else:
+                        c = round(c, 2)
+                    if c == 0 and (m == 0 or m == 1):
+                        t.write(f"y=x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                    elif m == 0 or m == 1:
+                        if isSlope:
+                            t.write(f"y=x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                        else:
+                            t.write(f"y={c}, y-int = {c}", font=("Arial", 18))
+                    elif c == 0:
+                        t.write(f"y={m}x, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                    else:
+                        t.write(f"y={m}x{sign}{c}, x-int = {xInt}, y-int = {c}", font=("Arial", 18))
+                    t.pd()
+                    t.setpos(tempX, tempY)
+                    t.pen(pensize=4)
+                t.setpos(x, y)
         t.pu()
         t.pen(pencolor="black", pensize=0)
         t.seth(0)
