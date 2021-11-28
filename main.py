@@ -1085,12 +1085,12 @@ class Calculator(tk.Frame, UpdateNumber):
                     m = -1
                 else:
                     m = eval(m)
-            except SyntaxError:
+            except (SyntaxError, SyntaxError):
                 m = 1
 
             try:
                 c = eval(expression.split("x", 1)[1])
-            except SyntaxError:
+            except (SyntaxError, SyntaxError):
                 c = 0
         except:
             try:
@@ -1110,6 +1110,13 @@ class Calculator(tk.Frame, UpdateNumber):
             except:
                 tk.messagebox.showinfo(errorTitle, errorText)
                 return 1
+        try:
+            if not isXonly:
+                y = float(m * 1) + c
+        except (ValueError, TypeError):
+            tk.messagebox.showinfo(errorTitle, errorText)
+            return 1
+
         try:
             t.setworldcoordinates(-100, -100, 100, 100)
         except:
@@ -1169,7 +1176,7 @@ class Calculator(tk.Frame, UpdateNumber):
             t.setpos(m, 250)
         else:
             for x in range(-250, 250):
-                y = (m * x) + c
+                y = float(m * x) + c
                 if x != -250:
                     t.pd()
                 if x == 15:
