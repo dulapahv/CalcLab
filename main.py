@@ -262,7 +262,7 @@ class CalcLab(tk.Tk):
         try:
             open("history.txt", "w").close()
         except PermissionError:
-            tk.messagebox.showerror("Error", "Error occurred: Cannot access" +
+            tk.messagebox.showerror("CalcLab Error", "An error occurred:\nCannot access" +
                                     " history.txt\n\nIt may be set to " +
                                     "read-only or you might not have\n" +
                                     "enough disk space.")
@@ -1072,18 +1072,26 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def plot_graph(self):
         errTitle = "Graph Plotter Error"
-        tip = ("Expression must be in the format:\ny=mx+c, f(x)=mx+c, y=mx^n+c, y=n, " +
+        tip = ("Expression must be in the format of:\ny=mx+c, f(x)=mx+c, y=mx^n+c, y=n, " +
                "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
-               "y = (1/2)x - (100/3)\nf(x)=0.03x^3+20")
-        syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"
-        slopeLowErrMsg = "Error occurred: Slope (m) value is too low"
-        expoSlopeErrMsg = f"Error occurred: Unexpected slope (m) value and/or exponent value\n\n{tip}"
-        exponentHighErrMsg = "Error occurred: Exponent value must be\nbetween 0 and 6, inclusive"
-        exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or " +
+               "y = (1/2)x - (100/3)\nf(x)=0.03x^3+20\n\nYou can also type '/undo' to remove each plotted line.")
+        syntaxErrMsg = f"An error occurred:\nInvalid syntax\n\n{tip}"
+        slopeLowErrMsg = "An error occurred:\nSlope (m) value is too low"
+        expoSlopeErrMsg = f"An error occurred:\nUnexpected slope (m) value and/or exponent value\n\n{tip}"
+        exponentHighErrMsg = "An error occurred:\nExponent value must be\nbetween 0 and 6, inclusive"
+        exponentInterceptErrMsg = ("An error occurred:\nUnexpected y-intercept (c) value and/or " +
                                    f"exponent value\n\n{tip}")
-        valTooHighErrMsg = ("Error occurred: Slope (m) value and/or y-intercept (c) value is" +
+        valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is" +
                             "too high (>10,000,000)")
+        mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
+                      f"further. The program will now revert the latest drawings.\n\n{tip}")
         font = ("Arial", 18)
+
+        if self.text.get() == "/undo":
+            for i in range(500):
+                t.undo()
+            return 1
+
         isXonly = False
         # remove spaces/commas and convert expression to lower case
         expression = self.text.get().replace(" ", "").replace(",", "").lower()
@@ -1227,6 +1235,8 @@ class Calculator(tk.Frame, UpdateNumber):
             pass
         t.title("Graph Plotter")
         t.setworldcoordinates(-100, -100, 100, 100)
+        t.setpos(0, 0)
+        t.seth(0)
         t.ht()
         t.tracer(0, 0)
         t.pen(pencolor="black", pensize=0)
@@ -1235,7 +1245,7 @@ class Calculator(tk.Frame, UpdateNumber):
             sign = 1
             if axis == 1 or axis == 2:
                 sign = -1
-            for i in range(25):
+            for action in range(25):
                 t.dot()
                 t.write(interval * sign)
                 t.fd(10)
@@ -1292,6 +1302,14 @@ class Calculator(tk.Frame, UpdateNumber):
                     tempX, tempY = t.pos()
                     t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
                              random.randint(int(tempY) - 10, int(tempY) + 10))
+                    try:
+                        1 / expo
+                    except ZeroDivisionError:
+                        tk.messagebox.showinfo(errTitle, mathErrMsg)
+                        for action in range(250):
+                            t.undo()
+                        t.pu()
+                        return 1
                     if m > 90 / expo or c > 170 / expo:
                         t.setpos(random.randint(-10, 10), random.randint(-10, 10))
                     if expo == 0 or expo == 1:
@@ -1342,7 +1360,6 @@ class Calculator(tk.Frame, UpdateNumber):
                     t.pd()
                 t.setpos(x, y)
         t.pu()
-        t.setpos(0, 0)
         t.update()
 
 
@@ -1519,7 +1536,7 @@ class CurrencyConverter(tk.Frame, UpdateNumber):
         try:
             request = requests.get(url, timeout=timeout)
         except (requests.ConnectionError, requests.Timeout):
-            answer = tk.messagebox.askretrycancel("Error", "Error occurred: No internet connection\n\n" +
+            answer = tk.messagebox.askretrycancel("CalcLab Error", "An error occurred:\nNo internet connection\n\n" +
                                                   "Check your connection and try again.")
             self.equal() if answer else self.display_error()
             return 1
