@@ -1090,6 +1090,7 @@ class Calculator(tk.Frame, UpdateNumber):
         if self.text.get() == "/undo":
             for i in range(500):
                 t.undo()
+            t.pu()
             return 1
 
         isXonly = False
