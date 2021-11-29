@@ -1077,11 +1077,12 @@ class Calculator(tk.Frame, UpdateNumber):
                "y = (1/2)x - (100/3)\nf(x)=0.03x^3+20")
         syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"
         slopeLowErrMsg = "Error occurred: Slope (m) value is too low"
-        expoSlopeErrMsg = f"Error occurred: Unexpected slope (m) value or exponent value\n\n{tip}"
-        exponentHighErrMsg = "Error occurred: Exponent value must be between 0 and 6, inclusive"
+        expoSlopeErrMsg = f"Error occurred: Unexpected slope (m) value and/or exponent value\n\n{tip}"
+        exponentHighErrMsg = "Error occurred: Exponent value must be\nbetween 0 and 6, inclusive"
         exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or " +
                                    f"unexpected exponent value\n\n{tip}")
-        valTooHighErrMsg = "Error occurred: Slope (m) value or y-intercept (c) value is too high (>10,000,000)"
+        valTooHighErrMsg = ("Error occurred: Slope (m) value and/or y-intercept (c) value is" +
+                            "too high (>10,000,000)")
         font = ("Arial", 18)
         isXonly = False
         # remove spaces and convert expression to lower case
