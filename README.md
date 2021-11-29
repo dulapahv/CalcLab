@@ -1,34 +1,39 @@
-# CalcLab
+# Calculator
 An individual project for Introduction to Computers and Programming, KMITL Software Engineering, Year 1, Semester 1
 
+> Created by **Dulapah Vibulsanti (64011388)**
+
 ## Introduction
-CalcLab is an all-in-one application which includes a scientific calculator, date comparator, currency converter (real-time rates), and 12 more converter tools. It is designed to be as easy to use and as straightforward as possible. It also has a beautiful flat-modern GUI which makes it fit seamlessly into any workspace.
+CalcLab is an all-in-one application which includes a scientific calculator with graph plotting capability, date comparator, currency converter (real-time rates), and 12 more converter tools. It is designed to be as easy to use and as straightforward as possible. It also has a beautiful flat-modern GUI which makes it fit seamlessly into any workspace.
 
 ## Motivation
 Generally, when people want to perform conversions or calculations, they must look up on the internet to get the right tools. However, that is inefficient and not so productive as they have to waste their precious time finding the right tools, not to mention some people even have a hard time finding the right tools. This is where CalcLab will solve the problem as it has all the right tools located at their fingertip, and it is very easy to use.
 
 ## Features
 1. [Calculator (scientific)](#1-calculator-scientific)
-2. [Date Comparator](#2-date-comparator)
-3. [Currency Converter (real-time rates provided by Forex Python)](#3-currency-converter)
-4. [Volume Converter](#4-volume-converter)
-5. [Length Converter](#5-length-converter)
-6. [Weight and Mass Converter](#6-weight-and-mass-converter)
-7. [Temperature Converter](#7-temperature-converter)
-8. [Energy Converter](#8-energy-converter)
-9. [Area Converter](#9-area-converter)
-10. [Speed Converter](#10-speed-converter)
-11. [Time Converter](#11-time-converter)
-12. [Power Converter](#12-power-converter)
-13. [Data Converter](#13-data-converter)
-14. [Pressure Converter](#14-pressure-converter)
-15. [Angle Converter](#15-angle-converter)
+2. [Graph Plotter](#2-graph-plotter)
+3. [History](#3-history)
+4. [Tools Selection Menu](#4-tools-selection-menu)
+5. [Date Comparator](#5-date-comparator)
+6. [Currency Converter](#6-currency-converter)
+7. [Volume Converter](#7-volume-converter)
+8. [Length Converter](#8-length-converter)
+9. [Weight and Mass Converter](#9-weight-and-mass-converter)
+10. [Temperature Converter](#10-temperature-converter)
+11. [Energy Converter](#11-energy-converter)
+12. [Area Converter](#12-area-converter)
+13. [Speed Converter](#13-speed-converter)
+14. [Time Converter](#14-time-converter)
+15. [Power Converter](#15-power-converter)
+16. [Data Converter](#16-data-converter)
+17. [Pressure Converter](#17-pressure-converter)
+18. [Angle Converter](#18-angle-converter)
 
 ### 1. Calculator (scientific)
 **Supports:**
 add, subtract, multiply, divide, percentage, square, cube, square root, cube root, factorial, natural logarithm, common logarithm (base 10), sin, cos, tan, sinh, cosh, tanh, e constant, pi constant
 
-![image](https://user-images.githubusercontent.com/71577909/141668830-fda32ffe-5f64-41b6-94ef-6bad6ef4c105.png)
+![image](https://user-images.githubusercontent.com/71577909/143890053-e603982d-3ef4-408c-8bb6-c884af1cb4a0.png)
 
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character) and invalid number operations (i.e. dividing by 0) 
@@ -36,16 +41,43 @@ add, subtract, multiply, divide, percentage, square, cube, square root, cube roo
  - If the result is the same as what is currently displayed (i.e. 4/2 = 2), the display will blink, indicating that the result is updated
  - Auto conversion to scientific notation when the result is too long
  - Able to do continuous calculations, no need to press AC (i.e. pressing 5 + 2 x 2 will give out 14)
+ - Result will be automatically stored in [history](#3-history)
 
+### 2. Graph Plotter
+**Supports:**
+Straight line (`y=mx+c`, `x=my`)
+Parabola (`y=mx^2+c`)
+Cubic Graph (`y=mx^3+c`)
+Graph of `n` power (`y=mx^n+c`); 0 **≤** n **≤** 6
+
+![plot7-2](https://user-images.githubusercontent.com/71577909/143892694-c37f6797-6954-40d1-814c-be642cd7f629.png)
+User can also type `/undo` to remove the latest plotted line.
+Examples of supported equation:
+
+    y=20
+    x=5.23
+    y=2x
+    y=-2x+10
+    y=(1/2)x^2-(100/3)
+    f(x)=0.03x^3+20
+
+### 3. History
+Everytime user calculates something, it will be stored in a text file `history.txt` which user can view it right from the program. User also has an option to clear all history.
+
+![image](https://user-images.githubusercontent.com/71577909/143897465-2215ddfe-8c28-4fb1-8e18-3a59bed5942f.png)
+
+![image](https://user-images.githubusercontent.com/71577909/143897528-f05970f9-3ba6-413a-b4f7-d3213c29fd17.png)
+
+### 4. Tools Selection Menu
 When user presses the upper left button, the selection menu will appear. From here, they can select tools they want.
 
 ![image](https://user-images.githubusercontent.com/71577909/141668902-d7e14812-82a5-4c2a-b152-8eb29343080d.png)
 
-### 2. Date Comparator
+### 5. Date Comparator
 **Supports:**
 Calculate date difference and output in year, month, week, day, and sum of day.
 
-![image](https://user-images.githubusercontent.com/71577909/141668929-c76177ce-58e2-48de-a1ff-da5eeeb6e82b.png)
+![image](https://user-images.githubusercontent.com/71577909/143898075-c5290f80-e365-4c8d-9f44-6def21911d9e.png)
 
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character, invalid date number, not entering date completely)
@@ -53,7 +85,7 @@ Calculate date difference and output in year, month, week, day, and sum of day.
  - Suffix (s) is automatically determined
  - “From” date does not have to be less than “To” date
 
-### 3. Currency Converter
+### 6. Currency Converter
 **Supports:**
 BTC, AED, AUD, BRL, CAD, CHF, CLP, CNY, COP, CZK, DKK, EUR, GBP, HKD, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SAR, SEK, SGD, THB, TRY, TWD, USD, ZAR
 The rates are obtained real-time right when press the equal button.
@@ -65,7 +97,7 @@ The rates are obtained real-time right when press the equal button.
  - The program will show the current rates, date, and time at the bottom left
  - The program will show error if the server is not responding
 
-### 4. Volume Converter
+### 7. Volume Converter
 **Supports:**
 Milliliters, Cubic centimeters, Liters, Cubic meters, Teaspoons (US), Tablespoons (US), Fluid ounces (US), Cups (US), Pints (US), Quarts (US), Gallons (US), Cubic inches, Cubic feet, Cubic yards, Teaspoons (UK), Tablespoons (UK), Fluid ounces (UK), Pints (UK), Quarts (UK), Gallons (UK),
 
@@ -74,7 +106,7 @@ Milliliters, Cubic centimeters, Liters, Cubic meters, Teaspoons (US), Tablespoon
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 5. Length Converter
+### 8. Length Converter
 **Supports:**
 Nanometers, Microns, Millimeters, Centimeters, Meters, Kilometers, Inches, Feet, Yards, Miles, Nautical Miles
 
@@ -83,7 +115,7 @@ Nanometers, Microns, Millimeters, Centimeters, Meters, Kilometers, Inches, Feet,
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 6. Weight and Mass Converter
+### 9. Weight and Mass Converter
 **Supports:**
 Carats, Milligrams, Centigrams, Decigrams, Grams, Dekagrams, Hectogram, Kilograms, Metric tonnes, Ounces, Pounds, Stone, Short tons (US), Long tons (US)
 
@@ -92,7 +124,7 @@ Carats, Milligrams, Centigrams, Decigrams, Grams, Dekagrams, Hectogram, Kilogram
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 7. Temperature Converter
+### 10. Temperature Converter
 **Supports:**
 Celsius, Fahrenheit, Kelvin
 
@@ -101,7 +133,7 @@ Celsius, Fahrenheit, Kelvin
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 8. Energy Converter
+### 11. Energy Converter
 **Supports:**
 Electron volts, Joules, Kilojoules, Thermal calories, Food calories, Foot-pounds, British thermal units
 
@@ -110,7 +142,7 @@ Electron volts, Joules, Kilojoules, Thermal calories, Food calories, Foot-pounds
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 9. Area Converter
+### 12. Area Converter
 **Supports:**
 Square millimeters, Square centimeters, Square meters, Hectares, Square kilometers, Square inches, Square feet, Square yards, Acres, Square miles
 
@@ -119,7 +151,7 @@ Square millimeters, Square centimeters, Square meters, Hectares, Square kilomete
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 10. Speed Converter
+### 13. Speed Converter
 **Supports:**
 Centimeters per second, Meters per second, Kilometers per hour, Feet per second, Miles per hour, Knots, Mach
 
@@ -128,7 +160,7 @@ Centimeters per second, Meters per second, Kilometers per hour, Feet per second,
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 11. Time Converter
+### 14. Time Converter
 **Supports:**
 Microseconds, Milliseconds, Seconds, Minutes, Hours, Days, Weeks, Years
 
@@ -137,7 +169,7 @@ Microseconds, Milliseconds, Seconds, Minutes, Hours, Days, Weeks, Years
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 12. Power Converter
+### 15. Power Converter
 **Supports:**
 Watts, Kilowats, Horsepower (US), Foot-pounds/minute, BTUs/minute
 
@@ -146,7 +178,7 @@ Watts, Kilowats, Horsepower (US), Foot-pounds/minute, BTUs/minute
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 13. Data Converter
+### 16. Data Converter
 **Supports:**
 Bits, Bytes, Kilobits, Kibibits, Kilobytes, Kibibytes, Megabits, Mebibits, Megabytes, Mebibytes, Gigabits, Gibibits, Gigabytes, Gibibytes, Terabits, Tebibits, Terabytes, Tebibytes, Petabits, Pebibits, Petabytes, Pebibytes, Exabits, Exbibits, Exabytes, Exibytes, Zetabits, Zebibits, Zetabytes, Zebibytes, Yottabit, Yobibits, Yottabyte, Yobibytes
 
@@ -155,7 +187,7 @@ Bits, Bytes, Kilobits, Kibibits, Kilobytes, Kibibytes, Megabits, Mebibits, Megab
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 14. Pressure Converter
+### 17. Pressure Converter
 **Supports:**
 Atmospheres, Bars, Kilopascals, Millimeters of mercury, Pascals, Pounds per square inch
 
@@ -164,7 +196,7 @@ Atmospheres, Bars, Kilopascals, Millimeters of mercury, Pascals, Pounds per squa
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character)
 
-### 15. Angle Converter
+### 18. Angle Converter
 **Supports:**
 Degrees, Radians, Gradians
 
