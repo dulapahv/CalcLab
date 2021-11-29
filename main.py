@@ -1071,68 +1071,101 @@ class Calculator(tk.Frame, UpdateNumber):
         popup.mainloop()
 
     def plot_graph(self):
-        expression = self.text.get().replace(" ", "")
-        errorTitle = "Graph Plotter Error"
-        errorText = ("Error occurred: Invalid syntax\n\nExpression must be in the format:\n" +
-                     "y=mx+c, y=mx^n+c, y=n, x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\n" +
-                     "y=-2x+10\ny = (1/2)x - (100/3)\ny=0.03x^3+20")
-        isSlope = True
-        isXonly = False
-        isYonly = False
-        try:
-            try:
-                m = expression.split("y=", 1)[1]
-                m = m.split("x")[0]
-                if m == "-":
-                    m = -1
-                else:
-                    m = eval(m)
-            except (SyntaxError, SyntaxError):
-                m = 1
+        errTitle = "Graph Plotter Error"
+        syntaxErrMsg = ("Error occurred: Invalid syntax\n\n" +
+                        "Expression must be in the format:\ny=mx+c, y=mx^n+c, y=n, " +
+                        "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
+                        "y = (1/2)x - (100/3)\ny=0.03x^3+20")
+        exponentErrMsg = "Error occurred: Unexpected slope (m) value"
+        exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or "+ 
+                                   "unexpected exponent value")
+        # remove spaces and convert expression to lower case
+        expression = self.text.get().replace(" ", "").lower()
 
-            try:
-                c = expression.split("x", 1)[1]
-                c = eval(expression.split("+", 1)[1])
-            except:
-                c = 0
-        except:
-            try:
-                try:
-                    m = expression.split("y=", 1)[1]
-                    c = eval(m)
-                    m = 0
-                    isSlope = False
-                except:
-                    try:
-                        m = expression.split("x=", 1)[1]
-                        m = eval(m)
-                        isXonly = True
-                    except:
-                        tk.messagebox.showinfo(errorTitle, errorText)
-                        return 1
-            except:
-                tk.messagebox.showinfo(errorTitle, errorText)
-                return 1
-        if "x" not in expression:
-            c, m = m, c
-            isSlope = False
-        try:
-            if not isXonly:
-                y = float(m * 1) + c
-        except (ValueError, TypeError):
-            tk.messagebox.showinfo(errorTitle, errorText)
+        # check if the expression is "y=" or "x=" or "f(x)=", if not then raise error
+        if expression[:2] != "y=" and expression[:2] != "x=" and expression[:5] != "f(x)=":
+            tk.messagebox.showinfo(errTitle, syntaxErrMsg)
             return 1
-        if "^" in expression:
-            try:
-                a = expression.split("x", 1)[1][1:]
-                a = eval(a.split("+")[0])
-            except:
-                if "x" in expression:
-                    a = 1
-                else:
-                    a = 0
+
+        # store "y=","x=", "f(x)=" prefix to a variable to be used when writing equation later on,
+        # then remove "y=","x=", "f(x)=" prefix
+        if expression[:2] == "y=" or expression[:2] == "x=":
+            prefix = expression[:2]
+            expression = expression.removeprefix("y=")
+            expression = expression.removeprefix("x=")
         else:
-            a = 1
+            prefix = expression[:5]
+            expression = expression.removeprefix("f(x)=")  
+
+        expo = 1 # default value of exponent
+        c = 0 # default value of y-intercept
+
+        # check if expression is "y=x", "y=-x", "x=y", or "x=-y"
+        if expression.split("x") == ['', '']:
+            m = 1; c = 0
+        elif expression.split("x") == ['-', '']:
+            m = -1; c = 0
+        elif expression.split("y") == ['', '']:
+            m = 1; c = 0
+        elif expression.split("y") == ['-', '']:
+            m = -1; c = 0
+        else:
+            # split expression between "x"
+            # if the front split contains no number, then m = 1 or -1. Else, eval m
+            valBeforeX = expression.split("x")[0]
+            if valBeforeX == "":
+                m = 1
+            elif valBeforeX == "-":
+                m = -1
+            else:
+                try:
+                    m = round(eval(valBeforeX), 2)
+                except (SyntaxError, NameError, TypeError):
+                    tk.messagebox.showinfo(errTitle, exponentErrMsg)
+                    return 1
+            
+            # if the back split contains no number, then c = 0. Else, eval c
+            valAfterX = expression.split("x")[1]
+            # print(valAfterX)
+            if valAfterX == "":
+                c = 0
+            else:
+                try:
+                    c = round(eval(valAfterX), 2)
+                except (SyntaxError, NameError, TypeError):
+                    # if the expression contains exponent (back split contains "^"), split again based on "+" and "-",
+                    # then eval expo
+                    valBeforeOp = valAfterX.split("+")[0][1:]
+                    if "-" in valBeforeOp:
+                        valBeforeOp = valAfterX.split("-")[0][1:]
+                    if valBeforeOp == "":
+                        tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
+                        return 1
+                    try:
+                        valBeforeOp = round(eval(valBeforeOp), 2)
+                    except (SyntaxError, NameError, TypeError):
+                        tk.messagebox.showinfo(errTitle, exponentErrMsg)
+                        return 1
+                    expo = valBeforeOp
+                    
+                    # get c value
+                    # check whether there is c value or not, if so, split based on "+" and "-", then eval c
+                    if len(valAfterX.split("+")) == 1 and len(valAfterX.split("-")) == 1:
+                        c = 0
+                    else:
+                        try:
+                            try:
+                                valAfterOp = eval(valAfterX.split("+")[1])
+                            except (SyntaxError, NameError, TypeError):
+                                tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
+                                return 1
+                        except IndexError:
+                            try:
+                                valAfterOp = eval(valAfterX.split("-")[1]) * -1
+                            except (SyntaxError, NameError, TypeError):
+                                tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
+                                return 1
+                        c = valAfterOp
         try:
             t.setworldcoordinates(-100, -100, 100, 100)
         except:
@@ -1142,138 +1175,91 @@ class Calculator(tk.Frame, UpdateNumber):
         t.ht()
         t.tracer(0, 0)
         t.pen(pencolor="black", pensize=0)
-        count = 0
-        for i in range(25):
-            t.dot()
-            t.write(count)
-            t.fd(10)
-            count += 10
-        t.setx(0)
-        count = 0
-        for i in range(25):
-            t.dot()
-            t.write(count)
-            t.bk(10)
-            count -= 10
-        t.setx(0)
-        t.lt(90)
-        count = 0
-        for i in range(25):
-            t.dot()
-            t.write(count)
-            t.fd(10)
-            count += 10
-        t.sety(0)
-        count = 0
-        for i in range(25):
-            t.dot()
-            t.write(count)
-            t.bk(10)
-            count -= 10
+        for axis in range(4):
+            interval = 0
+            sign = 1
+            if axis == 1 or axis == 2:
+                sign = -1
+            for i in range(25):
+                t.dot()
+                t.write(interval * sign)
+                t.fd(10)
+                interval += 10
+            t.bk(250)
+            t.rt(90)
 
-        t.setpos(0, 0)
+        if expo == 0:
+            xInt = (0 - c) / m
+        elif expo % 2 != 0:
+            xInt = round((((c) / m) ** (1/float(expo)) * -1), 2)
+            if xInt == -0:
+                xInt = 0
+        elif expo % 2 == 0 and c == 0:
+            xInt = 0
+        else:
+            xInt = "n/a"
+        yInt = c
+
         color = "#%06x" % random.randint(0, 0xFFFFFF)
         t.pu()
         t.pen(pencolor=color, pensize=4)
-        if isXonly:
-            t.setpos(m, -250)
-            t.pd()
-            t.setpos(m, 25)
-            t.pu()
-            t.setpos(m + 5, 25 + random.randint(-20, 20))
-            if m % 1 == 0:
-                m = int(m)
-            else:
-                m = round(m, 2)
-            t.write(f"x={m}, x-int = {m}", font=("Arial", 18))
-            t.pen(pensize=1)
-            t.pd()
-            t.setpos(m, 25)
-            t.pen(pensize=4)
-            t.setpos(m, 250)
-        else:
-            for x in range(-250, 250):
-                y = float(m * (x**a)) + c
-                if x != -250:
-                    t.pd()
-                
-                if a != 0:
-                    try:
-                        x == 15 // a**1.5
-                    except TypeError:
-                        tk.messagebox.showinfo(errorTitle, "Error occurred: Math error\n\nPlease check your expression.")
-                        return 1
-                    val = 15 // a**1.5
-                else:
-                    val = 15
-                if x == val:
-                    t.pu()
-                    tempX, tempY = t.pos()
-                    t.pen(pensize=1)
-                    t.setpos(x + random.randint(-20, 20), y)
-                    if m > 4:
-                        t.sety(random.randint(0, 80))
-                    if m < -4:
-                        t.sety(random.randint(-60, 0))
-                    sign = "+"
-                    if c < 0:
-                        sign = ""
-                    if m % 1 == 0:
-                        m = int(m)
-                    else:
-                        m = round(m, 2)
-                    try:
-                        xInt = ((0 - c) / m)
-                    except ZeroDivisionError:
-                        xInt = 0
-                    if xInt % 1 == 0:
-                        xInt = int(xInt)
-                        xIntText = f", x-int = {xInt}"
-                    else:
-                        xInt = round(xInt, 2)
-                    if a != 0 and c != 0:
-                        xIntText = ""
-                    if c % 1 == 0:
-                        c = int(c)
-                    else:
-                        c = round(c, 2)
-                    if a == 0 or a == 1:
-                        expo = ""
-                    else:
-                        expo = f"^{a}"
-                    if c == 0 and m == 1:
-                        t.write(f"y=x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
-                    elif c == 0 and m == -1:
-                        t.write(f"y=-x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
-                    else:
-                        if m == 0 or m == 1 or m == -1:
-                            if isSlope:
-                                if m == -1:
-                                    t.write(f"y=-x{expo}{sign}{c}{xIntText}, y-int = {c}", font=("Arial", 18))
-                                else:
-                                    t.write(f"y=x{expo}{sign}{c}{xIntText}, y-int = {c}", font=("Arial", 18))
-                            else:
-                                t.write(f"y={c}, y-int = {c}", font=("Arial", 18))
-                        elif c == 0 and (m == 0 or m == 1 or m == -1):
-                            if isSlope:
-                                if m == -1:
-                                    t.write(f"y=-x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
-                                else:
-                                    t.write(f"y=x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
-                            else:
-                                t.write(f"y={c}{xIntText}, y-int = {c}", font=("Arial", 18))
-                        elif "x" not in expression:
-                            t.write(f"y={m}, y-int = {m}", font=("Arial", 18))
-                        elif c == 0:
-                            t.write(f"y={m}x{expo}{xIntText}, y-int = {c}", font=("Arial", 18))
+        for x in range(-250, 250):
+            y = m * (x**expo) + c
+            if x != -250:
+                t.pd()
+            if x == 0:
+                t.pu()
+                tempX, tempY = t.pos()
+                t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
+                         random.randint(int(tempY) - 10, int(tempY) + 10))
+                if expo == 0 or expo == 1:
+                    if c == 0:
+                        if m == 0 or m == 1:
+                            t.write(f"      {prefix}x, {xInt = }, {yInt = }", font=("Arial", 18))
+                        elif m == -1:
+                            t.write(f"      {prefix}-{m}x, {xInt = }, {yInt = }", font=("Arial", 18))
                         else:
-                            t.write(f"y={m}x{expo}{sign}{c}{xIntText}, y-int = {c}", font=("Arial", 18))
-                    t.pd()
-                    t.setpos(tempX, tempY)
-                    t.pen(pensize=4)
-                t.setpos(x, y)
+                            t.write(f"      {prefix}{m}x, {xInt = }, {yInt = }", font=("Arial", 18))
+                    elif c >= 0:
+                        if m == 0 or m == 1:
+                            t.write(f"      {prefix}x+{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        elif m == -1:
+                            t.write(f"      {prefix}-{m}x+{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        else:
+                            t.write(f"      {prefix}{m}x+{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                    else:
+                        if m == 0 or m == 1:
+                            t.write(f"      {prefix}x{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        elif m == -1:
+                            t.write(f"      {prefix}-{m}x{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        else:
+                            t.write(f"      {prefix}{m}x{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                else:
+                    if c == 0:
+                        if m == 0 or m == 1:
+                            t.write(f"      {prefix}x^{expo}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        elif m == -1:
+                            t.write(f"      {prefix}-{m}x^{expo}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        else:
+                            t.write(f"      {prefix}{m}x^{expo}, {xInt = }, {yInt = }", font=("Arial", 18))
+                    elif c >= 0:
+                        if m == 0 or m == 1:
+                            t.write(f"      {prefix}x^{expo}+{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        elif m == -1:
+                            t.write(f"      {prefix}-{m}x^{expo}+{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        else:
+                            t.write(f"      {prefix}{m}x^{expo}+{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                    else:
+                        if m == 0 or m == 1:
+                            t.write(f"      {prefix}x^{expo}{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        elif m == -1:
+                            t.write(f"      {prefix}-{m}x^{expo}{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                        else:
+                            t.write(f"      {prefix}{m}x^{expo}{c}, {xInt = }, {yInt = }", font=("Arial", 18))
+                t.setpos(tempX, tempY)
+                t.pd()
+            t.setpos(x, y)
         t.pu()
-        t.seth(0)
         t.setpos(0, 0)
         t.update()
 
