@@ -1072,15 +1072,15 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def plot_graph(self):
         errTitle = "Graph Plotter Error"
-        tip = ("Expression must be in the format:\ny=mx+c, y=mx^n+c, y=n, " +
-              "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
-              "y = (1/2)x - (100/3)\ny=0.03x^3+20")
-        syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"               
+        tip = ("Expression must be in the format:\ny=mx+c, f(x)=mx+c, y=mx^n+c, y=n, " +
+               "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
+               "y = (1/2)x - (100/3)\nf(x)=0.03x^3+20")
+        syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"      
         slopeLowErrMsg = "Error occurred: Slope (m) value is too low"
         exponentErrMsg = f"Error occurred: Unexpected slope (m) value\n\n{tip}"
         exponentHighErrMsg = "Error occurred: Exponent value must be between 0 and 6, inclusive"
-        exponentInterceptErrMsg = (f"Error occurred: Unexpected y-intercept (c) value and/or "+ 
-                                   "unexpected exponent value\n\n{tip}")
+        exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or " +
+                                   f"unexpected exponent value\n\n{tip}")
         font = ("Arial", 18)
         isXonly = False
         # remove spaces and convert expression to lower case
@@ -1103,23 +1103,27 @@ class Calculator(tk.Frame, UpdateNumber):
             expression = expression.removeprefix("x=")
         else:
             prefix = expression[:5]
-            expression = expression.removeprefix("f(x)=")  
+            expression = expression.removeprefix("f(x)=")
 
-        expo = 1 # default value of exponent
-        c = 0 # default value of y-intercept
+        expo = 1  # default value of exponent
+        c = 0  # default value of y-intercept
 
         # check if expression is "y=x", "y=-x", "x=y", or "x=-y"
         if expression.split("x") == ['', '']:
-            m = 1; c = 0
+            m = 1
+            c = 0
         elif expression.split("x") == ['-', '']:
-            m = -1; c = 0
+            m = -1
+            c = 0
         elif expression.split("y") == ['', '']:
-            m = 1; c = 0
+            m = 1
+            c = 0
             isXonly = False
         elif expression.split("y") == ['-', '']:
-            m = -1; c = 0
+            m = -1
+            c = 0
             isXonly = False
-            
+
         else:
             # split expression between "x"
             # if the front split contains no number, then m = 1 or -1. Else, eval m
@@ -1134,14 +1138,13 @@ class Calculator(tk.Frame, UpdateNumber):
                 except (SyntaxError, NameError, TypeError):
                     tk.messagebox.showinfo(errTitle, exponentErrMsg)
                     return 1
-            
+
             # check if there is other term left
             if not expression.replace(str(m), ""):
                 expo = 0
             else:
                 # if the back split contains no number, then c = 0. Else, eval c
                 valAfterX = expression.split("x")[1]
-                # print(valAfterX)
                 if valAfterX == "":
                     c = 0
                 else:
@@ -1162,7 +1165,7 @@ class Calculator(tk.Frame, UpdateNumber):
                             tk.messagebox.showinfo(errTitle, exponentErrMsg)
                             return 1
                         expo = valBeforeOp
-                        
+
                         # get c value
                         # check whether there is c value or not, if so, split based on "+" and "-", then eval c
                         if len(valAfterX.split("+")) == 1 and len(valAfterX.split("-")) == 1:
@@ -1185,7 +1188,7 @@ class Calculator(tk.Frame, UpdateNumber):
         if expo > 6:
             tk.messagebox.showinfo(errTitle, exponentHighErrMsg)
             return 1
-        
+
         xInt = "n/a"
         if expression != "0":
             try:
@@ -1239,20 +1242,22 @@ class Calculator(tk.Frame, UpdateNumber):
             slope = ""
         else:
             slope = m
-        
-        if prefix == "y=" and expo == 0:
+
+        if (prefix == "y=" or prefix == "f(x)=") and expo == 0:
             if slope == "":
                 var = 1
+                slope = 1
             elif slope == 0:
                 var = 0
             else:
                 var = ""
-            xInt = "n/a"; yInt = slope
+            xInt = "n/a"
+            yInt = slope
         elif prefix == "x=" and expo == 0:
             if slope == "":
                 slope = 1
                 var = "y"
-        elif prefix == "y=":
+        elif prefix == "y=" or prefix == "f(x)=":
             var = "x"
         else:
             var = "y"
@@ -1277,7 +1282,7 @@ class Calculator(tk.Frame, UpdateNumber):
                     t.pu()
                     tempX, tempY = t.pos()
                     t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
-                            random.randint(int(tempY) - 10, int(tempY) + 10))
+                             random.randint(int(tempY) - 10, int(tempY) + 10))
                     if expo == 0 or expo == 1:
                         if c == 0:
                             if m == 0 or m == 1:
