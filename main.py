@@ -1072,15 +1072,15 @@ class Calculator(tk.Frame, UpdateNumber):
 
     def plot_graph(self):
         errTitle = "Graph Plotter Error"
-        syntaxErrMsg = ("Error occurred: Invalid syntax\n\n" +
-                        "Expression must be in the format:\ny=mx+c, y=mx^n+c, y=n, " +
-                        "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
-                        "y = (1/2)x - (100/3)\ny=0.03x^3+20")
+        tip = ("Expression must be in the format:\ny=mx+c, y=mx^n+c, y=n, " +
+              "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
+              "y = (1/2)x - (100/3)\ny=0.03x^3+20")
+        syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"               
         slopeLowErrMsg = "Error occurred: Slope (m) value is too low"
-        exponentErrMsg = "Error occurred: Unexpected slope (m) value"
+        exponentErrMsg = f"Error occurred: Unexpected slope (m) value\n\n{tip}"
         exponentHighErrMsg = "Error occurred: Exponent value must be between 0 and 6, inclusive"
-        exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or "+ 
-                                   "unexpected exponent value")
+        exponentInterceptErrMsg = (f"Error occurred: Unexpected y-intercept (c) value and/or "+ 
+                                   "unexpected exponent value\n\n{tip}")
         font = ("Arial", 18)
         isXonly = False
         # remove spaces and convert expression to lower case
@@ -1186,20 +1186,22 @@ class Calculator(tk.Frame, UpdateNumber):
             tk.messagebox.showinfo(errTitle, exponentHighErrMsg)
             return 1
         
-        try:
-            if expo == 0:
-                xInt = (0 - c) / m
-            elif expo % 2 != 0:
-                xInt = round((((c) / m) ** (1/float(expo)) * -1), 2)
-                if xInt == -0:
+        xInt = "n/a"
+        if expression != "0":
+            try:
+                if expo == 0:
+                    xInt = (0 - c) / m
+                elif expo % 2 != 0:
+                    xInt = round((((c) / m) ** (1/float(expo)) * -1), 2)
+                    if xInt == -0:
+                        xInt = 0
+                elif expo % 2 == 0 and c == 0:
                     xInt = 0
-            elif expo % 2 == 0 and c == 0:
-                xInt = 0
-            else:
-                xInt = "n/a"
-        except ZeroDivisionError:
-            tk.messagebox.showinfo(errTitle, slopeLowErrMsg)
-            return 1
+                else:
+                    xInt = "n/a"
+            except ZeroDivisionError:
+                tk.messagebox.showinfo(errTitle, slopeLowErrMsg)
+                return 1
         try:
             if xInt % 1 == 0:
                 xInt = int(xInt)
@@ -1239,8 +1241,17 @@ class Calculator(tk.Frame, UpdateNumber):
             slope = m
         
         if prefix == "y=" and expo == 0:
-            var = ""
+            if slope == "":
+                var = 1
+            elif slope == 0:
+                var = 0
+            else:
+                var = ""
             xInt = "n/a"; yInt = slope
+        elif prefix == "x=" and expo == 0:
+            if slope == "":
+                slope = 1
+                var = "y"
         elif prefix == "y=":
             var = "x"
         else:
