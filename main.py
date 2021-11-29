@@ -1240,7 +1240,7 @@ class Calculator(tk.Frame, UpdateNumber):
         t.seth(0)
         t.ht()
         t.tracer(0, 0)
-        t.pen(pencolor="black", pensize=0)
+        t.pen(pencolor="black", pensize=1)
         for axis in range(4):
             interval = 0
             sign = 1
