@@ -1146,7 +1146,7 @@ class Calculator(tk.Frame, UpdateNumber):
             else:
                 try:
                     m = round(eval(valBeforeX), 2)
-                except (SyntaxError, NameError, TypeError):
+                except (SyntaxError, NameError, TypeError, ZeroDivisionError):
                     tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                     return 1
 
@@ -1165,7 +1165,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 else:
                     try:
                         c = round(eval(valAfterX), 2)
-                    except (SyntaxError, NameError, TypeError):
+                    except (SyntaxError, NameError, TypeError, ZeroDivisionError):
                         # if the expression contains exponent (back split contains "^"), split again based on "+" and "-",
                         # then eval expo
                         valBeforeOp = valAfterX.split("+")[0][1:]
@@ -1176,7 +1176,7 @@ class Calculator(tk.Frame, UpdateNumber):
                             return 1
                         try:
                             valBeforeOp = round(eval(valBeforeOp), 2)
-                        except (SyntaxError, NameError, TypeError):
+                        except (SyntaxError, NameError, TypeError, ZeroDivisionError):
                             tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                             return 1
                         expo = valBeforeOp
@@ -1231,6 +1231,11 @@ class Calculator(tk.Frame, UpdateNumber):
                 xInt = int(xInt)
         except TypeError:
             pass
+
+        if c % 1 == 0:
+            c = int(c)
+        if m % 1 == 0:
+            m = int(m)
         yInt = c
 
         try:
