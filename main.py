@@ -1075,16 +1075,17 @@ class Calculator(tk.Frame, UpdateNumber):
         tip = ("Expression must be in the format:\ny=mx+c, f(x)=mx+c, y=mx^n+c, y=n, " +
                "x=n\n\nFor example:\ny=20\nx=(22/7)+5\ny=2x\ny=-2x+10\n" +
                "y = (1/2)x - (100/3)\nf(x)=0.03x^3+20")
-        syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"      
+        syntaxErrMsg = f"Error occurred: Invalid syntax\n\n{tip}"
         slopeLowErrMsg = "Error occurred: Slope (m) value is too low"
-        exponentErrMsg = f"Error occurred: Unexpected slope (m) value\n\n{tip}"
+        expoSlopeErrMsg = f"Error occurred: Unexpected slope (m) value or exponent value\n\n{tip}"
         exponentHighErrMsg = "Error occurred: Exponent value must be between 0 and 6, inclusive"
         exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or " +
                                    f"unexpected exponent value\n\n{tip}")
+        valTooHighErrMsg = "Error occurred: Slope (m) value or y-intercept (c) value is too high (>10,000,000)"
         font = ("Arial", 18)
         isXonly = False
         # remove spaces and convert expression to lower case
-        expression = self.text.get().replace(" ", "").lower()
+        expression = self.text.get().replace(" ", "").replace(",", "").lower()
 
         # check if the expression is "y=" or "x=" or "f(x)=", if not then raise error
         if expression[:2] != "y=" and expression[:2] != "x=" and expression[:5] != "f(x)=":
@@ -1136,7 +1137,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 try:
                     m = round(eval(valBeforeX), 2)
                 except (SyntaxError, NameError, TypeError):
-                    tk.messagebox.showinfo(errTitle, exponentErrMsg)
+                    tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                     return 1
 
             # check if there is other term left
@@ -1166,7 +1167,7 @@ class Calculator(tk.Frame, UpdateNumber):
                         try:
                             valBeforeOp = round(eval(valBeforeOp), 2)
                         except (SyntaxError, NameError, TypeError):
-                            tk.messagebox.showinfo(errTitle, exponentErrMsg)
+                            tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                             return 1
                         expo = valBeforeOp
 
@@ -1191,6 +1192,9 @@ class Calculator(tk.Frame, UpdateNumber):
         # prevent user from entering too high exponent value
         if expo > 6:
             tk.messagebox.showinfo(errTitle, exponentHighErrMsg)
+            return 1
+        if m > 10000000 or c > 10000000:
+            tk.messagebox.showinfo(errTitle, valTooHighErrMsg)
             return 1
 
         xInt = "n/a"
