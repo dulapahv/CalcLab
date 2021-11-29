@@ -581,11 +581,11 @@ class Calculator(tk.Frame, UpdateNumber):
 
         AnswerField.summon(self, 2, 8)
 
-        self.graphButton = tk.Button(self, text="⧟", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
+        self.graphButton = tk.Button(self, text="⌗", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
                                      activebackground="#767676", activeforeground="#FFFFFF", command=self.plot_graph
-                                     ).place(x=442, y=0)
+                                     ).place(x=436, y=0)
 
-        self.historyButton = tk.Button(self, text="↺", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Cambria", 18), width=3,
+        self.historyButton = tk.Button(self, text="⭯", bg="#1C1C1C", fg="#FFFFFF", bd=0, font=("Arial", 18), width=3,
                                        activebackground="#767676", activeforeground="#FFFFFF", command=self.show_history
                                        ).grid(row=1, column=7, sticky="E")
 
@@ -1292,6 +1292,8 @@ class Calculator(tk.Frame, UpdateNumber):
                     tempX, tempY = t.pos()
                     t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
                              random.randint(int(tempY) - 10, int(tempY) + 10))
+                    if m > 90 / expo or c > 170 / expo:
+                        t.setpos(random.randint(-10, 10), random.randint(-10, 10))
                     if expo == 0 or expo == 1:
                         if c == 0:
                             if m == 0 or m == 1:
