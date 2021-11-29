@@ -1080,7 +1080,7 @@ class Calculator(tk.Frame, UpdateNumber):
         expoSlopeErrMsg = f"Error occurred: Unexpected slope (m) value and/or exponent value\n\n{tip}"
         exponentHighErrMsg = "Error occurred: Exponent value must be\nbetween 0 and 6, inclusive"
         exponentInterceptErrMsg = ("Error occurred: Unexpected y-intercept (c) value and/or " +
-                                   f"unexpected exponent value\n\n{tip}")
+                                   f"exponent value\n\n{tip}")
         valTooHighErrMsg = ("Error occurred: Slope (m) value and/or y-intercept (c) value is" +
                             "too high (>10,000,000)")
         font = ("Arial", 18)
