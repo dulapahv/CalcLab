@@ -1198,7 +1198,7 @@ class Calculator(tk.Frame, UpdateNumber):
                                 except (SyntaxError, NameError, TypeError):
                                     tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
                                     return 1
-                            c = valAfterOp
+                            c = round(valAfterOp, 2)
         # prevent user from entering too high exponent value
         if expo > 6:
             tk.messagebox.showinfo(errTitle, exponentHighErrMsg)
