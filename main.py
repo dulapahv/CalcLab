@@ -1081,7 +1081,7 @@ class Calculator(tk.Frame, UpdateNumber):
         exponentHighErrMsg = "An error occurred:\nExponent value must be\nbetween 0 and 6, inclusive"
         exponentInterceptErrMsg = ("An error occurred:\nUnexpected y-intercept (c) value and/or " +
                                    f"exponent value\n\n{tip}")
-        valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is" +
+        valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is " +
                             "too high (>10,000,000)")
         mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
                       f"further. The program will now revert the latest plotted line.\n\n{tip}")
