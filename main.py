@@ -1085,7 +1085,7 @@ class Calculator(tk.Frame, UpdateNumber):
                             "too high (>10,000,000)")
         font = ("Arial", 18)
         isXonly = False
-        # remove spaces and convert expression to lower case
+        # remove spaces/commas and convert expression to lower case
         expression = self.text.get().replace(" ", "").replace(",", "").lower()
 
         # check if the expression is "y=" or "x=" or "f(x)=", if not then raise error
