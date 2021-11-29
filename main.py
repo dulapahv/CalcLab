@@ -1144,7 +1144,11 @@ class Calculator(tk.Frame, UpdateNumber):
                 expo = 0
             else:
                 # if the back split contains no number, then c = 0. Else, eval c
-                valAfterX = expression.split("x")[1]
+                try:
+                    valAfterX = expression.split("x")[1]
+                except IndexError:
+                    tk.messagebox.showinfo(errTitle, syntaxErrMsg)
+                    return 1
                 if valAfterX == "":
                     c = 0
                 else:
