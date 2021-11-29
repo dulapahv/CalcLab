@@ -1238,7 +1238,10 @@ class Calculator(tk.Frame, UpdateNumber):
         else:
             slope = m
         
-        if prefix == "y=":
+        if prefix == "y=" and expo == 0:
+            var = ""
+            xInt = "n/a"; yInt = slope
+        elif prefix == "y=":
             var = "x"
         else:
             var = "y"
@@ -1250,7 +1253,7 @@ class Calculator(tk.Frame, UpdateNumber):
             tempX, tempY = t.pos()
             t.pu()
             t.setx(tempX + random.randint(0, 10))
-            t.write(f"{prefix}{slope}", font=font)
+            t.write(f"{prefix}{slope}, xInt = {slope}, yInt = 'n/a'", font=font)
             t.setpos(tempX, tempY)
             t.pd()
             t.setpos(m, 250)
