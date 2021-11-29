@@ -1213,7 +1213,10 @@ class Calculator(tk.Frame, UpdateNumber):
                 if expo == 0:
                     xInt = (0 - c) / m
                 elif expo % 2 != 0:
-                    xInt = round((((c) / m) ** (1/float(expo)) * -1), 2)
+                    if c >= 0:
+                        xInt = round((((c) / m) ** (1/float(expo)) * -1), 2)
+                    else:
+                        xInt = round((((c * -1) / m) ** (1/float(expo)) * -1), 2)
                     if xInt == -0:
                         xInt = 0
                 elif expo % 2 == 0 and c == 0:
