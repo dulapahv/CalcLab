@@ -47,7 +47,7 @@ add, subtract, multiply, divide, percentage, square, cube, square root, cube roo
 **Supports:**
  - Straight line (`y=mx+c`, `x=my`)
  - Parabola (`y=mx^2+c`)
- - Cubic Graph (`y=mx^3+c`)
+ - Cubic graph (`y=mx^3+c`)
  - Graph of `n` power (`y=mx^n+c`); 0 **≤** n **≤** 6
 
 ![plot7-2](https://user-images.githubusercontent.com/71577909/143892694-c37f6797-6954-40d1-814c-be642cd7f629.png)
