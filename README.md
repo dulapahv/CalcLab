@@ -73,7 +73,7 @@ Everytime user calculates something, it will be stored in a text file `history.t
 ### 4. Tools Selection Menu
 When user presses the upper left button, the selection menu will appear. From here, they can select tools they want.
 
-![image](https://user-images.githubusercontent.com/71577909/141668902-d7e14812-82a5-4c2a-b152-8eb29343080d.png)
+![image](https://user-images.githubusercontent.com/71577909/144089150-24923de5-fdda-48d4-87d7-42ab1abda11b.png)
 
 ### 5. Date Comparator
 **Supports:**
