@@ -1078,12 +1078,11 @@ class Calculator(tk.Frame, UpdateNumber):
         syntaxErrMsg = f"An error occurred:\nInvalid syntax\n\n{tip}"
         slopeLowErrMsg = "An error occurred:\nSlope (m) value is too low"
         expoSlopeErrMsg = f"An error occurred:\nUnexpected slope (m) value and/or exponent value\n\n{tip}"
-        exponentHighErrMsg = "An error occurred:\nExponent value must be\nbetween 0 and 6, inclusive"
         exponentInterceptErrMsg = ("An error occurred:\nUnexpected y-intercept (c) value and/or " +
                                    f"exponent value\n\n{tip}")
         valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is " +
                             "too high (>10,000,000)")
-        expoNotIntErrMsg = "An error occurred:\nExponent value must be an integer"
+        intErrMsg = "An error occurred:\nExponent value must be a positive integer between 0 and 6, inclusive"
         mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
                       f"further. The program will now revert the latest plotted line.\n\n{tip}")
         font = ("Arial", 18)
@@ -1200,17 +1199,13 @@ class Calculator(tk.Frame, UpdateNumber):
                                     tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
                                     return 1
                             c = round(valAfterOp, 2)
-        # prevent user from entering too high exponent value
-        if expo > 6:
-            tk.messagebox.showinfo(errTitle, exponentHighErrMsg)
+        # prevent user from entering non integer exponent value, and too high/low exponent value
+        if isinstance(expo, float) or expo > 6 or expo < 0:
+            tk.messagebox.showinfo(errTitle, intErrMsg)
             return 1
         # prevent user from entering too high slope value
         if m > 10000000 or c > 10000000:
             tk.messagebox.showinfo(errTitle, valTooHighErrMsg)
-            return 1
-        # prevent user from entering non integer exponent value
-        if isinstance(expo, float):
-            tk.messagebox.showinfo(errTitle, expoNotIntErrMsg)
             return 1
 
         xInt = "n/a"
