@@ -551,7 +551,7 @@ class SelectionMenu(tk.Frame):
         # list since user is already in that page
         pages.remove("SelectionMenu")
         pageList = pages
-        iconList = [" ∑", "📆", " £ ", "🧊", "📏", "⏬ ", "🔥 ", "⚛ ", "⬟ ", "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
+        iconList = [" ∑", "📆", " £ ", "🧊", "📏", "⧭ ", "🔥 ", "⚛ ", "⬟ ", "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
         for index, page in enumerate(pageList):
             spacedText = ""
             for i, letter in enumerate(page):
