@@ -1083,6 +1083,7 @@ class Calculator(tk.Frame, UpdateNumber):
                                    f"exponent value\n\n{tip}")
         valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is " +
                             "too high (>10,000,000)")
+        expoNotIntErrMsg = "An error occurred:\nExponent value must be an integer"
         mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
                       f"further. The program will now revert the latest plotted line.\n\n{tip}")
         font = ("Arial", 18)
@@ -1203,8 +1204,13 @@ class Calculator(tk.Frame, UpdateNumber):
         if expo > 6:
             tk.messagebox.showinfo(errTitle, exponentHighErrMsg)
             return 1
+        # prevent user from entering too high slope value
         if m > 10000000 or c > 10000000:
             tk.messagebox.showinfo(errTitle, valTooHighErrMsg)
+            return 1
+        # prevent user from entering non integer exponent value
+        if isinstance(expo, float):
+            tk.messagebox.showinfo(errTitle, expoNotIntErrMsg)
             return 1
 
         xInt = "n/a"
