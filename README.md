@@ -50,7 +50,7 @@ add, subtract, multiply, divide, percentage, square, cube, square root, cube roo
  - Cubic graph `y=mx^3+c`
  - Graph of `n` power `y=mx^n+c`; 0 **≤** n **≤** 6
 
-![plot7-2](https://user-images.githubusercontent.com/71577909/143892694-c37f6797-6954-40d1-814c-be642cd7f629.png)
+![plot8ex](https://user-images.githubusercontent.com/71577909/144034842-3af13abf-41ee-426e-adc4-e4ffeb50fb86.png)
 ![image](https://user-images.githubusercontent.com/71577909/143985456-15214eac-4d89-46d5-bfa1-103bc41108e3.png)
 User can also type `/undo` to remove the latest plotted line.
 Examples of supported equation:
