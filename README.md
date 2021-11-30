@@ -60,6 +60,7 @@ Examples of supported equation:
     y=-2x+10
     y=(1/2)x^2-(100/3)
     f(x)=0.03x^3+20
+    y=(1/3)**3x^2+(25/2)**1.3
 
 ### 3. History
 Everytime user calculates something, it will be stored in a text file `history.txt` which user can view it right from the program. User also has an option to clear all history.
