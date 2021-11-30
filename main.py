@@ -1222,26 +1222,38 @@ class Calculator(tk.Frame, UpdateNumber):
                     xInt = (0 - c) / m
                 elif expo % 2 != 0:
                     if c >= 0:
-                        xInt = round((((c) / m) ** (1/float(expo)) * -1).real, 2)
+                        xInt = round(abs(((c) / m) ** (1/float(expo))), 2)
                     else:
-                        xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
+                        xInt = round(abs(((c * -1) / m) ** (1/float(expo))), 2)
                     if xInt == -0:
                         xInt = 0
+                    if m > 0:
+                        xInt *= -1
                 elif expo % 2 == 0 and c == 0:
                     xInt = 0
                 elif expo % 2 == 0:
                     if c >= 0:
-                        xInt = round((((c) / m) ** (1/float(expo)) * -1).real, 2)
+                        xInt = round(abs(((c) / m) ** (1/float(expo))), 2)
                     else:
-                        xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
+                        xInt = round(abs(((c * -1) / m) ** (1/float(expo))), 2)
                     if xInt == -0:
                         xInt = 0
                     xInt = f"{xInt}, {xInt * -1}"
+                    if m > 0:
+                        xInt = "n/a"
                 else:
                     xInt = "n/a"
             except ZeroDivisionError:
                 tk.messagebox.showinfo(errTitle, slopeLowErrMsg)
                 return 1
+        
+        if m > 0 and isinstance(expo, float) and c > 0:
+            xInt = "n/a"
+        if m < 0 and isinstance(expo, float) and c > 0:
+            xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
+        if m < 0 and isinstance(expo, float) and c < 0:
+            xInt = "n/a"
+
         try:
             if xInt % 1 == 0:
                 xInt = int(xInt)
