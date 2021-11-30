@@ -1090,7 +1090,7 @@ class Calculator(tk.Frame, UpdateNumber):
         endRange = 250
 
         if self.text.get() == "/undo":
-            for i in range(500):
+            for i in range(abs(startRange) + endRange):
                 t.undo()
             t.pu()
             return 1
@@ -1348,8 +1348,18 @@ class Calculator(tk.Frame, UpdateNumber):
                     tempX, tempY = t.pos()
                     t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
                              random.randint(int(tempY) - 10, int(tempY) + 10))
-                    if m > 90 / expo or c > 170 / expo:
-                        t.setpos(random.randint(-10, 10), random.randint(-10, 10))
+                    try:
+                        if m > 90 / expo or c > 170 / expo:
+                            t.setpos(random.randint(-10, 10), random.randint(-10, 10))
+                    except ZeroDivisionError:
+                        if c != 0 and expo != 0:
+                            tk.messagebox.showinfo(errTitle, mathErrMsg)
+                            for action in range(250):
+                                t.undo()
+                            t.pu()
+                            return 1
+                        else:
+                            pass
                     if expo == 0 or expo == 1:
                         if c == 0:
                             if m == 0 or m == 1:
