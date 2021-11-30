@@ -1074,7 +1074,7 @@ class Calculator(tk.Frame, UpdateNumber):
         errTitle = "Graph Plotter Error"
         tip = ("Expression must be in the format of:\ny=mx+c, f(x)=mx+c, y=mx^n+c, y=n, " +
                "x=n\n\nFor example:\ny=20\nx=5.23\ny=2x\ny=-2x+10\n" +
-               "y=(1/2)x-(100/3)\nf(x)=0.03x^3+20\n\nYou can also type '/undo' to remove latest plotted line.")
+               "y=(1/2)x^2-(100/3)\nf(x)=0.03x^1.25+20\n\nYou can also type '/undo' to remove latest plotted line.")
         syntaxErrMsg = f"An error occurred:\nInvalid syntax\n\n{tip}"
         slopeLowErrMsg = "An error occurred:\nSlope (m) value is too low"
         expoSlopeErrMsg = f"An error occurred:\nUnexpected slope (m) value and/or exponent value\n\n{tip}"
