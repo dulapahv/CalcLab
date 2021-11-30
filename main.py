@@ -1148,7 +1148,7 @@ class Calculator(tk.Frame, UpdateNumber):
             else:
                 try:
                     m = round(eval(valBeforeX), 2)
-                except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                except (SyntaxError, NameError, TypeError, ZeroDivisionError):
                     tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                     return 1
 
@@ -1159,7 +1159,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 # if the back split contains no number, then c = 0. Else, eval c
                 try:
                     valAfterX = expression.split("x")[1]
-                except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                except IndexError:
                     tk.messagebox.showinfo(errTitle, syntaxErrMsg)
                     return 1
                 if valAfterX == "":
@@ -1167,7 +1167,7 @@ class Calculator(tk.Frame, UpdateNumber):
                 else:
                     try:
                         c = round(eval(valAfterX), 2)
-                    except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                    except (SyntaxError, NameError, TypeError, ZeroDivisionError):
                         # if the expression contains exponent (back split contains "^"), split again based on "+" and "-",
                         # then eval expo
                         valBeforeOp = valAfterX.split("+")[0][1:]
@@ -1180,12 +1180,12 @@ class Calculator(tk.Frame, UpdateNumber):
                                 else:
                                     tk.messagebox.showinfo(errTitle, intErrMsg)
                                     return 1
-                            except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                            except IndexError:
                                 tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                                 return 1
                         try:
                             valBeforeOp = round(eval(valBeforeOp), 2)
-                        except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                        except (SyntaxError, NameError, TypeError, ZeroDivisionError):
                             tk.messagebox.showinfo(errTitle, expoSlopeErrMsg)
                             return 1
                         expo = valBeforeOp
@@ -1198,13 +1198,13 @@ class Calculator(tk.Frame, UpdateNumber):
                             try:
                                 try:
                                     valAfterOp = eval(valAfterX.split("+")[1])
-                                except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                                except (SyntaxError, NameError, TypeError):
                                     tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
                                     return 1
                             except IndexError:
                                 try:
                                     valAfterOp = eval(valAfterX.split("-")[1]) * -1
-                                except (SyntaxError, NameError, TypeError, ZeroDivisionError, IndexError):
+                                except (SyntaxError, NameError, TypeError):
                                     tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
                                     return 1
                             c = round(valAfterOp, 2)
