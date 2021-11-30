@@ -1362,7 +1362,7 @@ class Calculator(tk.Frame, UpdateNumber):
                     except ZeroDivisionError:
                         if c != 0 and expo != 0:
                             tk.messagebox.showinfo(errTitle, mathErrMsg)
-                            for action in range(250):
+                            for action in range(abs(startRange)):
                                 t.undo()
                             t.pu()
                             return 1
