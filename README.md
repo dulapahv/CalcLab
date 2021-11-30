@@ -60,7 +60,7 @@ Examples of supported equation:
     y=2x
     y=-2x+10
     y=(1/2)x^2-(100/3)
-    f(x)=0.03x^3+20
+    f(x)=-0.03x^2.5+20
     y=(1/3)**3x^2+(25/2)**1.3
 
 ### 3. History
