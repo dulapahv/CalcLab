@@ -1086,6 +1086,8 @@ class Calculator(tk.Frame, UpdateNumber):
         mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
                       f"further. The program will now revert the latest plotted line.\n\n{tip}")
         font = ("Arial", 18)
+        startRange = -250
+        endRange = 250
 
         if self.text.get() == "/undo":
             for i in range(500):
@@ -1172,8 +1174,11 @@ class Calculator(tk.Frame, UpdateNumber):
                         if "-" in valBeforeOp:
                             valBeforeOp = valAfterX.split("-")[0][1:]
                         if valBeforeOp == "":
-                            tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
-                            return 1
+                            if valAfterX.split("-")[1][1:]:
+                                valBeforeOp = str(eval(valAfterX.split("-")[1][1:]) * -1)
+                            else:
+                                print("Math error (exponent cannot be negative)")
+                                exit(1) # return 1
                         try:
                             valBeforeOp = round(eval(valBeforeOp), 2)
                         except (SyntaxError, NameError, TypeError, ZeroDivisionError):
@@ -1199,8 +1204,10 @@ class Calculator(tk.Frame, UpdateNumber):
                                     tk.messagebox.showinfo(errTitle, exponentInterceptErrMsg)
                                     return 1
                             c = round(valAfterOp, 2)
+        if expo % 1 == 0:
+            expo = int(expo)
         # prevent user from entering non integer exponent value, and too high/low exponent value
-        if isinstance(expo, float) or expo > 6 or expo < 0:
+        if expo > 6:
             tk.messagebox.showinfo(errTitle, intErrMsg)
             return 1
         # prevent user from entering too high slope value
@@ -1215,13 +1222,21 @@ class Calculator(tk.Frame, UpdateNumber):
                     xInt = (0 - c) / m
                 elif expo % 2 != 0:
                     if c >= 0:
-                        xInt = round((((c) / m) ** (1/float(expo)) * -1), 2)
+                        xInt = round((((c) / m) ** (1/float(expo)) * -1).real, 2)
                     else:
-                        xInt = round((((c * -1) / m) ** (1/float(expo))), 2)
+                        xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
                     if xInt == -0:
                         xInt = 0
                 elif expo % 2 == 0 and c == 0:
                     xInt = 0
+                elif expo % 2 == 0:
+                    if c >= 0:
+                        xInt = round((((c) / m) ** (1/float(expo)) * -1).real, 2)
+                    else:
+                        xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
+                    if xInt == -0:
+                        xInt = 0
+                    xInt = f"{xInt}, {xInt * -1}"
                 else:
                     xInt = "n/a"
             except ZeroDivisionError:
@@ -1292,7 +1307,7 @@ class Calculator(tk.Frame, UpdateNumber):
             var = "y"
 
         if isXonly:
-            t.setpos(m, -250)
+            t.setpos(m, startRange)
             t.pd()
             t.setpos(m, random.randint(-10, 10))
             tempX, tempY = t.pos()
@@ -1301,11 +1316,18 @@ class Calculator(tk.Frame, UpdateNumber):
             t.write(f"{prefix}{slope}, xInt = {slope}, yInt = 'n/a'", font=font)
             t.setpos(tempX, tempY)
             t.pd()
-            t.setpos(m, 250)
+            t.setpos(m, endRange)
+        
         else:
-            for x in range(-250, 250):
+            if isinstance(expo, float):
+                startRange = 0
+            if m > 0 and 0 < expo < 1:
+                xInt = "n/a"
+            for x in range(startRange, endRange): # -250
                 y = m * (x**expo) + c
-                if x != -250:
+                if x == startRange: #
+                    t.pu()
+                    t.setpos(x.real, y.real)
                     t.pd()
                 if x == 0:
                     t.pu()
@@ -1370,7 +1392,7 @@ class Calculator(tk.Frame, UpdateNumber):
                                 t.write(f"      {prefix}{slope}{var}^{expo}{c}, {xInt = }, {yInt = }", font=font)
                     t.setpos(tempX, tempY)
                     t.pd()
-                t.setpos(x, y)
+                t.setpos(x.real, y.real)
         t.pu()
         t.update()
 
