@@ -1259,6 +1259,8 @@ class Calculator(tk.Frame, UpdateNumber):
             xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
         if m < 0 and isinstance(expo, float) and c < 0:
             xInt = "n/a"
+        if m > 0 and isinstance(expo, float) and c < 0:
+            xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
 
         try:
             if xInt % 1 == 0:
@@ -1339,7 +1341,7 @@ class Calculator(tk.Frame, UpdateNumber):
         else:
             if isinstance(expo, float):
                 startRange = 0
-            if m > 0 and 0 < expo < 1:
+            if m > 0 and 0 < expo < 1 and c >= 0:
                 xInt = "n/a"
             for x in range(startRange, endRange): # -250
                 y = m * (x**expo) + c
