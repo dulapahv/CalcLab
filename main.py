@@ -1082,7 +1082,7 @@ class Calculator(tk.Frame, UpdateNumber):
                                    f"exponent value\n\n{tip}")
         valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is " +
                             "too high (>10,000,000)")
-        intErrMsg = "An error occurred:\nExponent value must be a positive integer between 0 and 6, inclusive"
+        intErrMsg = "An error occurred:\nExponent value must be a positive real number between 0 and 6, inclusive"
         mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
                       f"further. The program will now revert the latest plotted line.\n\n{tip}")
         font = ("Arial", 18)
@@ -1177,8 +1177,8 @@ class Calculator(tk.Frame, UpdateNumber):
                             if valAfterX.split("-")[1][1:]:
                                 valBeforeOp = str(eval(valAfterX.split("-")[1][1:]) * -1)
                             else:
-                                print("Math error (exponent cannot be negative)")
-                                exit(1) # return 1
+                                tk.messagebox.showinfo(errTitle, intErrMsg)
+                                return 1
                         try:
                             valBeforeOp = round(eval(valBeforeOp), 2)
                         except (SyntaxError, NameError, TypeError, ZeroDivisionError):
@@ -1207,7 +1207,7 @@ class Calculator(tk.Frame, UpdateNumber):
         if expo % 1 == 0:
             expo = int(expo)
         # prevent user from entering non integer exponent value, and too high/low exponent value
-        if expo > 6:
+        if expo < 0 or expo > 6:
             tk.messagebox.showinfo(errTitle, intErrMsg)
             return 1
         # prevent user from entering too high slope value
@@ -1334,18 +1334,8 @@ class Calculator(tk.Frame, UpdateNumber):
                     tempX, tempY = t.pos()
                     t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
                              random.randint(int(tempY) - 10, int(tempY) + 10))
-                    try:
-                        if m > 90 / expo or c > 170 / expo:
-                            t.setpos(random.randint(-10, 10), random.randint(-10, 10))
-                    except ZeroDivisionError:
-                        if c != 0 and expo != 0:
-                            tk.messagebox.showinfo(errTitle, mathErrMsg)
-                            for action in range(250):
-                                t.undo()
-                            t.pu()
-                            return 1
-                        else:
-                            pass
+                    if m > 90 / expo or c > 170 / expo:
+                        t.setpos(random.randint(-10, 10), random.randint(-10, 10))
                     if expo == 0 or expo == 1:
                         if c == 0:
                             if m == 0 or m == 1:
