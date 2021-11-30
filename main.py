@@ -1261,6 +1261,8 @@ class Calculator(tk.Frame, UpdateNumber):
             xInt = "n/a"
         if m > 0 and isinstance(expo, float) and c < 0:
             xInt = round((((c * -1) / m) ** (1/float(expo))).real, 2)
+        if (expo == 3 or expo == 5) and c < 0:
+            xInt *= -1
 
         try:
             if xInt % 1 == 0:
@@ -1355,7 +1357,7 @@ class Calculator(tk.Frame, UpdateNumber):
                     t.setpos(random.randint(int(tempX) - 10, int(tempX) + 10),
                              random.randint(int(tempY) - 10, int(tempY) + 10))
                     try:
-                        if m > 90 / expo or c > 170 / expo:
+                        if abs(m) > 90 / expo or abs(c) > 170 / expo:
                             t.setpos(random.randint(-10, 10), random.randint(-10, 10))
                     except ZeroDivisionError:
                         if c != 0 and expo != 0:
