@@ -367,11 +367,15 @@ class AnswerField:
             self.text.insert(0, f"{round(value, 12):e}")
 
     def negative(self):
-        if (self.text.get().replace(',', '') == "0" or
+        try:
+            if (self.text.get().replace(',', '') == "0" or
                 float(self.text.get().replace(',', '')) > 0):
-            self.text.insert(0, "-")
-        else:
-            self.text.delete(0, 1)
+                self.text.insert(0, "-")
+            else:
+                self.text.delete(0, 1)
+        except ValueError:
+            self.text.delete(0, tk.END)
+            self.text.insert(0, "Error")
 
     def clear(self):
         self.dotButton["state"] = "normal"
