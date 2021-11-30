@@ -1239,7 +1239,9 @@ class Calculator(tk.Frame, UpdateNumber):
                     if xInt == -0:
                         xInt = 0
                     xInt = f"{xInt}, {xInt * -1}"
-                    if m > 0:
+                    if m > 0 and c > 0:
+                        xInt = "n/a"
+                    if m < 0 and c < 0:
                         xInt = "n/a"
                 else:
                     xInt = "n/a"
