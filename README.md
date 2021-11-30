@@ -33,7 +33,7 @@ Generally, when people want to perform conversions or calculations, they must lo
 **Supports:**
 add, subtract, multiply, divide, percentage, square, cube, square root, cube root, factorial, natural logarithm, common logarithm (base 10), sin, cos, tan, sinh, cosh, tanh, e constant, pi constant
 
-![image](https://user-images.githubusercontent.com/71577909/143890053-e603982d-3ef4-408c-8bb6-c884af1cb4a0.png)
+![image](https://user-images.githubusercontent.com/71577909/143985101-fa815096-d885-464a-b129-16246dc6db83.png)
 
 **Other features:**
  - Auto detect invalid input (i.e. contains non-numeric character) and invalid number operations (i.e. dividing by 0) 
