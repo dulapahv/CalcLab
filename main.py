@@ -21,7 +21,6 @@ through the terminal with the following commands.
 import math
 import os
 import random
-import requests
 import subprocess
 import sys
 import turtle as t
@@ -35,6 +34,17 @@ try:
 except ImportError:
     import Tkinter as tk  # python 2
     from Tkinter import messagebox
+
+"""Check for requests module"""
+try:
+    import requests
+except ImportError:
+    print("> requests module is missing!\n" +
+          "Trying to install required module: requests")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+    print()
+finally:
+    import requests
 
 """Check for numpy module"""
 try:
@@ -414,8 +424,8 @@ class NumPad(AnswerField):
                                       command=self.delete).grid(row=3, column=4)
 
         self.sevenButton = tk.Button(self, width=5, height=2, text="7", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
-                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0)
-        self.sevenButton.grid(row=4, column=2)
+                                     activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
+                                     self.update(7)).grid(row=4, column=2)
         self.eightButton = tk.Button(self, width=5, height=2, text="8", font=("Arial", 18), bg="#505050", fg="#FFFFFF",
                                      activebackground="#A5A5A5", activeforeground="#FFFFFF", bd=0, command=lambda:
                                      self.update(8)).grid(row=4, column=3)
@@ -1821,7 +1831,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
 
     def equal(self):
         self.__value = AnswerField.get_value(self)
-        if self.__value is None or self.__value < 0:
+        if self.__value is None or (self.__value < 0 and self.__fromUnitVal.get() == "Kelvin"):
             self.display_error()
         else:
             if self.__fromUnitVal.get() != self.__toUnitVal.get():
@@ -1829,7 +1839,7 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
                     if self.__toUnitVal.get() == "Fahrenheit":
                         self.set_text((self.__value * 9 / 5) + 32)
                     else:
-                        self.set_text(self.__value + 273.15)
+                        self.display_error() if self.__value + 273.15 < 0 else self.set_text(self.__value + 273.15)
                 elif self.__fromUnitVal.get() == "Fahrenheit":
                     if self.__toUnitVal.get() == "Celsius":
                         self.set_text((self.__value - 32) * 5 / 9)
@@ -1839,7 +1849,8 @@ class TemperatureConverter(tk.Frame, UpdateNumber):
                     if self.__toUnitVal.get() == "Celsius":
                         self.set_text(self.__value - 273.15)
                     else:
-                        self.set_text((self.__value - 273.15) * (9 / 5) + 32)
+                        self.display_error() if (self.__value - 273.15) * (9 / 5) + 32 < 0 else self.set_text((
+                                                 self.__value - 273.15) * (9 / 5) + 32)
             else:
                 self.set_text(self.__value)
 
