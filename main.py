@@ -39,7 +39,7 @@ except ImportError:
 try:
     import requests
 except ImportError:
-    print("> requests module is missing!\n" +
+    print("> 'requests' module is missing!\n" +
           "Trying to install required module: requests")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
     print()
@@ -50,7 +50,7 @@ finally:
 try:
     import numpy
 except ImportError:
-    print("> numpy module is missing!\n" +
+    print("> 'numpy' module is missing!\n" +
           "Trying to install required module: numpy")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy"])
     print()
@@ -63,7 +63,7 @@ try:
                                         DecimalFloatMismatchError)
     from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print("> forex-python module is missing!\nTrying to install required " +
+    print("> 'forex-python' module is missing!\nTrying to install required " +
           "module: forex-python")
     subprocess.check_call([sys.executable, "-m", "pip", "install",
                           "forex-python"])
