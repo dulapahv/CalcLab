@@ -89,7 +89,7 @@ pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter",
          "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter",
          "PressureConverter", "AngleConverter"]
 
-pageIconList = [" ∑", "📆", " £ ", "🧊", "📏", "⧭ ", "🔥 ", "⚛ ", "⬟ ",
+pageIcons = [" ∑", "📆", " £ ", "🧊", "📏", "⧭ ", "🔥 ", "⚛ ", "⬟ ",
                 "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
 
 """
@@ -571,7 +571,7 @@ class SelectionMenu(tk.Frame):
             spacedText = ""
             for i, letter in enumerate(page):
                 if i == 0: 
-                    spacedText += pageIconList[index] + "  "
+                    spacedText += pageIcons[index] + "  "
                 if i and letter.isupper():
                     spacedText += " "
                 spacedText += letter
