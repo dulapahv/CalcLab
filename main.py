@@ -79,12 +79,18 @@ The page name will be automatically space-separated when encountering
 capital letters.
 
 The first page in this list will be the first page to appear.
+
+The pageIconList will store all the icon for each pages, respectively
+(excluding SelectionMenu).
 """
 pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter",
          "VolumeConverter", "LengthConverter", "WeightAndMassConverter",
          "TemperatureConverter", "EnergyConverter", "AreaConverter",
          "SpeedConverter", "TimeConverter", "PowerConverter", "DataConverter",
          "PressureConverter", "AngleConverter"]
+
+pageIconList = [" ∑", "📆", " £ ", "🧊", "📏", "⧭ ", "🔥 ", "⚛ ", "⬟ ",
+                "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
 
 """
 The following lists/dictionaries store all the conversion units as well as
@@ -561,12 +567,11 @@ class SelectionMenu(tk.Frame):
         # list since user is already in that page
         pages.remove("SelectionMenu")
         pageList = pages
-        iconList = [" ∑", "📆", " £ ", "🧊", "📏", "⧭ ", "🔥 ", "⚛ ", "⬟ ", "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
         for index, page in enumerate(pageList):
             spacedText = ""
             for i, letter in enumerate(page):
                 if i == 0: 
-                    spacedText += iconList[index] + "  "
+                    spacedText += pageIconList[index] + "  "
                 if i and letter.isupper():
                     spacedText += " "
                 spacedText += letter
