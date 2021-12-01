@@ -80,7 +80,7 @@ capital letters.
 
 The first page in this list will be the first page to appear.
 
-The pageIconList will store all the icon for each pages, respectively
+The pageIcons list stores all the icon for each pages, respectively
 (excluding SelectionMenu).
 """
 pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter",
