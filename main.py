@@ -90,7 +90,7 @@ pages = ["Calculator", "SelectionMenu", "DateComparator", "CurrencyConverter",
          "PressureConverter", "AngleConverter"]
 
 pageIcons = [" ∑", "📆", " £ ", "🧊", "📏", "⧭ ", "🔥 ", "⚛ ", "⬟ ",
-                "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
+             "💨", "⏰", "🔋 ", "📂", "💎", "📐"]
 
 """
 The following lists/dictionaries store all the conversion units as well as
