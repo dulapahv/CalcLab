@@ -63,8 +63,8 @@ try:
                                         DecimalFloatMismatchError)
     from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print("> 'forex-python' module is missing!\nTrying to install required " +
-          "module: forex-python")
+    print("> 'forex-python' module is missing!\n" +
+          "Trying to install required module: forex-python")
     subprocess.check_call([sys.executable, "-m", "pip", "install",
                           "forex-python"])
 finally:
