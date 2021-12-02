@@ -14,8 +14,9 @@
 CalcLab requires the following modules, however, the program will install them
 automatically. Should the program fail to do so, please install them manually
 through the terminal with the following commands.
-1. pip install numpy
-2. pip install forex-python
+1. pip install forex-python
+2. pip install numpy
+3. pip install requests
 """
 
 import math
@@ -35,16 +36,20 @@ except ImportError:
     import Tkinter as tk  # python 2
     from Tkinter import messagebox
 
-"""Check for requests module"""
+"""Check for forex-python module"""
 try:
-    import requests
+    from forex_python.converter import (CurrencyRates, RatesNotAvailableError,
+                                        DecimalFloatMismatchError)
+    from forex_python.bitcoin import BtcConverter
 except ImportError:
-    print("> 'requests' module is missing!\n" +
-          "Trying to install required module: requests")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+    print("> 'forex-python' module is missing!\n" +
+          "Trying to install required module: forex-python")
+    subprocess.check_call([sys.executable, "-m", "pip", "install",
+                          "forex-python"])
     print()
 finally:
-    import requests
+    from forex_python.converter import CurrencyRates, RatesNotAvailableError
+    from forex_python.bitcoin import BtcConverter
 
 """Check for numpy module"""
 try:
@@ -57,19 +62,16 @@ except ImportError:
 finally:
     import numpy
 
-"""Check for forex-python module"""
+"""Check for requests module"""
 try:
-    from forex_python.converter import (CurrencyRates, RatesNotAvailableError,
-                                        DecimalFloatMismatchError)
-    from forex_python.bitcoin import BtcConverter
+    import requests
 except ImportError:
-    print("> 'forex-python' module is missing!\n" +
-          "Trying to install required module: forex-python")
-    subprocess.check_call([sys.executable, "-m", "pip", "install",
-                          "forex-python"])
+    print("> 'requests' module is missing!\n" +
+          "Trying to install required module: requests")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+    print()
 finally:
-    from forex_python.converter import CurrencyRates, RatesNotAvailableError
-    from forex_python.bitcoin import BtcConverter
+    import requests
 
 """
 This list stores all the pages in the program, respectively. To add
