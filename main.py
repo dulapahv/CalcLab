@@ -1101,10 +1101,10 @@ class Calculator(tk.Frame, UpdateNumber):
                "y=(1/2)x^2-(100/3)\nf(x)=0.03x^2.5+20\n\nYou can also type '/undo' to remove latest plotted line.")
         syntaxErrMsg = f"An error occurred:\nInvalid syntax\n\n{tip}"
         slopeLowErrMsg = "An error occurred:\nSlope (m) value is too low"
-        expoSlopeErrMsg = f"An error occurred:\nUnexpected slope (m) value and/or exponent value\n\n{tip}"
-        exponentInterceptErrMsg = ("An error occurred:\nUnexpected y-intercept (c) value and/or " +
+        expoSlopeErrMsg = f"An error occurred:\nUnexpected slope (m) and/or exponent value\n\n{tip}"
+        exponentInterceptErrMsg = ("An error occurred:\nUnexpected y-intercept (c) and/or " +
                                    f"exponent value\n\n{tip}")
-        valTooHighErrMsg = ("An error occurred:\nSlope (m) value and/or y-intercept (c) value is " +
+        valTooHighErrMsg = ("An error occurred:\nSlope (m) and/or y-intercept (c) value is " +
                             "too high (>10,000,000)")
         intErrMsg = "An error occurred:\nExponent value must be a positive real number between 0 and 6, inclusive"
         mathErrMsg = ("An error occurred:\nExpression contains an error and cannot be plotted " +
