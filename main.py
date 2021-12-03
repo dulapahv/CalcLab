@@ -1366,7 +1366,11 @@ class Calculator(tk.Frame, UpdateNumber):
         
         else:
             if isinstance(expo, float):
-                startRange = 0
+                chkExpo = str(expo) + "0"
+                if int(chkExpo[2]) % 2 == 0 and int(chkExpo[3]) % 2 != 0:
+                    startRange = 0
+                elif int(chkExpo[2]) % 2 != 0 and int(chkExpo[3]) == 0:
+                    startRange = 0
             if m > 0 and 0 < expo < 1 and c >= 0:
                 xInt = "n/a"
             for x in range(startRange, endRange): # -250
