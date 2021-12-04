@@ -1373,9 +1373,9 @@ class Calculator(tk.Frame, UpdateNumber):
                     startRange = 0
             if m > 0 and 0 < expo < 1 and c >= 0:
                 xInt = "n/a"
-            for x in range(startRange, endRange): # -250
+            for x in range(startRange, endRange):
                 y = m * (x**expo) + c
-                if x == startRange: #
+                if x == startRange:
                     t.pu()
                     t.setpos(x.real, y.real)
                     t.pd()
